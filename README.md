@@ -13,7 +13,9 @@
 
 # pytmod
 
-Time modulated wave solver.
+Time modulated wave solver. 
+
+This is a work in progress...
 
 
 ## Installation

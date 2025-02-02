@@ -489,7 +489,7 @@ def _nonlinear_eigensolver(
                 im = im.numpy()
             coordinates = peak_local_max(im, min_distance=1)
 
-            guess_peak = bk.array([omegas_complex[*coord] for coord in coordinates])
+            guess_peak = bk.array([omegas_complex[coord] for coord in coordinates])
             tloc = bk.linspace(0, 2 * bk.pi, N_guess_loc + 1)[:-1]
             guesses = []
             for guess_loc in guess_peak:
