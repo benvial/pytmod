@@ -38,8 +38,8 @@ jobs:
       - name: Install package and run tests
         shell: bash -el {0}
         run: |
-          mamba create -n pymodes python=${{ matrix.python-version }} -c conda-forge
-          mamba env update -n pymodes -f environment.yml
-          conda activate pymodes
+          mamba create -n pytmod python=${{ matrix.python-version }} -c conda-forge
+          mamba env update -n pytmod -f environment.yml
+          conda activate pytmod
           pip install .[test] -v
           pytest -svvv
