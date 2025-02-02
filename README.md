@@ -8,7 +8,7 @@
 
 
 
-![](doc/_static/pytmod.svg){width=64px}
+![](doc/_static/pytmod-small.png)
 
 
 # pytmod
