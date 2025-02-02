@@ -28,6 +28,7 @@ class Material:
     ValueError
         If the length of `eps_fourier` is even
     """
+
     def __init__(self, eps_fourier, modulation_frequency, Npad=0):
         self._eps_fourier = bk.array(eps_fourier)
         self.modulation_frequency = modulation_frequency
@@ -102,7 +103,7 @@ class Material:
                     if abs(dmn) > self.Nh
                     else self.gamma(mshift, omegas) * self.eps_fourier[dmn + self.Nh]
                 )
-                matrix[m,n] = coeff
+                matrix[m, n] = coeff
         return matrix
 
     def eigensolve(self, omegas, matrix=None):

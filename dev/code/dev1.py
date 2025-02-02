@@ -137,7 +137,6 @@ def compute(omegas):
         phi_minus = bk.exp(-1j * k * L)
         Q = denom / (k + EPS)
 
-
         matrix_slab = bk.block(
             [
                 [(1 + Q * eps_plus**0.5) * modes, (1 - Q * eps_plus**0.5) * modes],
@@ -174,7 +173,6 @@ def compute(omegas):
         ks[iomega] = k
         modes_omega[iomega] = modes
 
-
         # print(matrix_slab)
         # print(rhs_slab)
         # print(sol)
@@ -187,17 +185,13 @@ def compute(omegas):
         # plt.title("slab matrix")
         # plt.savefig("matrix_slab.png")
 
-        
-
-
-
     return matrix_freq, ks, modes_omega, rn, tn, matrix_slab_freq
 
 
 matrix_freq, kns, modes_omega, rn, tn, matrix_slab_freq = compute(omegas)
 
 # M = matrix_slab_freq[-1]
-# print(M) 
+# print(M)
 
 # plt.close("all")
 # plt.imshow(M.real)
@@ -362,8 +356,8 @@ plt.figure()
 plt.pcolormesh(omegasr, omegasi, bk.log10(bk.abs(rf)), cmap="inferno")
 plt.colorbar()
 plt.title("r fresnel")
-plt.plot(omega_slab_ana.real,omega_slab_ana.imag,"xg")
-plt.xlim(omegasr[0],omegasr[-1])
+plt.plot(omega_slab_ana.real, omega_slab_ana.imag, "xg")
+plt.xlim(omegasr[0], omegasr[-1])
 plt.show()
 
 i = Nh
@@ -372,8 +366,8 @@ plt.figure()
 plt.pcolormesh(omegasr, omegasi, bk.log10(bk.abs(rn_c[:, :, i])), cmap="inferno")
 plt.colorbar()
 plt.title("r")
-plt.plot(omega_slab_ana.real,omega_slab_ana.imag,"xg")
-plt.xlim(omegasr[0],omegasr[-1])
+plt.plot(omega_slab_ana.real, omega_slab_ana.imag, "xg")
+plt.xlim(omegasr[0], omegasr[-1])
 plt.show()
 
 
@@ -381,8 +375,8 @@ plt.figure()
 plt.pcolormesh(omegasr, omegasi, bk.log10(bk.abs(tf)), cmap="inferno")
 plt.colorbar()
 plt.title("t fresnel")
-plt.plot(omega_slab_ana.real,omega_slab_ana.imag,"xg")
-plt.xlim(omegasr[0],omegasr[-1])
+plt.plot(omega_slab_ana.real, omega_slab_ana.imag, "xg")
+plt.xlim(omegasr[0], omegasr[-1])
 plt.show()
 
 i = Nh
@@ -391,12 +385,9 @@ plt.figure()
 plt.pcolormesh(omegasr, omegasi, bk.log10(bk.abs(tn_c[:, :, i])), cmap="inferno")
 plt.colorbar()
 plt.title("t")
-plt.plot(omega_slab_ana.real,omega_slab_ana.imag,"xg")
-plt.xlim(omegasr[0],omegasr[-1])
+plt.plot(omega_slab_ana.real, omega_slab_ana.imag, "xg")
+plt.xlim(omegasr[0], omegasr[-1])
 plt.show()
-
-
-
 
 
 # # D = bk.min(bk.linalg.eigvals(matrix_c), axis=-1)
@@ -414,8 +405,8 @@ plt.figure()
 plt.pcolormesh(omegasr, omegasi, bk.log10(bk.abs(D)), cmap="inferno")
 plt.colorbar()
 plt.title("Det slab")
-plt.plot(omega_slab_ana.real,omega_slab_ana.imag,"xg")
-plt.xlim(omegasr[0],omegasr[-1])
+plt.plot(omega_slab_ana.real, omega_slab_ana.imag, "xg")
+plt.xlim(omegasr[0], omegasr[-1])
 plt.show()
 
 

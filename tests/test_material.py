@@ -7,6 +7,7 @@
 from pytmod import Material
 import numpy as bk
 
+
 def test_material():
     eps0 = 5.25
     deps = 0.85

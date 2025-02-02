@@ -10,6 +10,7 @@ from .helpers import *
 from .eig import nonlinear_eigensolver
 import numpy as bk
 
+
 class Slab:
     def __init__(self, material, thickness, eps_plus=1, eps_minus=1):
         self.material = material
@@ -146,7 +147,7 @@ if __name__ == "__main__":
         deps / (2 * 1j),
     ]
     # eps_fourier = [eps0]
-    Omega = 1#5707963267948966
+    Omega = 1  # 5707963267948966
 
     from material import Material
 
@@ -155,7 +156,7 @@ if __name__ == "__main__":
     Omega = mat.modulation_frequency
     Ln = 2
     L = Ln / eps0**0.5 / Omega
-    L = Ln / eps0**0.5 #/ Omega
+    L = Ln / eps0**0.5  # / Omega
     slab = Slab(mat, L)
     omegas0D = 0.15
     omegas1D = bk.array([0.15, 0.15])
@@ -178,24 +179,20 @@ if __name__ == "__main__":
 
     plt.ion()
 
-
     Nomega = 1000
     omegas = bk.linspace(0, 10 * Omega, Nomega)
     EPS = 1e-4
     omegas = bk.linspace(0 + EPS, 10 * Omega - EPS, Nomega)
-    # omegas = bk.array([0.5])      
+    # omegas = bk.array([0.5])
     # omegas = omegas2D
 
     kns, ens = mat.eigensolve(omegas)
 
     Nharmo_plot = 0
 
-
     # # plt.plot(kns.T.real,omegas.real,".",c="#d42323", ms=5, mew=0)
 
-
     # omegas = bk.array([8.5])
-
 
     # rconv = []
     # tconv = []
@@ -220,7 +217,6 @@ if __name__ == "__main__":
     # rconv = bk.array(rconv)
     # tconv = bk.array(tconv)
     # plt.plot(tconv.imag)
-
 
     mat = Material(eps_fourier, Omega, Npad=Npad)
     slab = Slab(mat, L)
@@ -251,7 +247,6 @@ if __name__ == "__main__":
     plt.legend()
     plt.pause(0.1)
 
-
     omega0 = 0.12 - 2.1 * 1j
     omega1 = 8.1 - 1e-12 * 1j
 
@@ -261,20 +256,16 @@ if __name__ == "__main__":
 
     nc = 201
 
-
     omegasr = bk.linspace(omega0.real, omega1.real, nc)
     omegasi = bk.linspace(omega0.imag, omega1.imag, nc)
 
     re, im = bk.meshgrid(omegasr, omegasi)
     omegas = re + 1j * im
 
-
     kns, ens = mat.eigensolve(omegas)
     matrix_slab_c = slab.build_matrix(omegas, kns, ens)
 
-
     matrix_slab_c = bk.transpose(matrix_slab_c, (2, 3, 0, 1))
-
 
     # D = bk.min(bk.linalg.eigvals(matrix_slab_c), axis=-1)
     D = bk.linalg.det(matrix_slab_c)

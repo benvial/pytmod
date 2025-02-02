@@ -205,7 +205,7 @@ if True:
     plt.imshow(matrix_slab[0].real)
     plt.colorbar()
     plt.title("dev")
-    sys.exit(0) 
+    sys.exit(0)
 
     # return matrix_slab, eigenvalues, modes, matrix, phi_plus, phi_minus, ks
 
@@ -242,7 +242,6 @@ def compute(omegas):
         tn[i] = modes[i] / Ei * phi_plus[i] @ C[i] + modes[i] / Ei * phi_minus[i] @ D[i]
 
     return matrix, eigenvalues, modes, rn, tn, C, D, matrix_slab
-
 
 
 omegas = bk.array([0.5])

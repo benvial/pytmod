@@ -20,6 +20,8 @@ from skimage.feature import peak_local_max
 
 
 import numpy as bk
+
+
 def get_backend():
     return "numpy"
 
@@ -303,7 +305,7 @@ def eig_newton(
             else:
                 y_s = la.lu_solve(T_s_lu, w, trans=1)
             # y_s = bk.linalg.lu_solve(T_s_lu, dot(T_ds.T, y_s), trans=1)
-            y_s /= bk.sqrt(bk.sum(bk.abs(y_s) ** 2)) 
+            y_s /= bk.sqrt(bk.sum(bk.abs(y_s) ** 2))
             v_s = dot(T_s.T, y_s)
         else:
             raise ValueError("Unknown weighting method %s" % weight)
@@ -452,7 +454,7 @@ def _nonlinear_eigensolver(
                 Mc = bk.permute(Mc, (2, 3, 0, 1))
             else:
                 Mc = bk.transpose(Mc, axes=(2, 3, 0, 1))
-            if peaks_estimate== "eig":
+            if peaks_estimate == "eig":
                 evs = bk.linalg.eigvals(Mc)
                 srt = bk.argsort(bk.abs(evs), axis=-1)
                 if get_backend() == "torch":
@@ -1025,9 +1027,7 @@ def nonlinear_eigensolver(
                 func, omega0, omega1, **kwargs
             )
         else:
-            evs_, eigenvectors_ = _nleigsolve_recursive(
-                func, omega0, omega1, **kwargs
-            )
+            evs_, eigenvectors_ = _nleigsolve_recursive(func, omega0, omega1, **kwargs)
 
     else:
         if return_left:

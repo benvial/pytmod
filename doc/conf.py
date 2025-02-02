@@ -56,7 +56,7 @@ extensions = [
 # register_plugin("pybtex.style.formatting", "custombibstyle", CustomBibStyle)
 
 bibtex_bibfiles = ["_static/biblio.bib"]
-bibtex_default_style = 'unsrt'
+bibtex_default_style = "unsrt"
 # bibtex_reference_style = "label"
 
 
