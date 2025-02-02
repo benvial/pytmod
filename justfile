@@ -87,3 +87,7 @@ show:
 
 docker-build:
     docker build . -t pytmod
+
+
+cov:
+	firefox htmlcov/index.html

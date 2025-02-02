@@ -9,8 +9,8 @@
 import numpy as bk
 
 
-def pad(coeffs, Npad):
-    return bk.array([0] * Npad + list(coeffs) + [0] * Npad)
+def pad(coefficients, padding_size):
+    return bk.array([0] * padding_size + list(coefficients) + [0] * padding_size)
 
 
 def build_field_time(coeffs, Omega, t):
@@ -53,18 +53,18 @@ def block(blocks):
     return bk.concatenate(row_stacked, axis=0)
 
 
-def fresnel(omegas, eps_slab, eps_plus, eps_minus):
+def fresnel(omegas, eps_slab, eps_plus, eps_minus, L):
 
-    r13 = (eps_plus**0.5 - eps_slab**0.5) / (eps_plus**0.5 + eps_slab**0.5)
-    r32 = (eps_slab**0.5 - eps_minus**0.5) / (eps_slab**0.5 + eps_minus**0.5)
-    t13 = (2 * eps_plus**0.5) / (eps_plus**0.5 + eps_slab**0.5)
-    t32 = (2 * eps_slab**0.5) / (eps_slab**0.5 + eps_minus**0.5)
+    r12 = (eps_plus**0.5 - eps_slab**0.5) / (eps_plus**0.5 + eps_slab**0.5)
+    r23 = (eps_slab**0.5 - eps_minus**0.5) / (eps_slab**0.5 + eps_minus**0.5)
+    t12 = (2 * eps_plus**0.5) / (eps_plus**0.5 + eps_slab**0.5)
+    t23 = (2 * eps_slab**0.5) / (eps_minus**0.5 + eps_slab**0.5)
 
-    rf = (r13 + r32 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)) / (
-        1 + r13 * r32 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)
+    rf = (r12 + r23 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)) / (
+        1 + r12 * r23 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)
     )
-    tf = (t13 * t32 * bk.exp(1j * 2 * eps_slab**0.5 * omegas * L)) / (
-        1 + r13 * r32 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)
+    tf = (t12 * t23 * bk.exp(1j * eps_slab**0.5 * omegas * L)) / (
+        1 + r12 * r23 * bk.exp(1j * 2 * omegas * eps_slab**0.5 * L)
     )
     return rf, tf
 

@@ -158,7 +158,7 @@ def eig_newton(
     func,
     lambda_0,
     x_0=None,
-    lambda_tol=1e-6,
+    tol=1e-6,
     max_iter=20,
     func_gives_der=False,
     G=None,
@@ -176,7 +176,7 @@ def eig_newton(
         The starting guess for the eigenvalue
     x_0 : ndarray
         The starting guess for the eigenvector
-    lambda_tol : float
+    tol : float
         The relative tolerance in the eigenvalue for convergence
     max_iter : int
         The maximum number of iterations to perform
@@ -242,7 +242,7 @@ def eig_newton(
     if not func_gives_der:
         # evaluate at an arbitrary nearby starting point to allow finite
         # differences to be taken
-        step = lambda_tol * 10
+        step = tol * 10
         step = max(1e-3, step)
         step = (1 + 1j) * step
         # lambda_sm = lambda_0 * (1 + (1 + 1j) * step)
@@ -313,7 +313,7 @@ def eig_newton(
         delta_lambda_abs = dot(v_s, x_s) / dot(v_s, u)
 
         delta_lambda = bk.abs(delta_lambda_abs / lambda_s)
-        converged = delta_lambda < lambda_tol
+        converged = delta_lambda < tol
 
         if converged:
             break
@@ -398,7 +398,7 @@ def _nonlinear_eigensolver(
     init_vect="eig",
     strategy="peaks",
     peaks_estimate="eig",
-    lambda_tol=1e-6,
+    tol=1e-6,
     max_iter=100,
     N_grid=(10, 10),
     N_guess_loc=0,
@@ -489,7 +489,9 @@ def _nonlinear_eigensolver(
                 im = im.numpy()
             coordinates = peak_local_max(im, min_distance=1)
 
-            guess_peak = bk.array([omegas_complex[coord] for coord in coordinates])
+            guess_peak = bk.array(
+                [omegas_complex[coord[0], coord[1]] for coord in coordinates]
+            )
             tloc = bk.linspace(0, 2 * bk.pi, N_guess_loc + 1)[:-1]
             guesses = []
             for guess_loc in guess_peak:
@@ -533,7 +535,7 @@ def _nonlinear_eigensolver(
             plt.gca().set_ylabel(r"Im $\omega/\omega_p$")
             plt.pause(0.01)
 
-    def compute_eigenvalues(guesses, lambda_tol, max_iter):
+    def compute_eigenvalues(guesses, tol, max_iter):
         evs = []
         modes = []
         modes_left = []
@@ -552,7 +554,7 @@ def _nonlinear_eigensolver(
                     func_eig,
                     guess,
                     vect_init,
-                    lambda_tol=lambda_tol,
+                    tol=tol,
                     max_iter=max_iter,
                     func_gives_der=func_gives_der,
                     weight=weight,
@@ -595,7 +597,7 @@ def _nonlinear_eigensolver(
         modes_left = bk.stack(modes_left).T
         residuals = bk.array(residuals)
         if filter:
-            unique_indices = unique(evs, precision=lambda_tol * 100)
+            unique_indices = unique(evs, precision=tol * 100)
             modes = modes[:, unique_indices]
             modes_left = modes_left[:, unique_indices]
             evs = evs[unique_indices]
@@ -612,10 +614,10 @@ def _nonlinear_eigensolver(
     if len(guesses) > 0:
         if return_left:
             evs, modes, modes_left, residuals = compute_eigenvalues(
-                guesses, lambda_tol, max_iter
+                guesses, tol, max_iter
             )
         else:
-            evs, modes, residuals = compute_eigenvalues(guesses, lambda_tol, max_iter)
+            evs, modes, residuals = compute_eigenvalues(guesses, tol, max_iter)
 
     else:
         raise EigenvalueError("No eigenvalues found")
@@ -722,7 +724,7 @@ def _nleigsolve(func, *args, refine=False, **kwargs):
             evs0, eigenvectors0 = out
         if refine:
             kwargs["guesses"] = evs0
-            kwargs["lambda_tol"] = max(kwargs["lambda_tol"] / 10, 1e-14)
+            kwargs["tol"] = max(kwargs["tol"] / 10, 1e-14)
             kwargs["max_iter"] *= 2
             if return_left:
                 evs, eigenvectors, eigenvectors_left = _nonlinear_eigensolver(
@@ -859,7 +861,7 @@ def _nleigsolve_recursive(
     evs_old = evs_.copy()
     if evs_old != []:
         _evs0 = bk.hstack(evs_old) if evs_old != [] else evs_old
-        unique_indices0 = unique(_evs0, precision=kwargs["lambda_tol"] * 100)
+        unique_indices0 = unique(_evs0, precision=kwargs["tol"] * 100)
         Nmodes0 = len(unique_indices0)
         Nmodes_in_region = 0
         for e in _evs0[unique_indices0]:
@@ -920,7 +922,7 @@ def _nleigsolve_recursive(
 
     if evs_old != []:
         _evs1 = bk.hstack(evs_)
-        unique_indices1 = unique(_evs1, precision=kwargs["lambda_tol"] * 100)
+        unique_indices1 = unique(_evs1, precision=kwargs["tol"] * 100)
         cond = len(unique_indices0) == len(unique_indices1)
         # evs_ = [_evs1[i] for i in unique_indices1]
     else:
@@ -1002,7 +1004,7 @@ def nonlinear_eigensolver(
         init_vect="eig",
         strategy="peaks",
         peaks_estimate="eig",
-        lambda_tol=1e-6,
+        tol=1e-6,
         max_iter=100,
         N_grid=(10, 10),
         N_guess_loc=0,
@@ -1049,7 +1051,7 @@ def nonlinear_eigensolver(
                 eigenvectors_left_ = [eigenvectors_left_]
             evs_ = [evs_]
         evs = bk.hstack(evs_)
-        unique_indices = unique(evs, precision=kwargs["lambda_tol"] * 100)
+        unique_indices = unique(evs, precision=kwargs["tol"] * 100)
         evs = evs[unique_indices]
         isort = bk.argsort(evs.real)
         evs = evs[isort]

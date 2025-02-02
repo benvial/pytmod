@@ -37,11 +37,14 @@ class Material:
         if self.nh % 2 == 0:
             raise ValueError("The length of eps_fourier must be odd")
 
+    def pad(self, x):
+        if self.Npad > 0:
+            return pad(x, self._Npad)
+        return x
+
     @property
     def eps_fourier(self):
-        if self._Npad > 0:
-            return pad(self._eps_fourier, self._Npad)
-        return self._eps_fourier
+        return self.pad(self._eps_fourier)
 
     @eps_fourier.setter
     def eps_fourier(self, coeff):
@@ -49,13 +52,13 @@ class Material:
 
     @property
     def Npad(self):
+        if not isinstance(self._Npad, int) or self._Npad < 0:
+            raise ValueError("Npad must be a positive integer")
         return self._Npad
 
     @Npad.setter
     def Npad(self, N):
         self._Npad = N
-        if self._Npad < 0:
-            raise ValueError("Npad must be >0")
 
     @property
     def modulation_period(self):
