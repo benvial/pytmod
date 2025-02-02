@@ -1,0 +1,18 @@
+pytmod
+======
+
+.. py:module:: pytmod
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/pytmod/eig/index
+   /autoapi/pytmod/helpers/index
+   /autoapi/pytmod/material/index
+   /autoapi/pytmod/slab/index
+
+

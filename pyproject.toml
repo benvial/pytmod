@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "pytmod"
+version = "0.0.1"
+description = "Time modulated wave solver"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE.txt" }
+keywords = ["time-modulated", "electromagnetism", "optics"]
+authors = [{ email = "benjamin.vial84@gmail.com" }, { name = "Benjamin Vial" }]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Programming Language :: Python",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "numpy>=1.20.0",
+  "scipy >= 1.10.0",
+  "matplotlib >= 3.7.0",
+  "scikit-image >= 0.19.3",
+  # "numdiff",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-datadir",
+  "pytest-sugar",
+  "pytest-xdist[psutil]",
+  "coverage",
+]
+doc = [
+  "sphinx",
+  "shibuya",
+  "sphinx-gallery",
+  "memory_profiler",
+  "sphinx-autoapi",
+  "myst-parser",
+  "sphinxcontrib-bibtex",
+]
+dev = [
+  "toml",
+]
+
+[project.urls]
+Homepage = "https://bvial.info/pytmod"
+Documentation = "https://bvial.info/pytmod"
+Repository = "https://github.com/benvial/pytmod"
+Issues = "https://github.com/benvial/pytmod/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+"*" = ["*.par"]

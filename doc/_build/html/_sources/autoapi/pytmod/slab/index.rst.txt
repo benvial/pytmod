@@ -1,0 +1,53 @@
+pytmod.slab
+===========
+
+.. py:module:: pytmod.slab
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: Slab(material, thickness, eps_plus=1, eps_minus=1)
+
+   .. py:attribute:: material
+
+
+   .. py:attribute:: thickness
+
+
+   .. py:attribute:: eps_plus
+      :value: 1
+
+
+
+   .. py:attribute:: eps_minus
+      :value: 1
+
+
+
+   .. py:method:: build_matrix(omegas, eigenvalues, modes)
+
+
+   .. py:method:: build_rhs(omegas, Eis)
+
+
+   .. py:method:: solve(matrix_slab, rhs_slab)
+
+
+   .. py:method:: extract_coefficients(solution, Eis, kns, ens)
+
+
+   .. py:method:: fresnel_static(omegas)
+
+
+   .. py:method:: eigenvalue_static(n)
+
+
+.. py:data:: eps0
+   :value: 5.25
+
+

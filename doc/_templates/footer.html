@@ -1,0 +1,30 @@
+
+<footer class="py-6 border-t border-border md:py-0">
+  {%- block footer_before %}{%- endblock footer_before %}
+    <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+      <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+        <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">
+          {%- if show_copyright and copyright|length -%}
+            {%- if hasdoc('copyright') -%}
+              {%- trans path=pathto('copyright'), copyright=copyright|e -%}
+              © <a href="{{ path }}">Copyright</a>{{ copyright }}
+            {%- endtrans -%}
+          {%- else -%}
+            {%- trans copyright=copyright|e -%}
+            © {{ copyright }}&nbsp;
+          {%- endtrans -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- if last_updated -%}
+        {%- trans last_updated=last_updated|e -%}
+        Last updated: {{ last_updated }}.&nbsp;
+      {%- endtrans -%}
+    {%- endif -%}
+</p>
+</div>
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+    <span class="text-logo">pymodes</span> <img src="{{ pathto('_static/' + 'pymodes-white.svg', 1) }}"" alt="pymodes Logo" style="width: 50px; height: 50px;"/>
+</div>
+</div>
+{%- block footer_after %}{%- endblock footer_after %}
+</footer>

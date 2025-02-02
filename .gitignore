@@ -1,0 +1,11 @@
+# pip installation stuff
+*.pyc
+*.egg-info
+PKG-INFO
+
+src/stamp-h1
+src/Makefile 
+src/config.status 
+src/config.log
+src/autom4te.cache
+wheelhouse

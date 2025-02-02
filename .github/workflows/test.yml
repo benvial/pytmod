@@ -1,0 +1,45 @@
+name: Test
+run-name: ${{ github.repository }} testing
+on: [push]
+jobs:
+  install-and-test:
+    name: system (${{ matrix.python-version }}, ${{ matrix.os }})
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+        os: ['ubuntu-24.04'] #, windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and run tests
+        run: |
+          pip install .[test] -v
+          pytest -svvv
+
+  install-and-test-conda:
+    name: conda (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-24.04']
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+      - name: Install package and run tests
+        shell: bash -el {0}
+        run: |
+          mamba create -n pymodes python=${{ matrix.python-version }} -c conda-forge
+          mamba env update -n pymodes -f environment.yml
+          conda activate pymodes
+          pip install .[test] -v
+          pytest -svvv

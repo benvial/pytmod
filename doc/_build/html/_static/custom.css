@@ -1,0 +1,33 @@
+/* :root {
+    --accent: #e0e5e5;
+} */
+
+
+h1 {
+    color: #5000ca !important;
+}
+
+.highlight {
+    background-color: #f5f3f36b !important;
+}
+
+div.sphx-glr-download a {
+    background-color: rgb(211, 211, 211);
+    background-image: none;
+}
+
+div.sphx-glr-download a:hover {
+    background-color: rgb(186, 185, 185);
+}
+
+
+footer {
+    background-color: rgb(65, 65, 65);
+}
+
+.text-logo {
+    color: #ffffff !important;
+    font-size: 120%;
+    font-weight: 700;
+    padding-right: 1rem
+}
