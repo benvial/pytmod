@@ -17,6 +17,8 @@ Time modulated wave solver.
 
 This is a work in progress...
 
+Documentation can be found at [bvial.info/pytmod](https://bvial.info/pytmod)
+
 
 ## Installation
 
