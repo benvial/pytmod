@@ -15,6 +15,9 @@ import matplotlib.pyplot as plt
 import scipy.linalg as la
 from skimage.feature import peak_local_max
 import numpy as bk
+import random
+
+random.seed(0)
 
 
 def get_backend():
@@ -501,7 +504,6 @@ def _nonlinear_eigensolver(
             if len(guesses) > 0:
                 guesses = bk.stack(guesses).flatten()
         elif strategy == "random":
-            import random
 
             rand_re = bk.array([random.random() for i in range(N_grid[0] * N_grid[1])])
             rand_im = bk.array([random.random() for i in range(N_grid[0] * N_grid[1])])
