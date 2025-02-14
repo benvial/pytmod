@@ -5,11 +5,13 @@
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
 
+import random
+
+random.seed(0)
 import pytest
 import numpy as bk
 from pytmod.helpers import *
 
-bk.random.seed(1234)
 from pytmod import Material, Slab
 from pytmod.eig import get_residual
 import matplotlib

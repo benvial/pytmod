@@ -14,8 +14,6 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import scipy.linalg as la
 from skimage.feature import peak_local_max
-
-
 import numpy as bk
 
 
