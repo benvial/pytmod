@@ -5,30 +5,10 @@
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
 
-import os
-import shutil
-import subprocess
-import sys
-from os.path import join, splitext
-
+import warnings
 import datetime
-from dataclasses import asdict
 import pytmod as package
-from pybtex.plugin import register_plugin
-from pybtex.style.formatting.unsrt import Style as UnsrtStyle
-from pybtex.style.labels import BaseLabelStyle
 
-
-# # finished generated, so go back up a level
-# os.chdir("..")
-
-# # If extensions (or modules to document with autodoc) are in another directory,
-# # add these directories to sys.path here. If the directory is relative to the
-# # documentation root, use os.path.abspath to make it absolute, like shown here.
-# # sys.path.insert(0, os.path.abspath(join('..', 'pytmod')))
-# sys.path.insert(0, os.path.abspath(".."))
-
-# print sys.path
 
 # -- General configuration ------------------------------------------------
 
@@ -38,6 +18,7 @@ from pybtex.style.labels import BaseLabelStyle
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+# see https://shibuya.lepture.com/extensions/sphinx-copybutton/
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
@@ -45,23 +26,68 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
     "sphinx_gallery.gen_gallery",
     "autoapi.extension",
     "myst_parser",
     "sphinxcontrib.bibtex",
+    "sphinx_design",
+    "sphinx_tabs.tabs",
+    "sphinx_togglebutton",
+    "numpydoc",
 ]
 
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
+]
 
-# register_plugin("pybtex.style.formatting", "custombibstyle", CustomBibStyle)
 
 bibtex_bibfiles = ["_static/biblio.bib"]
 bibtex_default_style = "unsrt"
 # bibtex_reference_style = "label"
 
 
+# -- autoapi configuration ---------------------------------------------------
+
+autodoc_typehints = "signature"  # autoapi respects this
+
+autoapi_type = "python"
 autoapi_dirs = ["../pytmod"]
-autoapi_options = ["members", "undoc-members"]
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "imported-members",
+]
+autoapi_add_toctree_entry = False
+# autoapi_python_use_implicit_namespaces = True
+autoapi_keep_files = True
+# autoapi_generate_api_docs = False
+
+
+def skip_member(app, what, name, obj, skip, options):
+    # skip submodules
+    if what == "module":
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_member)
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -78,7 +104,7 @@ master_doc = "index"
 # General information about the project.
 project = "pytmod"
 
-copyright = f"{datetime.date.today().year}, Benjamin Vial"
+copyright = f"Copyright © {datetime.date.today().year}, Benjamin Vial"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -139,8 +165,12 @@ html_theme = "shibuya"
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {}
-
+html_theme_options = {
+    "github_url": "https://github.com/benvial/pytmod",
+    "light_logo": "_static/pytmod-name.svg",
+    "dark_logo": "_static/pytmod-name-dark.svg",
+    "accent_color": "blue",
+}
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
 
@@ -153,7 +183,7 @@ html_title = "pytmod"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/pytmod.svg"
+html_logo = "_static/pytmod-name.svg"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -314,6 +344,7 @@ sphinx_gallery_conf = {
     "thumbnail_size": (800, 800),
     "default_thumb_file": "./_static/pytmod.png",
     "show_memory": True,
+    "matplotlib_animations": (True, "html5"),
     # "binder": {
     #     "org": "phokaia",
     #     "repo": "phokaia.gitlab.io/emustack",
@@ -325,5 +356,10 @@ sphinx_gallery_conf = {
     # },
 }
 
-
-html_theme_options = {"github_url": "https://github.com/benvial/pytmod"}
+# Remove matplotlib agg warnings from generated doc when using plt.show
+warnings.filterwarnings(
+    "ignore",
+    category=UserWarning,
+    message="Matplotlib is currently using agg, which is a"
+    " non-GUI backend, so cannot show the figure.",
+)

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="./">
+<html lang="en" data-accent-color="blue" data-content_root="./">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Python Module Index - pytmod</title><link rel="shortcut icon" href="_static/favicon.ico"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><script>
@@ -8,31 +8,40 @@
   </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=10d1008b" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=bf552558" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=32b4838b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Georama:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+  rel="stylesheet">
 <style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
+  :root {
+    --sy-f-heading: 'Georama', var(--sy-f-sys), sans-serif;
+    --sy-f-mono: 'Atkinson Hyperlegible Mono';
+    --sy-f-sys: 'Instrument Sans';
+  }
 </style>
     
 
+
+    <script>
+      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
+    </script>
 
 </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
   <div class="sy-head-inner sy-container mx-auto">
     <a class="sy-head-brand" href="index.html">
-      <img class="light-logo" src="_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
-      <img class="dark-logo" src="_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="light-logo" src="_static/pytmod-name.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="dark-logo" src="_static/pytmod-name-dark.svg" alt="pytmod" height="28" loading="lazy" />
       <strong>pytmod</strong>
     </a>
     <div class="sy-head-nav" id="HeadNav">
@@ -75,30 +84,9 @@ data-aria-dark="Switch to auto color mode">
      <tr class="cap" id="cap-p"><td></td><td>
        <strong>p</strong></td><td></td></tr>
      <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
+       <td></td>
        <td>
        <a href="autoapi/pytmod/index.html#module-pytmod"><code class="xref">pytmod</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="autoapi/pytmod/eig/index.html#module-pytmod.eig"><code class="xref">pytmod.eig</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="autoapi/pytmod/helpers/index.html#module-pytmod.helpers"><code class="xref">pytmod.helpers</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="autoapi/pytmod/material/index.html#module-pytmod.material"><code class="xref">pytmod.material</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="autoapi/pytmod/slab/index.html#module-pytmod.slab"><code class="xref">pytmod.slab</code></a></td><td>
        <em></em></td></tr>
    </table>
 
@@ -109,7 +97,7 @@ data-aria-dark="Switch to auto color mode">
   </div><footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>2025, Benjamin Vial</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Benjamin Vial</p>
   
   <p>
     Made with
@@ -129,5 +117,12 @@ data-aria-dark="Switch to auto color mode">
       <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="_static/shibuya.js?v=55e26b35"></script></body>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="_static/shibuya.js?v=55e26b35"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script></body>
 </html>

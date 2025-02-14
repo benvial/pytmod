@@ -82,12 +82,14 @@ for i, Ln in enumerate([0.5, 2]):
         kns, ens = mat.eigensolve(omegas)
         slab = pm.Slab(mat, L)
         matrix_slab = slab.build_matrix(omegas, kns, ens)
-        Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+        Eis = slab.init_incident_field(omegas)
         Ei0 = 1
         Eis[mat.Nh] = Ei0
         rhs_slab = slab.build_rhs(omegas, Eis)
         solution = slab.solve(matrix_slab, rhs_slab)
-        C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+        Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(
+            solution, Eis, kns, ens
+        )
         rn = Er / Ei0
         tn = Et / Ei0
 
@@ -134,12 +136,13 @@ for i, Ln in enumerate([0.5, 8]):
     kns, ens = mat.eigensolve(omegas)
     slab = pm.Slab(mat, L)
     matrix_slab = slab.build_matrix(omegas, kns, ens)
-    Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+    Eis = slab.init_incident_field(omegas)
     Ei0 = 1
     Eis[mat.Nh] = Ei0
     rhs_slab = slab.build_rhs(omegas, Eis)
     solution = slab.solve(matrix_slab, rhs_slab)
-    C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+
+    Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
     rn = Er / Ei0
     tn = Et / Ei0
     for j, Nharmo_plot in enumerate([1, -1]):
@@ -188,12 +191,12 @@ for j, Ln in enumerate([0.5, 8]):
     kns, ens = mat.eigensolve(omegas)
     slab = pm.Slab(mat, L)
     matrix_slab = slab.build_matrix(omegas, kns, ens)
-    Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+    Eis = slab.init_incident_field(omegas)
     Ei0 = 1
     Eis[mat.Nh] = Ei0
     rhs_slab = slab.build_rhs(omegas, Eis)
     solution = slab.solve(matrix_slab, rhs_slab)
-    C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+    Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
     rn = Er / Ei0
     tn = Et / Ei0
     for i, Nharmo_plot in enumerate([1, -1, 2, -2]):

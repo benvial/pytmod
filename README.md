@@ -1,5 +1,6 @@
 
 
+<!-- start badges -->
 
 |  |  | |
 |-----------|-----------------|-----------------|
@@ -7,6 +8,7 @@
 | License | [![LICENSE](https://img.shields.io/badge/license-GPLv3-blue?color=aec2ff&logo=open-access&logoColor=aec2ff&style=for-the-badge)](https://github.com/benvial/pytmod/blob/main/LICENSE.txt) | |
 
 
+<!-- end badges -->
 
 ![](doc/_static/pytmod-small.png)
 

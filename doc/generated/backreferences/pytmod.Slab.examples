@@ -15,6 +15,48 @@ Examples using ``pytmod.Slab``
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Calculate the field in response to an incident plane wave.">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_plot_slab_field_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_plot_slab_field.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Electric field in a time-modulated slab</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_examples_plot_slab_field.py`
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Solve the slab nonlinear eigenproblem and plot the quasi normal modes">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_plot_slab_modes_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_plot_slab_modes.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Slab quasi normal modes</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_examples_plot_slab_modes.py`
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="A simple example.">
 
 .. only:: html

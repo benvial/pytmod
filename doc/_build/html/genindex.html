@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="./">
+<html lang="en" data-accent-color="blue" data-content_root="./">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Index - pytmod</title><link rel="shortcut icon" href="_static/favicon.ico"/><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" /><script>
@@ -8,28 +8,33 @@
   </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=10d1008b" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=bf552558" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=32b4838b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Georama:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+  rel="stylesheet">
 <style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
+  :root {
+    --sy-f-heading: 'Georama', var(--sy-f-sys), sans-serif;
+    --sy-f-mono: 'Atkinson Hyperlegible Mono';
+    --sy-f-sys: 'Instrument Sans';
+  }
 </style>
     </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
   <div class="sy-head-inner sy-container mx-auto">
     <a class="sy-head-brand" href="index.html">
-      <img class="light-logo" src="_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
-      <img class="dark-logo" src="_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="light-logo" src="_static/pytmod-name.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="dark-logo" src="_static/pytmod-name-dark.svg" alt="pytmod" height="28" loading="lazy" />
       <strong>pytmod</strong>
     </a>
     <div class="sy-head-nav" id="HeadNav">
@@ -64,8 +69,8 @@ data-aria-dark="Switch to auto color mode">
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#B"><strong>B</strong></a>
- | <a href="#D"><strong>D</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -77,30 +82,32 @@ data-aria-dark="Switch to auto color mode">
  | <a href="#T"><strong>T</strong></a>
  
 </div>
-<h2 id="B">B</h2>
+<h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.block">block() (in module pytmod.helpers)</a>
-</li>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.build_field_time">build_field_time() (in module pytmod.helpers)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.build_matrix">build_matrix() (pytmod.material.Material method)</a>
-
-      <ul>
-        <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.build_matrix">(pytmod.slab.Slab method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.build_rhs">build_rhs() (pytmod.slab.Slab method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.animate_field">animate_field() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
 
-<h2 id="D">D</h2>
+<h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.dimhandler">dimhandler() (in module pytmod.helpers)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.build_dmatrix_domega">build_dmatrix_domega() (pytmod.Material method)</a>
+
+      <ul>
+        <li><a href="autoapi/pytmod/index.html#pytmod.Slab.build_dmatrix_domega">(pytmod.Slab method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.build_matrix">build_matrix() (pytmod.Material method)</a>
+
+      <ul>
+        <li><a href="autoapi/pytmod/index.html#pytmod.Slab.build_matrix">(pytmod.Slab method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.build_rhs">build_rhs() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -108,21 +115,23 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.eigensolve">eigensolve() (pytmod.material.Material method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.eigensolve">eigensolve() (pytmod.Material method)</a>
+
+      <ul>
+        <li><a href="autoapi/pytmod/index.html#pytmod.Slab.eigensolve">(pytmod.Slab method)</a>
 </li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.eigenvalue_static">eigenvalue_static() (pytmod.slab.Slab method)</a>
-</li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.eps0">eps0 (in module pytmod.slab)</a>
+      </ul></li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.eigenvalue_static">eigenvalue_static() (pytmod.Slab method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.eps_fourier">eps_fourier (pytmod.material.Material property)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.eps_fourier">eps_fourier (pytmod.Material property)</a>
 </li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.eps_minus">eps_minus (pytmod.slab.Slab attribute)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.eps_minus">eps_minus (pytmod.Slab attribute)</a>
 </li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.eps_plus">eps_plus (pytmod.slab.Slab attribute)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.eps_plus">eps_plus (pytmod.Slab attribute)</a>
 </li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.extract_coefficients">extract_coefficients() (pytmod.slab.Slab method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.extract_coefficients">extract_coefficients() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -130,11 +139,11 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.fresnel">fresnel() (in module pytmod.helpers)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.freq2time">freq2time() (pytmod.Material method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.fresnel_static">fresnel_static() (pytmod.slab.Slab method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.fresnel_static">fresnel_static() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -142,7 +151,19 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.gamma">gamma() (pytmod.material.Material method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.get_deigenmodes_right_domega">get_deigenmodes_right_domega() (pytmod.Material method)</a>
+</li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.get_deigenvalues_domega">get_deigenvalues_domega() (pytmod.Material method)</a>
+</li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.get_eps_time">get_eps_time() (pytmod.Material method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.get_incident_field">get_incident_field() (pytmod.Slab method)</a>
+</li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.get_modes_normalization">get_modes_normalization() (pytmod.Material method)</a>
+</li>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.get_scattered_field">get_scattered_field() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -150,7 +171,11 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.index_shift">index_shift() (pytmod.material.Material method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.index_shift">index_shift() (pytmod.Material method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.init_incident_field">init_incident_field() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -158,13 +183,15 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material">Material (class in pytmod.material)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material">Material (class in pytmod)</a>
 </li>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.material">material (pytmod.slab.Slab attribute)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.material">material (pytmod.Slab attribute)</a>
 </li>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.modulation_frequency">modulation_frequency (pytmod.material.Material attribute)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.modulation_frequency">modulation_frequency (pytmod.Material attribute)</a>
 </li>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.modulation_period">modulation_period (pytmod.material.Material property)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.modulation_period">modulation_period (pytmod.Material property)</a>
 </li>
       <li>
     module
@@ -172,40 +199,22 @@ data-aria-dark="Switch to auto color mode">
       <ul>
         <li><a href="autoapi/pytmod/index.html#module-pytmod">pytmod</a>
 </li>
-        <li><a href="autoapi/pytmod/eig/index.html#module-pytmod.eig">pytmod.eig</a>
-</li>
-        <li><a href="autoapi/pytmod/helpers/index.html#module-pytmod.helpers">pytmod.helpers</a>
-</li>
-        <li><a href="autoapi/pytmod/material/index.html#module-pytmod.material">pytmod.material</a>
-</li>
-        <li><a href="autoapi/pytmod/slab/index.html#module-pytmod.slab">pytmod.slab</a>
-</li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.move_first_axes_to_end">move_first_axes_to_end() (in module pytmod.helpers)</a>
-</li>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.move_first_two_axes_to_end">move_first_two_axes_to_end() (in module pytmod.helpers)</a>
-</li>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.move_last_axes_to_beginning">move_last_axes_to_beginning() (in module pytmod.helpers)</a>
-</li>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.move_last_two_axes_to_beginning">move_last_two_axes_to_beginning() (in module pytmod.helpers)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.Nh">Nh (pytmod.material.Material property)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.Nh">Nh (pytmod.Material property)</a>
 </li>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.nh">nh (pytmod.material.Material property)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.nh">nh (pytmod.Material property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/eig/index.html#pytmod.eig.nonlinear_eigensolver">nonlinear_eigensolver() (in module pytmod.eig)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.normalize">normalize() (pytmod.Material method)</a>
 </li>
-      <li><a href="autoapi/pytmod/material/index.html#pytmod.material.Material.Npad">Npad (pytmod.material.Material property)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.Npad">Npad (pytmod.Material property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -213,43 +222,15 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/helpers/index.html#pytmod.helpers.pad">pad() (in module pytmod.helpers)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Material.pad">pad() (pytmod.Material method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pytmod
 
       <ul>
         <li><a href="autoapi/pytmod/index.html#module-pytmod">module</a>
-</li>
-      </ul></li>
-      <li>
-    pytmod.eig
-
-      <ul>
-        <li><a href="autoapi/pytmod/eig/index.html#module-pytmod.eig">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    pytmod.helpers
-
-      <ul>
-        <li><a href="autoapi/pytmod/helpers/index.html#module-pytmod.helpers">module</a>
-</li>
-      </ul></li>
-      <li>
-    pytmod.material
-
-      <ul>
-        <li><a href="autoapi/pytmod/material/index.html#module-pytmod.material">module</a>
-</li>
-      </ul></li>
-      <li>
-    pytmod.slab
-
-      <ul>
-        <li><a href="autoapi/pytmod/slab/index.html#module-pytmod.slab">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -258,11 +239,11 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab">Slab (class in pytmod.slab)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab">Slab (class in pytmod)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.solve">solve() (pytmod.slab.Slab method)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.solve">solve() (pytmod.Slab method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -270,7 +251,7 @@ data-aria-dark="Switch to auto color mode">
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/pytmod/slab/index.html#pytmod.slab.Slab.thickness">thickness (pytmod.slab.Slab attribute)</a>
+      <li><a href="autoapi/pytmod/index.html#pytmod.Slab.thickness">thickness (pytmod.Slab attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -283,7 +264,7 @@ data-aria-dark="Switch to auto color mode">
   </div><footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>2025, Benjamin Vial</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Benjamin Vial</p>
   
   <p>
     Made with
@@ -303,5 +284,12 @@ data-aria-dark="Switch to auto color mode">
       <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="_static/shibuya.js?v=55e26b35"></script></body>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="_static/shibuya.js?v=55e26b35"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script></body>
 </html>

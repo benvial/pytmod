@@ -9,6 +9,7 @@
 import pytest
 import numpy as bk
 from pytmod import Material
+from pytmod.helpers import dot, move_last_two_axes_to_beginning
 
 
 def test_material_initialization():
@@ -51,12 +52,87 @@ def test_build_matrix():
 
 def test_eigensolve():
     eps_fourier = [0.5, 1.0, 0.5]
-    modulation_frequency = 2.0
+    modulation_frequency = 1.2
     material = Material(eps_fourier, modulation_frequency)
-    omegas = bk.array([1.0, 2.0, 3.0])
+    omegas = bk.linspace(1, 10, 10)
     eigenvalues, modes = material.eigensolve(omegas)
     assert eigenvalues.shape == (material.nh, len(omegas))
     assert modes.shape == (material.nh, material.nh, len(omegas))
+    eigenvalues, modes_right, modes_left = material.eigensolve(omegas, left=True)
+    modes_right, modes_left = material.normalize(modes_right, modes_left)
+
+    for i in range(material.nh):
+        for j in range(material.nh):
+            test = dot(modes_left[:, i], modes_right[:, j])
+            val = 1 if i == j else 0
+            assert bk.allclose(test, val)
+
+
+def test_matrix_derivative():
+
+    eps_fourier = [0.5, 1.0, 0.5]
+    modulation_frequency = 1.2
+    material = Material(eps_fourier, modulation_frequency)
+    omegas = bk.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    matrix = material.build_matrix(omegas)
+    delta_omega = 1e-6
+    delta_matrix = material.build_matrix(omegas + delta_omega)
+
+    dmatrix_fd = (delta_matrix - matrix) / delta_omega
+
+    dmatrix = material.build_dmatrix_domega(omegas)
+
+    assert bk.allclose(dmatrix_fd, dmatrix)
+
+
+def test_deigenpairs_domega():
+    material = Material([0.5, 1.0, 0.5], 1)
+
+    omega0 = 0.65 - 0.32j
+    omega1 = 0.92 - 0.019j
+    nc = 11
+    omegasr = bk.linspace(omega0.real, omega1.real, nc)
+    omegasi = bk.linspace(omega0.imag, omega1.imag, nc)
+    re, im = bk.meshgrid(omegasr, omegasi)
+    omegas = re + 1j * im
+
+    dmatrix = material.build_dmatrix_domega(omegas)
+    eigenvalues, modes_right, modes_left = material.eigensolve(
+        omegas, left=True, normalize=True
+    )
+    for i in range(material.nh):
+        for j in range(material.nh):
+            test = dot(modes_right[:, i], modes_left[:, j])
+            val = 1 if i == j else 0
+            assert bk.allclose(test, val)
+
+    deigenvalues_nomatrix = material.get_deigenvalues_domega(
+        omegas,
+        eigenvalues,
+        modes_right,
+        modes_left,
+    )
+    deigenvalues = material.get_deigenvalues_domega(
+        omegas, eigenvalues, modes_right, modes_left, dmatrix
+    )
+    assert bk.allclose(deigenvalues_nomatrix, deigenvalues)
+    delta_omega = 1e-6
+    delta_matrix = material.build_matrix(omegas + delta_omega)
+    delta_eigenvalues, delta_vr, delta_vl = material.eigensolve(
+        omegas + delta_omega, left=True, normalize=True
+    )
+
+    deigenvalues_fd = (delta_eigenvalues - eigenvalues) / delta_omega
+    dvr_fd = (delta_vr - modes_right) / delta_omega
+    dvr = material.get_deigenmodes_right_domega(
+        omegas, eigenvalues, modes_right, modes_left, dmatrix
+    )
+    dvr_nomatrix = material.get_deigenmodes_right_domega(
+        omegas, eigenvalues, modes_right, modes_left
+    )
+    assert bk.allclose(dvr_nomatrix, dvr)
+    assert bk.allclose(deigenvalues_fd, deigenvalues)
+    assert bk.allclose(dvr_fd, dvr, atol=1e-6)
 
 
 def test_gamma():
@@ -65,7 +141,7 @@ def test_gamma():
     material = Material(eps_fourier, modulation_frequency)
     m = 1
     omega = 3.0
-    gamma_value = material.gamma(m, omega)
+    gamma_value = material._gamma(m, omega)
     expected_value = (omega - material.modulation_frequency * m) ** 2
     assert gamma_value == expected_value
 

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="blue" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Slab quasi normal modes - pytmod</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Slab" href="plot_slab.html" /><link rel="prev" title="Time modulated material" href="plot_material.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=32b4838b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Georama:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+  rel="stylesheet">
+<style>
+  :root {
+    --sy-f-heading: 'Georama', var(--sy-f-sys), sans-serif;
+    --sy-f-mono: 'Atkinson Hyperlegible Mono';
+    --sy-f-sys: 'Instrument Sans';
+  }
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Slab quasi normal modes"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/pytmod-name.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/pytmod-name-dark.svg" alt="pytmod" height="28" loading="lazy" />
+      <strong>pytmod</strong>
+    </a>
+    <div class="sy-head-nav" id="HeadNav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/benvial/pytmod" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="HeadNav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_slab_field.html">Electric field in a time-modulated slab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_material.html">Time modulated material</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Slab quasi normal modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_slab.html">Slab</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/pytmod/index.html">pytmod</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../biblio.html">Bibliography</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">pytmod</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Examples</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Slab quasi normal modes</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-examples-plot-slab-modes-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="slab-quasi-normal-modes">
+<span id="sphx-glr-examples-plot-slab-modes-py"></span><h1>Slab quasi normal modes<a class="headerlink" href="#slab-quasi-normal-modes" title="Link to this heading">¶</a></h1>
+<p>Solve the slab nonlinear eigenproblem and plot the quasi normal modes</p>
+<p>Imports and parameters</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">pytmod</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bk</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+</span><span data-line="7"><span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9">
+</span><span data-line="10"><span class="n">Omega</span> <span class="o">=</span> <span class="mf">1.3711034416945151</span>
+</span><span data-line="11"><span class="n">Omega</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="12"><span class="n">Npad</span> <span class="o">=</span> <span class="mi">11</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">eps0</span> <span class="o">=</span> <span class="mf">5.25</span>
+</span><span data-line="15"><span class="n">deps</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="n">eps_fourier</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="18">    <span class="o">-</span><span class="n">deps</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">),</span>
+</span><span data-line="19">    <span class="n">eps0</span><span class="p">,</span>
+</span><span data-line="20">    <span class="n">deps</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">),</span>
+</span><span data-line="21"><span class="p">]</span>
+</span><span data-line="22"><span class="c1"># eps_fourier = [eps0]</span>
+</span><span data-line="23">
+</span><span data-line="24"><span class="n">L</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="25"><span class="n">mat</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="n">eps_fourier</span><span class="p">,</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">Npad</span><span class="p">)</span>
+</span><span data-line="26"><span class="n">slab</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Slab</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="n">omega0</span> <span class="o">=</span> <span class="mf">0.65</span> <span class="o">-</span> <span class="mf">0.32</span><span class="n">j</span>
+</span><span data-line="29"><span class="n">omega1</span> <span class="o">=</span> <span class="mf">0.92</span> <span class="o">-</span> <span class="mf">0.019</span><span class="n">j</span>
+</span><span data-line="30">
+</span><span data-line="31"><span class="n">nc</span> <span class="o">=</span> <span class="mi">101</span>
+</span><span data-line="32">
+</span><span data-line="33"><span class="n">omegasr</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">omega0</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">omega1</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
+</span><span data-line="34"><span class="n">omegasi</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">omega0</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">omega1</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
+</span><span data-line="35">
+</span><span data-line="36"><span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">omegasr</span><span class="p">,</span> <span class="n">omegasi</span><span class="p">)</span>
+</span><span data-line="37"><span class="n">omegas</span> <span class="o">=</span> <span class="n">re</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">im</span>
+</span><span data-line="38">
+</span><span data-line="39"><span class="c1"># for Omega in bk.linspace(0.1, 1.7, 51):</span>
+</span><span data-line="40"><span class="c1">#     Nh = mat.Nh</span>
+</span><span data-line="41"><span class="c1">#     Nh = 50</span>
+</span><span data-line="42"><span class="c1">#     M = 50</span>
+</span><span data-line="43"><span class="c1">#     ms = bk.arange(-M, M+1)</span>
+</span><span data-line="44"><span class="c1">#     eigenvalue_static = slab.eigenvalue_static(ms)</span>
+</span><span data-line="45"><span class="c1">#     static_evs = []</span>
+</span><span data-line="46"><span class="c1">#     for n in range(-Nh, Nh + 1):</span>
+</span><span data-line="47"><span class="c1">#         static_evs.append(eigenvalue_static-n*Omega)</span>
+</span><span data-line="48"><span class="c1">#     static_evs = bk.array(static_evs)</span>
+</span><span data-line="49"><span class="c1">#     plt.plot(static_evs.real, static_evs.imag, &quot;.g&quot;)</span>
+</span><span data-line="50"><span class="c1">#     plt.plot(eigenvalue_static.real, eigenvalue_static.imag, &quot;or&quot;)</span>
+</span><span data-line="51"><span class="c1">#     plt.axvline(Omega)</span>
+</span><span data-line="52">
+</span><span data-line="53"><span class="c1">#     plt.xlim(omegasr[0], omegasr[-1])</span>
+</span><span data-line="54"><span class="c1">#     plt.ylim(omegasi[0], omegasi[-1])</span>
+</span><span data-line="55"><span class="c1">#     plt.xlabel(r&quot;Re $\omega/\Omega$&quot;)</span>
+</span><span data-line="56"><span class="c1">#     plt.ylabel(r&quot;Im $\omega/\Omega$&quot;)</span>
+</span><span data-line="57"><span class="c1">#     plt.pause(0.1)</span>
+</span><span data-line="58"><span class="c1">#     plt.clf()</span>
+</span><span data-line="59">
+</span><span data-line="60">
+</span><span data-line="61"><span class="c1"># sys.exit(0)</span>
+</span><span data-line="62">
+</span><span data-line="63">
+</span><span data-line="64"><span class="n">evs</span><span class="p">,</span> <span class="n">modes</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span>
+</span><span data-line="65">    <span class="n">omega0</span><span class="p">,</span>
+</span><span data-line="66">    <span class="n">omega1</span><span class="p">,</span>
+</span><span data-line="67">    <span class="n">peak_ref</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+</span><span data-line="68">    <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="69">    <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+</span><span data-line="70">    <span class="n">plot_solver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="71">    <span class="c1"># peaks_estimate=&quot;det&quot;,</span>
+</span><span data-line="72"><span class="p">)</span>
+</span><span data-line="73">
+</span><span data-line="74"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eigenvalues:&quot;</span><span class="p">)</span>
+</span><span data-line="75"><span class="nb">print</span><span class="p">(</span><span class="n">evs</span><span class="p">)</span>
+</span><span data-line="76"><span class="n">evs</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">evs</span><span class="p">)</span>
+</span><span data-line="77"><span class="n">Nevs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">evs</span><span class="p">)</span>
+</span><span data-line="78">
+</span><span data-line="79"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</span><span data-line="80">
+</span><span data-line="81">
+</span><span data-line="82"><span class="n">kns</span><span class="p">,</span> <span class="n">ens</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
+</span><span data-line="83"><span class="n">matrix_slab_c</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_matrix</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="84"><span class="n">matrix_slab_c</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">matrix_slab_c</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span data-line="85">
+</span><span data-line="86"><span class="n">D</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">matrix_slab_c</span><span class="p">)</span>
+</span><span data-line="87"><span class="c1"># D = bk.min(bk.abs(bk.linalg.eigvals(matrix_slab_c)), axis=-1)</span>
+</span><span data-line="88">
+</span><span data-line="89"><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">omegasr</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">omegasi</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">bk</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">D</span><span class="p">)),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">)</span>
+</span><span data-line="90"><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</span><span data-line="91"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;det $M(\omega)$&quot;</span><span class="p">)</span>
+</span><span data-line="92"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span data-line="93">    <span class="n">eigenvalue_static</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">eigenvalue_static</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span><span data-line="94">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eigenvalue_static</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">eigenvalue_static</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="s2">&quot;xg&quot;</span><span class="p">)</span>
+</span><span data-line="95">
+</span><span data-line="96">
+</span><span data-line="97"><span class="k">if</span> <span class="n">Nevs</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="98">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">evs</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">evs</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="s2">&quot;+w&quot;</span><span class="p">)</span>
+</span><span data-line="99"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">omegasr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">omegasr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">)</span>
+</span><span data-line="100"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">omegasi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">omegasi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">)</span>
+</span><span data-line="101"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Re $\omega/\Omega$&quot;</span><span class="p">)</span>
+</span><span data-line="102"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Im $\omega/\Omega$&quot;</span><span class="p">)</span>
+</span><span data-line="103"><span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span data-line="104">
+</span><span data-line="105"><span class="n">Nh</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">Nh</span>
+</span><span data-line="106"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+</span><span data-line="107">    <span class="n">eigenvalue_static</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">eigenvalue_static</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span><span data-line="108">    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">Nh</span><span class="p">,</span> <span class="n">Nh</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span data-line="109">        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+</span><span data-line="110">            <span class="n">eigenvalue_static</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">Omega</span> <span class="o">-</span> <span class="n">n</span><span class="p">,</span> <span class="n">eigenvalue_static</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">Omega</span><span class="p">,</span> <span class="s2">&quot;xg&quot;</span>
+</span><span data-line="111">        <span class="p">)</span>
+</span><span data-line="112">
+</span><span data-line="113">
+</span><span data-line="114"><span class="k">if</span> <span class="n">Nevs</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="115">    <span class="n">kns_eig</span><span class="p">,</span> <span class="n">ens_eig</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">evs</span><span class="p">)</span>
+</span><span data-line="116">    <span class="n">matrix_slab_eig</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_matrix</span><span class="p">(</span><span class="n">evs</span><span class="p">,</span> <span class="n">kns_eig</span><span class="p">,</span> <span class="n">ens_eig</span><span class="p">)</span>
+</span><span data-line="117">    <span class="n">matrix_slab_eig</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">matrix_slab_eig</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span data-line="118">    <span class="n">Deig</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">matrix_slab_eig</span><span class="p">)</span>
+</span><span data-line="119">
+</span><span data-line="120">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;det(eigenvalues):&quot;</span><span class="p">)</span>
+</span><span data-line="121">    <span class="nb">print</span><span class="p">(</span><span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Deig</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<p>Get the field</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">T</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">modulation_period</span>
+</span><span data-line="2"><span class="n">t</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">T</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+</span><span data-line="3"><span class="n">Lhom</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">L</span>
+</span><span data-line="4"><span class="n">x</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">Lhom</span><span class="p">,</span> <span class="n">Lhom</span> <span class="o">+</span> <span class="n">L</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="n">qnms</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="7"><span class="k">for</span> <span class="n">imode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nevs</span><span class="p">):</span>
+</span><span data-line="8">    <span class="n">omega</span> <span class="o">=</span> <span class="n">evs</span><span class="p">[</span><span class="n">imode</span><span class="p">]</span>
+</span><span data-line="9">    <span class="n">solution</span> <span class="o">=</span> <span class="n">modes</span><span class="p">[:,</span> <span class="n">imode</span><span class="p">]</span>
+</span><span data-line="10">    <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+</span><span data-line="11">    <span class="n">Eis</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">init_incident_field</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+</span><span data-line="12">    <span class="n">psi</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="13">    <span class="n">E</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">get_scattered_field</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="14">    <span class="n">qnms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Plot QNMs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</span><span data-line="2"><span class="k">for</span> <span class="n">imode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nevs</span><span class="p">):</span>
+</span><span data-line="3">    <span class="n">mode</span> <span class="o">=</span> <span class="n">qnms</span><span class="p">[</span><span class="n">imode</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+</span><span data-line="4">    <span class="n">mode</span> <span class="o">/=</span> <span class="n">bk</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span>
+</span><span data-line="5">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">imode</span> <span class="o">+</span> <span class="n">mode</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#949494&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="7"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#949494&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="8"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x/L$&quot;</span><span class="p">)</span>
+</span><span data-line="9"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$E(t=0)$&quot;</span><span class="p">)</span>
+</span><span data-line="10"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="11"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>Animate the field</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">anim</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">animate_field</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">qnms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></pre></div>
+</div>
+<p>Space time map</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</span><span data-line="2"><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">t</span> <span class="o">/</span> <span class="n">T</span><span class="p">,</span> <span class="n">bk</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">qnms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+</span><span data-line="3"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#949494&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#949494&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="5"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$x/L$&quot;</span><span class="p">)</span>
+</span><span data-line="7"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$t/T$&quot;</span><span class="p">)</span>
+</span><span data-line="8"><span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</span><span data-line="9"><span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Re $E$&quot;</span><span class="p">)</span>
+</span><span data-line="10"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="11"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p><strong>Estimated memory usage:</strong>  0 MB</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-plot-slab-modes-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ae49b6d84d5e693bb4a518d7058b4e82/plot_slab_modes.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_slab_modes.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/f23fe9e4e2896a5894211d4fa9c002a5/plot_slab_modes.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_slab_modes.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/0275c942ca3d9dd67bb4263f849d1297/plot_slab_modes.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_slab_modes.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="plot_material.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Time modulated material</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="plot_slab.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Slab</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Benjamin Vial</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/benvial/pytmod" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../_static/shibuya.js?v=55e26b35"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script></body>
+</html>

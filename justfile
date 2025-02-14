@@ -33,6 +33,10 @@ clean:
 doc:
     cd doc && make html
 
+# Build documentation (no examples)
+doc-noplot:
+    cd doc && make html-noplot
+
 # Build documentation and watch
 autodoc:
 	cd doc && just autobuild
@@ -67,14 +71,14 @@ dup:
 
 # Clean test coverage reports
 cleantest:
-	@rm -rf .coverage* htmlcov coverage.xml
+	@rm -rf .coverage* htmlcov coverage.xml coverage.json
 
 
 
 # Run the test suite
 test:
 	pytest tests \
-	--cov={{PROJECT_NAME}}/ --cov-report term --cov-report html --cov-report xml  \
+	--cov={{PROJECT_NAME}}/ --cov-report term --cov-report html --cov-report xml --cov-report json \
 	--durations=0
 
 #  Update header

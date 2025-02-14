@@ -2,7 +2,6 @@
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "pytmod"
 version = "0.0.1"
@@ -35,6 +34,7 @@ dependencies = [
   "matplotlib >= 3.7.0",
   "scikit-image >= 0.19.3",
   # "numdiff",
+
 ]
 
 [project.optional-dependencies]
@@ -53,11 +53,16 @@ doc = [
   "memory_profiler",
   "sphinx-autoapi",
   "myst-parser",
+  "sphinx_design",
   "sphinxcontrib-bibtex",
+  "sphinxcontrib-video",
+  "pandas",
+  "linkify-it-py",
+  "sphinx-tabs",
+  "sphinx-togglebutton",
+  "numpydoc",
 ]
-dev = [
-  "toml",
-]
+dev = ["toml"]
 
 [project.urls]
 Homepage = "https://bvial.info/pytmod"

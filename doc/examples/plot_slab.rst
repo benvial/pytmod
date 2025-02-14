@@ -59,12 +59,6 @@ Check results from :cite:t:`zurita-sanchez2009`
 
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Figure 3
@@ -89,17 +83,6 @@ Figure 3
     fig3.supxlabel(r"normalized wave vector $kc/(\Omega\sqrt{\epsilon_0)}$")
     fig3.supylabel(r"normalized frequency $\omega/\Omega$")
     fig3.tight_layout()
-
-
-
-
-.. image-sg:: /examples/images/sphx_glr_plot_slab_001.png
-   :alt: $\Delta \epsilon = 0.085$, $\Delta \epsilon = 0.85$, $\Delta \epsilon = 3.4$
-   :srcset: /examples/images/sphx_glr_plot_slab_001.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-68
@@ -127,12 +110,12 @@ Figures 4 and 5
             kns, ens = mat.eigensolve(omegas)
             slab = pm.Slab(mat, L)
             matrix_slab = slab.build_matrix(omegas, kns, ens)
-            Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+            Eis = slab.init_incident_field(omegas)
             Ei0 = 1
             Eis[mat.Nh] = Ei0
             rhs_slab = slab.build_rhs(omegas, Eis)
             solution = slab.solve(matrix_slab, rhs_slab)
-            C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+            Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
             rn = Er / Ei0
             tn = Et / Ei0
 
@@ -164,34 +147,11 @@ Figures 4 and 5
 
 
 
-
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_002.png
-         :alt: $L_N = 0.5, $n=$0$, $L_N = 0.5, $n=$0$, $L_N = 2, $n=$0$, $L_N = 2, $n=$0$
-         :srcset: /examples/images/sphx_glr_plot_slab_002.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_003.png
-         :alt: $L_N = 0.5, $n=$0$, $L_N = 0.5, $n=$0$, $L_N = 2, $n=$0$, $L_N = 2, $n=$0$
-         :srcset: /examples/images/sphx_glr_plot_slab_003.png
-         :class: sphx-glr-multi-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 122-123
 
 Figures 6 and 7
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-176
+.. GENERATED FROM PYTHON SOURCE LINES 123-177
 
 .. code-block:: Python
 
@@ -209,12 +169,13 @@ Figures 6 and 7
         kns, ens = mat.eigensolve(omegas)
         slab = pm.Slab(mat, L)
         matrix_slab = slab.build_matrix(omegas, kns, ens)
-        Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+        Eis = slab.init_incident_field(omegas)
         Ei0 = 1
         Eis[mat.Nh] = Ei0
         rhs_slab = slab.build_rhs(omegas, Eis)
         solution = slab.solve(matrix_slab, rhs_slab)
-        C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+    
+        Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
         rn = Er / Ei0
         tn = Et / Ei0
         for j, Nharmo_plot in enumerate([1, -1]):
@@ -249,34 +210,11 @@ Figures 6 and 7
     fig7.tight_layout()
 
 
-
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_004.png
-         :alt: $L_N = 0.5, $n=$1$, $L_N = 0.5, $n=$-1$, $L_N = 8, $n=$1$, $L_N = 8, $n=$-1$
-         :srcset: /examples/images/sphx_glr_plot_slab_004.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_005.png
-         :alt: $L_N = 0.5, $n=$1$, $L_N = 0.5, $n=$-1$, $L_N = 8, $n=$1$, $L_N = 8, $n=$-1$
-         :srcset: /examples/images/sphx_glr_plot_slab_005.png
-         :class: sphx-glr-multi-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 177-178
+.. GENERATED FROM PYTHON SOURCE LINES 178-179
 
 Figures 8 and 9
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-230
+.. GENERATED FROM PYTHON SOURCE LINES 179-231
 
 .. code-block:: Python
 
@@ -293,12 +231,12 @@ Figures 8 and 9
         kns, ens = mat.eigensolve(omegas)
         slab = pm.Slab(mat, L)
         matrix_slab = slab.build_matrix(omegas, kns, ens)
-        Eis = bk.zeros((slab.material.nh,) + omegas.shape, dtype=bk.complex128)
+        Eis = slab.init_incident_field(omegas)
         Ei0 = 1
         Eis[mat.Nh] = Ei0
         rhs_slab = slab.build_rhs(omegas, Eis)
         solution = slab.solve(matrix_slab, rhs_slab)
-        C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
+        Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
         rn = Er / Ei0
         tn = Et / Ei0
         for i, Nharmo_plot in enumerate([1, -1, 2, -2]):
@@ -333,35 +271,7 @@ Figures 8 and 9
     fig8.tight_layout()
     fig9.tight_layout()
 
-
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_006.png
-         :alt: $L_N = 0.5, n = 1$, $L_N = 8, n = 1$, $L_N = 0.5, n = -1$, $L_N = 8, n = -1$, $L_N = 0.5, n = 2$, $L_N = 8, n = 2$, $L_N = 0.5, n = -2$, $L_N = 8, n = -2$
-         :srcset: /examples/images/sphx_glr_plot_slab_006.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /examples/images/sphx_glr_plot_slab_007.png
-         :alt: $L_N = 0.5, n = 1$, $L_N = 8, n = 1$, $L_N = 0.5, n = -1$, $L_N = 8, n = -1$, $L_N = 0.5, n = 2$, $L_N = 8, n = 2$, $L_N = 0.5, n = -2$, $L_N = 8, n = -2$
-         :srcset: /examples/images/sphx_glr_plot_slab_007.png
-         :class: sphx-glr-multi-img
-
-
-
-
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 3.468 seconds)
-
-**Estimated memory usage:**  264 MB
+**Estimated memory usage:**  0 MB
 
 
 .. _sphx_glr_download_examples_plot_slab.py:

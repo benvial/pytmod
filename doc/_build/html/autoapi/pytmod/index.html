@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="../../">
+<html lang="en" data-accent-color="blue" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pytmod - pytmod</title><link rel="shortcut icon" href="../../_static/favicon.ico"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="pytmod.eig" href="eig/index.html" /><link rel="prev" title="API Reference" href="../index.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pytmod - pytmod</title><link rel="shortcut icon" href="../../_static/favicon.ico"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Bibliography" href="../../biblio.html" /><link rel="prev" title="Slab" href="../../examples/plot_slab.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=10d1008b" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=bf552558" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=32b4838b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Georama:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+  rel="stylesheet">
 <style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
+  :root {
+    --sy-f-heading: 'Georama', var(--sy-f-sys), sans-serif;
+    --sy-f-mono: 'Atkinson Hyperlegible Mono';
+    --sy-f-sys: 'Instrument Sans';
+  }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="pytmod"/>
 <meta name="twitter:card" content="summary"/>
@@ -30,8 +35,8 @@
   <div class="sy-head-blur"></div>
   <div class="sy-head-inner sy-container mx-auto">
     <a class="sy-head-brand" href="../../index.html">
-      <img class="light-logo" src="../../_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
-      <img class="dark-logo" src="../../_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="light-logo" src="../../_static/pytmod-name.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="dark-logo" src="../../_static/pytmod-name-dark.svg" alt="pytmod" height="28" loading="lazy" />
       <strong>pytmod</strong>
     </a>
     <div class="sy-head-nav" id="HeadNav">
@@ -63,23 +68,27 @@ data-aria-dark="Switch to auto color mode">
   <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Getting started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Examples</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/plot_slab_field.html">Electric field in a time-modulated slab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/plot_material.html">Time modulated material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/plot_slab_modes.html">Slab quasi normal modes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../examples/plot_slab.html">Slab</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pytmod</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">References</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../biblio.html">Bibliography</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pytmod</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="eig/index.html">pytmod.eig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="helpers/index.html">pytmod.helpers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="material/index.html">pytmod.material</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slab/index.html">pytmod.slab</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -92,7 +101,49 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#package-contents">Package Contents</a><ul>
+<li><a class="reference internal" href="#pytmod.Material"><code class="docutils literal notranslate"><span class="pre">Material</span></code></a><ul>
+<li><a class="reference internal" href="#pytmod.Material.modulation_frequency"><code class="docutils literal notranslate">modulation_frequency</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.pad"><code class="docutils literal notranslate">pad()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.eps_fourier"><code class="docutils literal notranslate">eps_fourier</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.Npad"><code class="docutils literal notranslate">Npad</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.modulation_period"><code class="docutils literal notranslate">modulation_period</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.nh"><code class="docutils literal notranslate">nh</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.Nh"><code class="docutils literal notranslate">Nh</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.index_shift"><code class="docutils literal notranslate">index_shift()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.build_matrix"><code class="docutils literal notranslate">build_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.build_dmatrix_domega"><code class="docutils literal notranslate">build_dmatrix_domega()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.eigensolve"><code class="docutils literal notranslate">eigensolve()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.get_modes_normalization"><code class="docutils literal notranslate">get_modes_normalization()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.normalize"><code class="docutils literal notranslate">normalize()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.get_deigenvalues_domega"><code class="docutils literal notranslate">get_deigenvalues_domega()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.get_deigenmodes_right_domega"><code class="docutils literal notranslate">get_deigenmodes_right_domega()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.freq2time"><code class="docutils literal notranslate">freq2time()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Material.get_eps_time"><code class="docutils literal notranslate">get_eps_time()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pytmod.Slab"><code class="docutils literal notranslate"><span class="pre">Slab</span></code></a><ul>
+<li><a class="reference internal" href="#pytmod.Slab.material"><code class="docutils literal notranslate">material</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.thickness"><code class="docutils literal notranslate">thickness</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.eps_plus"><code class="docutils literal notranslate">eps_plus</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.eps_minus"><code class="docutils literal notranslate">eps_minus</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.build_matrix"><code class="docutils literal notranslate">build_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.build_dmatrix_domega"><code class="docutils literal notranslate">build_dmatrix_domega()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.build_rhs"><code class="docutils literal notranslate">build_rhs()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.solve"><code class="docutils literal notranslate">solve()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.extract_coefficients"><code class="docutils literal notranslate">extract_coefficients()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.fresnel_static"><code class="docutils literal notranslate">fresnel_static()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.eigenvalue_static"><code class="docutils literal notranslate">eigenvalue_static()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.eigensolve"><code class="docutils literal notranslate">eigensolve()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.init_incident_field"><code class="docutils literal notranslate">init_incident_field()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.get_incident_field"><code class="docutils literal notranslate">get_incident_field()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.get_scattered_field"><code class="docutils literal notranslate">get_scattered_field()</span></code></a></li>
+<li><a class="reference internal" href="#pytmod.Slab.animate_field"><code class="docutils literal notranslate">animate_field()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
@@ -120,16 +171,722 @@ data-aria-dark="Switch to auto color mode">
         <article class="yue" role="main">
           <section id="module-pytmod">
 <span id="pytmod"></span><h1>pytmod<a class="headerlink" href="#module-pytmod" title="Link to this heading">¶</a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="eig/index.html">pytmod.eig</a></li>
-<li class="toctree-l1"><a class="reference internal" href="helpers/index.html">pytmod.helpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="material/index.html">pytmod.material</a></li>
-<li class="toctree-l1"><a class="reference internal" href="slab/index.html">pytmod.slab</a></li>
-</ul>
+<p>This module implements the pytmod API.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytmod.Material" title="pytmod.Material"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Material</span></code></a></p></td>
+<td><p>Material object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytmod.Slab" title="pytmod.Slab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Slab</span></code></a></p></td>
+<td><p>Slab object</p></td>
+</tr>
+</tbody>
+</table>
 </div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pytmod.Material">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytmod.</span></span><span class="sig-name descname"><span class="pre">Material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps_fourier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Npad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material" title="Link to this definition">¶</a></dt>
+<dd><p>Material object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eps_fourier</strong><span class="classifier">array_like</span></dt><dd><p>The Fourier coefficients of the dielectric function</p>
+</dd>
+<dt><strong>modulation_frequency</strong><span class="classifier">float</span></dt><dd><p>The modulation frequency of the dielectric function</p>
+</dd>
+<dt><strong>Npad</strong><span class="classifier">int, optional</span></dt><dd><p>The number of components to pad the dielectric function with</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>ValueError</dt><dd><p>If the length of <cite>eps_fourier</cite> is even</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pytmod.Material.modulation_frequency">
+<span class="sig-name descname"><span class="pre">modulation_frequency</span></span><a class="headerlink" href="#pytmod.Material.modulation_frequency" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.pad">
+<span class="sig-name descname"><span class="pre">pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.pad" title="Link to this definition">¶</a></dt>
+<dd><p>Pad an array with zeros if <cite>Npad</cite> is positive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The array to pad</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">array_like</span></dt><dd><p>The padded array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pytmod.Material.eps_fourier">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eps_fourier</span></span><a class="headerlink" href="#pytmod.Material.eps_fourier" title="Link to this definition">¶</a></dt>
+<dd><p>The Fourier coefficients of the dielectric function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eps_fourier</strong><span class="classifier">array_like</span></dt><dd><p>The Fourier coefficients of the dielectric function</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pytmod.Material.Npad">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Npad</span></span><a class="headerlink" href="#pytmod.Material.Npad" title="Link to this definition">¶</a></dt>
+<dd><p>The number of zeros to pad the Fourier coefficients with</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Npad</strong><span class="classifier">int</span></dt><dd><p>The number of zeros to pad the Fourier coefficients with</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pytmod.Material.modulation_period">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">modulation_period</span></span><a class="headerlink" href="#pytmod.Material.modulation_period" title="Link to this definition">¶</a></dt>
+<dd><p>The modulation period of the dielectric function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>modulation_period</strong><span class="classifier">float</span></dt><dd><p>The modulation period of the dielectric function</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pytmod.Material.nh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nh</span></span><a class="headerlink" href="#pytmod.Material.nh" title="Link to this definition">¶</a></dt>
+<dd><p>The length of the Fourier coefficients array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>nh</strong><span class="classifier">int</span></dt><dd><p>The length of the Fourier coefficients array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pytmod.Material.Nh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nh</span></span><a class="headerlink" href="#pytmod.Material.Nh" title="Link to this definition">¶</a></dt>
+<dd><p>The integer corresponding to order 0 in the Fourier coefficients array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Nh</strong><span class="classifier">int</span></dt><dd><p>The integer corresponding to order 0 in the Fourier coefficients array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.index_shift">
+<span class="sig-name descname"><span class="pre">index_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.index_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.index_shift" title="Link to this definition">¶</a></dt>
+<dd><p>Shift an index to the index of the Fourier coefficient of the same order
+in the padded array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index in the unpadded array</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The corresponding index in the padded array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.build_matrix">
+<span class="sig-name descname"><span class="pre">build_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.build_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.build_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Build the matrix of the linear system to be solved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>matrix</strong><span class="classifier">array_like</span></dt><dd><p>The matrix of the linear system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.build_dmatrix_domega">
+<span class="sig-name descname"><span class="pre">build_dmatrix_domega</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.build_dmatrix_domega"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.build_dmatrix_domega" title="Link to this definition">¶</a></dt>
+<dd><p>Build the matrix derivative wrt omega of the linear system to be solved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>dmatrix</strong><span class="classifier">array_like</span></dt><dd><p>The matrix matrix derivative wrt omega.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.eigensolve">
+<span class="sig-name descname"><span class="pre">eigensolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.eigensolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.eigensolve" title="Link to this definition">¶</a></dt>
+<dd><p>Solve the eigenvalue problem for the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+<dt><strong>matrix</strong><span class="classifier">array_like, optional</span></dt><dd><p>The matrix of the linear system. If None, it will be built.</p>
+</dd>
+<dt><strong>left</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to compute the left eigenvectors. Defaults to False.</p>
+</dd>
+<dt><strong>normalize</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to normalize the left and right eigenvectors. Defaults to False.</p>
+</dd>
+<dt><strong>sort</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to sort the eigenvalues. Defaults to True.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the material.</p>
+</dd>
+<dt><strong>modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The right eigenvectors of the material.</p>
+</dd>
+<dt><strong>modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The left eigenvectors of the material, if left is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.get_modes_normalization">
+<span class="sig-name descname"><span class="pre">get_modes_normalization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modes_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes_left</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.get_modes_normalization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.get_modes_normalization" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the normalization constants for the modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The right eigenvectors of the material.</p>
+</dd>
+<dt><strong>modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The left eigenvectors of the material.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>normas</strong><span class="classifier">array_like</span></dt><dd><p>The normalization constants.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modes_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes_left</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.normalize" title="Link to this definition">¶</a></dt>
+<dd><p>Normalize the eigenmodes of the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The right eigenvectors of the material.</p>
+</dd>
+<dt><strong>modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The left eigenvectors of the material.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The normalized right eigenvectors of the material.</p>
+</dd>
+<dt><strong>modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The normalized left eigenvectors of the material.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>First, the eigenmodes are normalized so that the left and right
+eigenmodes are biorthogonal. Then, the right eigenmodes are
+normalized so that the maximum value of each eigenmode is 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.get_deigenvalues_domega">
+<span class="sig-name descname"><span class="pre">get_deigenvalues_domega</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigenvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized_modes_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized_modes_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmatrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.get_deigenvalues_domega"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.get_deigenvalues_domega" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the derivative of the eigenvalues wrt omega.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to compute the derivative.</p>
+</dd>
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the material.</p>
+</dd>
+<dt><strong>normalized_modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The normalized right eigenvectors of the material.</p>
+</dd>
+<dt><strong>normalized_modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The normalized left eigenvectors of the material.</p>
+</dd>
+<dt><strong>dmatrix</strong><span class="classifier">array_like, optional</span></dt><dd><p>The matrix derivative wrt omega. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>deigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The derivative of the eigenvalues wrt omega.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.get_deigenmodes_right_domega">
+<span class="sig-name descname"><span class="pre">get_deigenmodes_right_domega</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigenvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized_modes_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized_modes_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmatrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.get_deigenmodes_right_domega"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.get_deigenmodes_right_domega" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the derivative of the right eigenmodes wrt omega.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to compute the derivative.</p>
+</dd>
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the material.</p>
+</dd>
+<dt><strong>normalized_modes_right</strong><span class="classifier">array_like</span></dt><dd><p>The normalized right eigenvectors of the material.</p>
+</dd>
+<dt><strong>normalized_modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The normalized left eigenvectors of the material.</p>
+</dd>
+<dt><strong>dmatrix</strong><span class="classifier">array_like, optional</span></dt><dd><p>The matrix derivative wrt omega. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>deigenmodes_right</strong><span class="classifier">array_like</span></dt><dd><p>The derivative of the right eigenmodes wrt omega.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.freq2time">
+<span class="sig-name descname"><span class="pre">freq2time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.freq2time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.freq2time" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the time-domain representation of a coefficient array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>coeff</strong><span class="classifier">array_like</span></dt><dd><p>The coefficient array in the frequency domain</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">array_like</span></dt><dd><p>The time array at which to compute the time-domain representation</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>The time-domain representation of the coefficient array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Material.get_eps_time">
+<span class="sig-name descname"><span class="pre">get_eps_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/material.html#Material.get_eps_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Material.get_eps_time" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the time-domain representation of the dielectric function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>t</strong><span class="classifier">array_like</span></dt><dd><p>The time array at which to compute the time-domain representation</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>array_like</dt><dd><p>The time-domain representation of the dielectric function</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pytmod.Slab">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytmod.</span></span><span class="sig-name descname"><span class="pre">Slab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_minus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab" title="Link to this definition">¶</a></dt>
+<dd><p>Slab object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>material</strong><span class="classifier">Material</span></dt><dd><p>The material of the slab</p>
+</dd>
+<dt><strong>thickness</strong><span class="classifier">float</span></dt><dd><p>The thickness of the slab</p>
+</dd>
+<dt><strong>eps_plus</strong><span class="classifier">float, optional</span></dt><dd><p>The permittivity of the medium above the slab</p>
+</dd>
+<dt><strong>eps_minus</strong><span class="classifier">float, optional</span></dt><dd><p>The permittivity of the medium below the slab</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pytmod.Slab.material">
+<span class="sig-name descname"><span class="pre">material</span></span><a class="headerlink" href="#pytmod.Slab.material" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pytmod.Slab.thickness">
+<span class="sig-name descname"><span class="pre">thickness</span></span><a class="headerlink" href="#pytmod.Slab.thickness" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pytmod.Slab.eps_plus">
+<span class="sig-name descname"><span class="pre">eps_plus</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pytmod.Slab.eps_plus" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pytmod.Slab.eps_minus">
+<span class="sig-name descname"><span class="pre">eps_minus</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pytmod.Slab.eps_minus" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.build_matrix">
+<span class="sig-name descname"><span class="pre">build_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigenvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.build_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.build_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Build the matrix of the linear system to be solved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the material.</p>
+</dd>
+<dt><strong>modes</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvectors of the material.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>matrix_slab</strong><span class="classifier">array_like</span></dt><dd><p>The matrix of the linear system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.build_dmatrix_domega">
+<span class="sig-name descname"><span class="pre">build_dmatrix_domega</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigenvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes_left</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.build_dmatrix_domega"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.build_dmatrix_domega" title="Link to this definition">¶</a></dt>
+<dd><p>Build the of the linear system to be solved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the material.</p>
+</dd>
+<dt><strong>modes</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvectors of the material.</p>
+</dd>
+<dt><strong>modes_left</strong><span class="classifier">array_like</span></dt><dd><p>The left eigenvectors of the material.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>matrix_slab</strong><span class="classifier">array_like</span></dt><dd><p>The matrix derivative wrt omega of the linear system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.build_rhs">
+<span class="sig-name descname"><span class="pre">build_rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Eis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.build_rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.build_rhs" title="Link to this definition">¶</a></dt>
+<dd><p>Build the right-hand side (RHS) of the linear system for the slab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to solve the system.</p>
+</dd>
+<dt><strong>Eis</strong><span class="classifier">array_like</span></dt><dd><p>The incident electric fields.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rhs_slab</strong><span class="classifier">array_like</span></dt><dd><p>The RHS matrix of the linear system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_slab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs_slab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.solve" title="Link to this definition">¶</a></dt>
+<dd><p>Solve the linear system defined by the matrix and RHS of the slab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>matrix_slab</strong><span class="classifier">array_like</span></dt><dd><p>The matrix of the linear system.</p>
+</dd>
+<dt><strong>rhs_slab</strong><span class="classifier">array_like</span></dt><dd><p>The right-hand side of the linear system.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>solution</strong><span class="classifier">array_like</span></dt><dd><p>The solution of the linear system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.extract_coefficients">
+<span class="sig-name descname"><span class="pre">extract_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Eis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ens</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.extract_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.extract_coefficients" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts the coefficients of the waves from the solution of the linear system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solution</strong><span class="classifier">array_like</span></dt><dd><p>The solution of the linear system.</p>
+</dd>
+<dt><strong>Eis</strong><span class="classifier">array_like</span></dt><dd><p>The incident electric fields.</p>
+</dd>
+<dt><strong>kns</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the slab time-modulated medium.</p>
+</dd>
+<dt><strong>ens</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvectors of the slab time-modulated medium.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Eslab_plus</strong><span class="classifier">array_like</span></dt><dd><p>The coefficients of the forward propagating waves inside the slab.</p>
+</dd>
+<dt><strong>Eslab_minus</strong><span class="classifier">array_like</span></dt><dd><p>The coefficients of the backward propagating waves inside the slab.</p>
+</dd>
+<dt><strong>Er</strong><span class="classifier">array_like</span></dt><dd><p>The coefficients of the reflected waves.</p>
+</dd>
+<dt><strong>Et</strong><span class="classifier">array_like</span></dt><dd><p>The coefficients of the transmitted waves.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.fresnel_static">
+<span class="sig-name descname"><span class="pre">fresnel_static</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.fresnel_static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.fresnel_static" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the Fresnel coefficients for a static slab with the same thickness
+and dielectric properties as the current slab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to compute the Fresnel coefficients</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rf</strong><span class="classifier">array_like</span></dt><dd><p>The reflection Fresnel coefficient</p>
+</dd>
+<dt><strong>tf</strong><span class="classifier">array_like</span></dt><dd><p>The transmission Fresnel coefficient</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.eigenvalue_static">
+<span class="sig-name descname"><span class="pre">eigenvalue_static</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.eigenvalue_static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.eigenvalue_static" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the static eigenvalue for a given mode number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>The mode number for which the static eigenvalue is calculated.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>complex</dt><dd><p>The static eigenvalue corresponding to the specified mode number,
+based on the slab’s thickness and dielectric properties.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.eigensolve">
+<span class="sig-name descname"><span class="pre">eigensolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.eigensolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.eigensolve" title="Link to this definition">¶</a></dt>
+<dd><p>Solve the eigenvalue problem of the time-modulated slab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>*args</strong><span class="classifier">array_like</span></dt><dd><p>Arguments to be passed to <cite>nonlinear_eigensolver</cite>.</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">dict</span></dt><dd><p>Keyword arguments to be passed to <cite>nonlinear_eigensolver</cite>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>eigenvalues</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the system.</p>
+</dd>
+<dt><strong>modes</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvectors of the system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.init_incident_field">
+<span class="sig-name descname"><span class="pre">init_incident_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">omegas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.init_incident_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.init_incident_field" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the incident field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>omegas</strong><span class="classifier">array_like</span></dt><dd><p>The frequencies at which to initialize the incident field.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>incident_field</strong><span class="classifier">array_like</span></dt><dd><p>The initialized incident field.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.get_incident_field">
+<span class="sig-name descname"><span class="pre">get_incident_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Eis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.get_incident_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.get_incident_field" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the incident field at the given points in space and time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The points in space at which to compute the incident field.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">array_like</span></dt><dd><p>The points in time at which to compute the incident field.</p>
+</dd>
+<dt><strong>omega</strong><span class="classifier">float</span></dt><dd><p>The frequency at which the incident field is computed.</p>
+</dd>
+<dt><strong>Eis</strong><span class="classifier">array_like</span></dt><dd><p>The Fourier coefficients of the incident field.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Einc</strong><span class="classifier">array_like</span></dt><dd><p>The incident field at the specified points in space and time.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.get_scattered_field">
+<span class="sig-name descname"><span class="pre">get_scattered_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.get_scattered_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.get_scattered_field" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the scattered electric field at positions x and times t.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The positions at which to compute the scattered field.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">array_like</span></dt><dd><p>The times at which to compute the scattered field.</p>
+</dd>
+<dt><strong>omega</strong><span class="classifier">float</span></dt><dd><p>The frequency of the incident wave.</p>
+</dd>
+<dt><strong>psi</strong><span class="classifier">tuple</span></dt><dd><p>The coefficients of the waves inside the slab, as returned by
+extract_coefficients.</p>
+</dd>
+<dt><strong>ks</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvalues of the slab time-modulated medium.</p>
+</dd>
+<dt><strong>modes</strong><span class="classifier">array_like</span></dt><dd><p>The eigenvectors of the slab time-modulated medium.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>E</strong><span class="classifier">array_like</span></dt><dd><p>The scattered electric field at positions x and times t.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pytmod.Slab.animate_field">
+<span class="sig-name descname"><span class="pre">animate_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pytmod/slab.html#Slab.animate_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytmod.Slab.animate_field" title="Link to this definition">¶</a></dt>
+<dd><p>Create an animation of the electric field over time within the slab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>The spatial positions at which the electric field is evaluated.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">array_like</span></dt><dd><p>The temporal points at which the electric field is evaluated.</p>
+</dd>
+<dt><strong>E</strong><span class="classifier">array_like</span></dt><dd><p>The electric field values at the specified positions and times.</p>
+</dd>
+<dt><strong>fig_ax</strong><span class="classifier">tuple, optional</span></dt><dd><p>A tuple containing a matplotlib figure and axes. If None, a new figure
+and axes are created.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>ani</strong><span class="classifier">matplotlib.animation.FuncAnimation</span></dt><dd><p>The animation object displaying the evolution of the electric field.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -139,16 +896,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../index.html">
+    <a href="../../examples/plot_slab.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">API Reference</div></div>
+        <span>Previous</span><div class="title">Slab</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="eig/index.html">
+    <a href="../../biblio.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">pytmod.eig</div>
+        <div class="title">Bibliography</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -159,7 +916,7 @@ data-aria-dark="Switch to auto color mode">
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>2025, Benjamin Vial</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Benjamin Vial</p>
   
   <p>
     Made with
@@ -179,5 +936,12 @@ data-aria-dark="Switch to auto color mode">
       <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/shibuya.js?v=55e26b35"></script></body>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../_static/shibuya.js?v=55e26b35"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script></body>
 </html>

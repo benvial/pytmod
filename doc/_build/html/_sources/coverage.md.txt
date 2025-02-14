@@ -1,0 +1,18 @@
+# Coverage
+
+```{eval-rst}
+.. report:code-coverage::
+   :packageid: pytmod
+```
+
+<!-- 
+```{report:doc-coverage} 
+   :packageid: pytmod
+``` -->
+
+<!-- ```{report} code-coverage
+   :packageid: pytmod
+```
+
+.. report:doc-coverage::
+   :packageid: src -->

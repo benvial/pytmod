@@ -15,9 +15,6 @@ import matplotlib.pyplot as plt
 import scipy.linalg as la
 from skimage.feature import peak_local_max
 
-# from numdiff import backend as bk
-# from numdiff import get_backend
-
 
 import numpy as bk
 
@@ -397,7 +394,7 @@ def _nonlinear_eigensolver(
     weight="max element",
     init_vect="eig",
     strategy="peaks",
-    peaks_estimate="eig",
+    peaks_estimate="det",
     tol=1e-6,
     max_iter=100,
     N_grid=(10, 10),
@@ -469,21 +466,22 @@ def _nonlinear_eigensolver(
                 if _bounds_im is None:
                     # vmin = bk.min(im)
                     vmax = bk.max(im)
-                    vmin = bk.mean(im) - 1
-                    # vmax = bk.mean(im)+1
+                    # vmin = bk.mean(im) - 1
+                    vmin = bk.min(im)
                     _bounds_im = vmin, vmax
                 else:
                     vmin, vmax = _bounds_im
-                plt.gca().pcolormesh(
+                cmap = plt.gca().pcolormesh(
                     omegas_re / scale,
                     omegas_im / scale,
                     im.T,
                     cmap="inferno",
-                    vmin=vmin,
-                    vmax=vmax,
+                    # vmin=vmin,
+                    # vmax=vmax,
                 )
+
                 # plt.pause(2)
-                # plt.colorbar()
+                # plt.colorbar(cmap)
 
             if get_backend() == "torch":
                 im = im.numpy()
@@ -544,10 +542,18 @@ def _nonlinear_eigensolver(
         for guess in guesses:
             if init_vect == "eig":
                 vect_init = None
-            else:
+            elif init_vect == "random":
+                if dim is None:
+                    raise ValueError(
+                        f"Please provide the dimension of your matrix with the keyword argument dim if init_vect = random"
+                    )
+
                 vect_init = bk.random.rand(dim) + 1j * bk.random.rand(dim)
                 vect_init /= (vect_init.conj() @ vect_init) ** 0.5
-
+            else:
+                raise ValueError(
+                    f"Wrong eigenvector initialization init_vect {init_vect}"
+                )
             t0 = -time.time()
             try:
                 res = eig_newton(
@@ -663,7 +669,6 @@ def unique(evs, precision):
 
 
 def gram_schmidt(A, dM):
-    # Get the number of vectors.
     """
     Perform the Gram-Schmidt process on the columns of matrix A.
 
@@ -676,6 +681,7 @@ def gram_schmidt(A, dM):
     mutually orthogonal with respect to the metric dM.
 
     """
+    # Get the number of vectors.
     n = A.shape[1]
     for j in range(n):
         # To orthogonalize the vector in column j with respect to the
@@ -772,35 +778,6 @@ def plot_rectangle(ax, z0, z1, **kwargs):
     ax.add_patch(patch)
     plt.pause(0.01)
     return patch
-
-
-def cut_rectangle_in_four(z0, z1, ratio_re=0.5, ratio_im=0.5):
-    """
-    Cut a rectangle in four parts.
-
-    Parameters
-    ----------
-    z0, z1 : complex
-        The lower left and upper right corners of the rectangle
-    ratio_re, ratio_im : float, optional
-        The ratio of the width and height of the middle rectangle
-        to the width and height of the whole rectangle. By default,
-        the ratio is 0.5.
-
-    Returns
-    -------
-    four_rectangles : tuple of four tuples
-        The four rectangles, each as a tuple of two complex numbers
-        (lower left and upper right corners)
-    """
-    xmid = z0.real + ratio_re * (z1.real - z0.real)
-    ymid = z0.imag + ratio_im * (z1.imag - z0.imag)
-    zmid = xmid + 1j * ymid
-    zbot = xmid + 1j * z0.imag
-    ztop = xmid + 1j * z1.imag
-    zleft = z0.real + 1j * ymid
-    zright = z1.real + 1j * ymid
-    return (z0, zmid), (zbot, zright), (zmid, z1), (zleft, ztop)
 
 
 def _nleigsolve_recursive(
@@ -1003,7 +980,7 @@ def nonlinear_eigensolver(
         weight="max element",
         init_vect="eig",
         strategy="peaks",
-        peaks_estimate="eig",
+        peaks_estimate="det",
         tol=1e-6,
         max_iter=100,
         N_grid=(10, 10),
@@ -1070,7 +1047,7 @@ def nonlinear_eigensolver(
     return evs_, eigenvectors_
 
 
-def polyeig(*A):
+def polyeig(A):
     """Solve the polynomial eigenvalue problem: (A0 + e A1 +...+  e**p Ap)x=0
 
     Parameters

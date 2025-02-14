@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:03.468** total execution time for 1 file **from all galleries**:
+**00:00.000** total execution time for 4 files **from all galleries**:
 
 .. container::
 
@@ -32,6 +32,15 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
+   * - :ref:`sphx_glr_examples_plot_material.py` (``../examples/plot_material.py``)
+     - 00:00.000
+     - 0.0
    * - :ref:`sphx_glr_examples_plot_slab.py` (``../examples/plot_slab.py``)
-     - 00:03.468
-     - 264.5
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_plot_slab_field.py` (``../examples/plot_slab_field.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_plot_slab_modes.py` (``../examples/plot_slab_modes.py``)
+     - 00:00.000
+     - 0.0

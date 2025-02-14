@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="../">
+<html lang="en" data-accent-color="blue" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Slab - pytmod</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Bibliography" href="../biblio.html" /><link rel="prev" title="Examples" href="index.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Slab - pytmod</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pytmod" href="../autoapi/pytmod/index.html" /><link rel="prev" title="Slab quasi normal modes" href="plot_slab_modes.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bf552558" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=32b4838b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Georama:ital,wght@0,100..900;1,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+  rel="stylesheet">
 <style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
+  :root {
+    --sy-f-heading: 'Georama', var(--sy-f-sys), sans-serif;
+    --sy-f-mono: 'Atkinson Hyperlegible Mono';
+    --sy-f-sys: 'Instrument Sans';
+  }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="Slab"/>
 <meta name="twitter:card" content="summary"/>
@@ -30,8 +35,8 @@
   <div class="sy-head-blur"></div>
   <div class="sy-head-inner sy-container mx-auto">
     <a class="sy-head-brand" href="../index.html">
-      <img class="light-logo" src="../_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
-      <img class="dark-logo" src="../_static/pytmod.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="light-logo" src="../_static/pytmod-name.svg" alt="pytmod" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/pytmod-name-dark.svg" alt="pytmod" height="28" loading="lazy" />
       <strong>pytmod</strong>
     </a>
     <div class="sy-head-nav" id="HeadNav">
@@ -63,23 +68,27 @@ data-aria-dark="Switch to auto color mode">
   <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Getting started</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Examples</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_slab_field.html">Electric field in a time-modulated slab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_material.html">Time modulated material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_slab_modes.html">Slab quasi normal modes</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Slab</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/pytmod/index.html">pytmod</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">References</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../biblio.html">Bibliography</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../autoapi/pytmod/index.html">pytmod</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../autoapi/pytmod/eig/index.html">pytmod.eig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../autoapi/pytmod/helpers/index.html">pytmod.helpers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../autoapi/pytmod/material/index.html">pytmod.material</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../autoapi/pytmod/slab/index.html">pytmod.slab</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -175,7 +184,7 @@ to download the full example code.</p>
 </span><span data-line="15"><span class="n">fig3</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<img src="../_images/sphx_glr_plot_slab_001.png" srcset="../_images/sphx_glr_plot_slab_001.png" alt="$\Delta \epsilon = 0.085$, $\Delta \epsilon = 0.85$, $\Delta \epsilon = 3.4$" class = "sphx-glr-single-img"/><p>Figures 4 and 5</p>
+<p>Figures 4 and 5</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">Nomega</span> <span class="o">=</span> <span class="mi">1500</span>
 </span><span data-line="2"><span class="n">omegas</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mi">10</span> <span class="o">+</span> <span class="mf">0.00001</span> <span class="o">*</span> <span class="n">Omega</span><span class="p">,</span> <span class="n">Nomega</span><span class="p">)</span>
 </span><span data-line="3">
@@ -192,12 +201,12 @@ to download the full example code.</p>
 </span><span data-line="14">        <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="15">        <span class="n">slab</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Slab</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </span><span data-line="16">        <span class="n">matrix_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_matrix</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
-</span><span data-line="17">        <span class="n">Eis</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">slab</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">nh</span><span class="p">,)</span> <span class="o">+</span> <span class="n">omegas</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">bk</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span data-line="17">        <span class="n">Eis</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">init_incident_field</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="18">        <span class="n">Ei0</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span data-line="19">        <span class="n">Eis</span><span class="p">[</span><span class="n">mat</span><span class="o">.</span><span class="n">Nh</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ei0</span>
 </span><span data-line="20">        <span class="n">rhs_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_rhs</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">Eis</span><span class="p">)</span>
 </span><span data-line="21">        <span class="n">solution</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">matrix_slab</span><span class="p">,</span> <span class="n">rhs_slab</span><span class="p">)</span>
-</span><span data-line="22">        <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="22">        <span class="n">Eslab_plus</span><span class="p">,</span> <span class="n">Eslab_minus</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
 </span><span data-line="23">        <span class="n">rn</span> <span class="o">=</span> <span class="n">Er</span> <span class="o">/</span> <span class="n">Ei0</span>
 </span><span data-line="24">        <span class="n">tn</span> <span class="o">=</span> <span class="n">Et</span> <span class="o">/</span> <span class="n">Ei0</span>
 </span><span data-line="25">
@@ -228,10 +237,6 @@ to download the full example code.</p>
 </span><span data-line="50"><span class="n">fig5</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img src="../_images/sphx_glr_plot_slab_002.png" srcset="../_images/sphx_glr_plot_slab_002.png" alt="$L_N = 0.5, $n=$0$, $L_N = 0.5, $n=$0$, $L_N = 2, $n=$0$, $L_N = 2, $n=$0$" class = "sphx-glr-multi-img"/></li>
-<li><img src="../_images/sphx_glr_plot_slab_003.png" srcset="../_images/sphx_glr_plot_slab_003.png" alt="$L_N = 0.5, $n=$0$, $L_N = 0.5, $n=$0$, $L_N = 2, $n=$0$, $L_N = 2, $n=$0$" class = "sphx-glr-multi-img"/></li>
-</ul>
 <p>Figures 6 and 7</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">fig6</span><span class="p">,</span> <span class="n">ax6</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </span><span data-line="2"><span class="n">fig7</span><span class="p">,</span> <span class="n">ax7</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -245,50 +250,47 @@ to download the full example code.</p>
 </span><span data-line="10">    <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="11">    <span class="n">slab</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Slab</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </span><span data-line="12">    <span class="n">matrix_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_matrix</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
-</span><span data-line="13">    <span class="n">Eis</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">slab</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">nh</span><span class="p">,)</span> <span class="o">+</span> <span class="n">omegas</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">bk</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span data-line="13">    <span class="n">Eis</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">init_incident_field</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="14">    <span class="n">Ei0</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span data-line="15">    <span class="n">Eis</span><span class="p">[</span><span class="n">mat</span><span class="o">.</span><span class="n">Nh</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ei0</span>
 </span><span data-line="16">    <span class="n">rhs_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_rhs</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">Eis</span><span class="p">)</span>
 </span><span data-line="17">    <span class="n">solution</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">matrix_slab</span><span class="p">,</span> <span class="n">rhs_slab</span><span class="p">)</span>
-</span><span data-line="18">    <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
-</span><span data-line="19">    <span class="n">rn</span> <span class="o">=</span> <span class="n">Er</span> <span class="o">/</span> <span class="n">Ei0</span>
-</span><span data-line="20">    <span class="n">tn</span> <span class="o">=</span> <span class="n">Et</span> <span class="o">/</span> <span class="n">Ei0</span>
-</span><span data-line="21">    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">Nharmo_plot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-</span><span data-line="22">        <span class="n">imode</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">Nh</span> <span class="o">+</span> <span class="n">Nharmo_plot</span>
-</span><span data-line="23">        <span class="n">r_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span>
-</span><span data-line="24">        <span class="n">t_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span>
-</span><span data-line="25">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">t_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#5000ca&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
-</span><span data-line="26">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">r_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#e49649&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$r$&quot;</span><span class="p">)</span>
-</span><span data-line="27">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$L_N = </span><span class="si">{</span><span class="n">Ln</span><span class="si">}</span><span class="s2">, $n=$</span><span class="si">{</span><span class="n">Nharmo_plot</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
-</span><span data-line="28">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span data-line="29">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</span><span data-line="30">
-</span><span data-line="31">        <span class="n">r_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span> <span class="o">/</span> <span class="n">bk</span><span class="o">.</span><span class="n">pi</span>
-</span><span data-line="32">        <span class="n">t_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">tn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span> <span class="o">/</span> <span class="n">bk</span><span class="o">.</span><span class="n">pi</span>
-</span><span data-line="33">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">t_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#5000ca&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
-</span><span data-line="34">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">r_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#e49649&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$r$&quot;</span><span class="p">)</span>
-</span><span data-line="35">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$L_N = </span><span class="si">{</span><span class="n">Ln</span><span class="si">}</span><span class="s2">, $n=$</span><span class="si">{</span><span class="n">Nharmo_plot</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
-</span><span data-line="36">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="37">        <span class="n">xmax</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">Ln</span> <span class="o">==</span> <span class="mi">8</span> <span class="k">else</span> <span class="mi">10</span>
-</span><span data-line="38">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
-</span><span data-line="39">        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="40">            <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-</span><span data-line="41">            <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-</span><span data-line="42">
-</span><span data-line="43"><span class="n">ax6</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</span><span data-line="44"><span class="n">ax7</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</span><span data-line="45"><span class="n">fig6</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;normalized frequency $\omega_0/\Omega$&quot;</span><span class="p">)</span>
-</span><span data-line="46"><span class="n">fig6</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;magnitude&quot;</span><span class="p">)</span>
-</span><span data-line="47"><span class="n">fig7</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;normalized frequency $\omega_0/\Omega$&quot;</span><span class="p">)</span>
-</span><span data-line="48"><span class="n">fig7</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;phase&quot;</span><span class="p">)</span>
-</span><span data-line="49"><span class="n">fig6</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</span><span data-line="50"><span class="n">fig7</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="18">
+</span><span data-line="19">    <span class="n">Eslab_plus</span><span class="p">,</span> <span class="n">Eslab_minus</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="20">    <span class="n">rn</span> <span class="o">=</span> <span class="n">Er</span> <span class="o">/</span> <span class="n">Ei0</span>
+</span><span data-line="21">    <span class="n">tn</span> <span class="o">=</span> <span class="n">Et</span> <span class="o">/</span> <span class="n">Ei0</span>
+</span><span data-line="22">    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">Nharmo_plot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+</span><span data-line="23">        <span class="n">imode</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">Nh</span> <span class="o">+</span> <span class="n">Nharmo_plot</span>
+</span><span data-line="24">        <span class="n">r_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span>
+</span><span data-line="25">        <span class="n">t_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span>
+</span><span data-line="26">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">t_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#5000ca&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+</span><span data-line="27">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">r_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#e49649&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$r$&quot;</span><span class="p">)</span>
+</span><span data-line="28">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$L_N = </span><span class="si">{</span><span class="n">Ln</span><span class="si">}</span><span class="s2">, $n=$</span><span class="si">{</span><span class="n">Nharmo_plot</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+</span><span data-line="29">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="30">        <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span><span data-line="31">
+</span><span data-line="32">        <span class="n">r_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span> <span class="o">/</span> <span class="n">bk</span><span class="o">.</span><span class="n">pi</span>
+</span><span data-line="33">        <span class="n">t_</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">tn</span><span class="p">[</span><span class="n">imode</span><span class="p">])</span> <span class="o">/</span> <span class="n">bk</span><span class="o">.</span><span class="n">pi</span>
+</span><span data-line="34">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">t_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#5000ca&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+</span><span data-line="35">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">r_</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#e49649&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;$r$&quot;</span><span class="p">)</span>
+</span><span data-line="36">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$L_N = </span><span class="si">{</span><span class="n">Ln</span><span class="si">}</span><span class="s2">, $n=$</span><span class="si">{</span><span class="n">Nharmo_plot</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+</span><span data-line="37">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="38">        <span class="n">xmax</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">Ln</span> <span class="o">==</span> <span class="mi">8</span> <span class="k">else</span> <span class="mi">10</span>
+</span><span data-line="39">        <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+</span><span data-line="40">        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="41">            <span class="n">ax6</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+</span><span data-line="42">            <span class="n">ax7</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+</span><span data-line="43">
+</span><span data-line="44"><span class="n">ax6</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span><span data-line="45"><span class="n">ax7</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span><span data-line="46"><span class="n">fig6</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;normalized frequency $\omega_0/\Omega$&quot;</span><span class="p">)</span>
+</span><span data-line="47"><span class="n">fig6</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;magnitude&quot;</span><span class="p">)</span>
+</span><span data-line="48"><span class="n">fig7</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;normalized frequency $\omega_0/\Omega$&quot;</span><span class="p">)</span>
+</span><span data-line="49"><span class="n">fig7</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;phase&quot;</span><span class="p">)</span>
+</span><span data-line="50"><span class="n">fig6</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="51"><span class="n">fig7</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img src="../_images/sphx_glr_plot_slab_004.png" srcset="../_images/sphx_glr_plot_slab_004.png" alt="$L_N = 0.5, $n=$1$, $L_N = 0.5, $n=$-1$, $L_N = 8, $n=$1$, $L_N = 8, $n=$-1$" class = "sphx-glr-multi-img"/></li>
-<li><img src="../_images/sphx_glr_plot_slab_005.png" srcset="../_images/sphx_glr_plot_slab_005.png" alt="$L_N = 0.5, $n=$1$, $L_N = 0.5, $n=$-1$, $L_N = 8, $n=$1$, $L_N = 8, $n=$-1$" class = "sphx-glr-multi-img"/></li>
-</ul>
 <p>Figures 8 and 9</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">fig8</span><span class="p">,</span> <span class="n">ax8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
 </span><span data-line="2"><span class="n">fig9</span><span class="p">,</span> <span class="n">ax9</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
@@ -302,12 +304,12 @@ to download the full example code.</p>
 </span><span data-line="10">    <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">eigensolve</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="11">    <span class="n">slab</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Slab</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </span><span data-line="12">    <span class="n">matrix_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_matrix</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
-</span><span data-line="13">    <span class="n">Eis</span> <span class="o">=</span> <span class="n">bk</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">slab</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">nh</span><span class="p">,)</span> <span class="o">+</span> <span class="n">omegas</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">bk</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+</span><span data-line="13">    <span class="n">Eis</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">init_incident_field</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
 </span><span data-line="14">    <span class="n">Ei0</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span data-line="15">    <span class="n">Eis</span><span class="p">[</span><span class="n">mat</span><span class="o">.</span><span class="n">Nh</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ei0</span>
 </span><span data-line="16">    <span class="n">rhs_slab</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">build_rhs</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">Eis</span><span class="p">)</span>
 </span><span data-line="17">    <span class="n">solution</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">matrix_slab</span><span class="p">,</span> <span class="n">rhs_slab</span><span class="p">)</span>
-</span><span data-line="18">    <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
+</span><span data-line="18">    <span class="n">Eslab_plus</span><span class="p">,</span> <span class="n">Eslab_minus</span><span class="p">,</span> <span class="n">Er</span><span class="p">,</span> <span class="n">Et</span> <span class="o">=</span> <span class="n">slab</span><span class="o">.</span><span class="n">extract_coefficients</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">Eis</span><span class="p">,</span> <span class="n">kns</span><span class="p">,</span> <span class="n">ens</span><span class="p">)</span>
 </span><span data-line="19">    <span class="n">rn</span> <span class="o">=</span> <span class="n">Er</span> <span class="o">/</span> <span class="n">Ei0</span>
 </span><span data-line="20">    <span class="n">tn</span> <span class="o">=</span> <span class="n">Et</span> <span class="o">/</span> <span class="n">Ei0</span>
 </span><span data-line="21">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Nharmo_plot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]):</span>
@@ -343,12 +345,7 @@ to download the full example code.</p>
 </span><span data-line="51"><span class="n">fig9</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img src="../_images/sphx_glr_plot_slab_006.png" srcset="../_images/sphx_glr_plot_slab_006.png" alt="$L_N = 0.5, n = 1$, $L_N = 8, n = 1$, $L_N = 0.5, n = -1$, $L_N = 8, n = -1$, $L_N = 0.5, n = 2$, $L_N = 8, n = 2$, $L_N = 0.5, n = -2$, $L_N = 8, n = -2$" class = "sphx-glr-multi-img"/></li>
-<li><img src="../_images/sphx_glr_plot_slab_007.png" srcset="../_images/sphx_glr_plot_slab_007.png" alt="$L_N = 0.5, n = 1$, $L_N = 8, n = 1$, $L_N = 0.5, n = -1$, $L_N = 8, n = -1$, $L_N = 0.5, n = 2$, $L_N = 8, n = 2$, $L_N = 0.5, n = -2$, $L_N = 8, n = -2$" class = "sphx-glr-multi-img"/></li>
-</ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.468 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  264 MB</p>
+<p><strong>Estimated memory usage:</strong>  0 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-plot-slab-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/2233d0ebbc185680b47133b0121b52a7/plot_slab.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_slab.ipynb</span></code></a></p>
@@ -369,16 +366,16 @@ to download the full example code.</p>
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="index.html">
+    <a href="plot_slab_modes.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Examples</div></div>
+        <span>Previous</span><div class="title">Slab quasi normal modes</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="../biblio.html">
+    <a href="../autoapi/pytmod/index.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Bibliography</div>
+        <div class="title">pytmod</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -389,7 +386,7 @@ to download the full example code.</p>
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>2025, Benjamin Vial</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Benjamin Vial</p>
   
   <p>
     Made with
@@ -409,5 +406,12 @@ to download the full example code.</p>
       <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../_static/shibuya.js?v=55e26b35"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script></body>
 </html>

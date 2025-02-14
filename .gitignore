@@ -9,3 +9,6 @@ src/config.status
 src/config.log
 src/autom4te.cache
 wheelhouse
+
+coverage.xml
+coverage.json

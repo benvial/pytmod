@@ -17,6 +17,57 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Calculate the field in response to an incident plane wave.">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_plot_slab_field_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_plot_slab_field.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Electric field in a time-modulated slab</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We will learn how to build a time modulated material and how to calculate the eigenvalues and eigenvectors of this material.">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_plot_material_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_plot_material.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Time modulated material</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Solve the slab nonlinear eigenproblem and plot the quasi normal modes">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_plot_slab_modes_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_plot_slab_modes.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Slab quasi normal modes</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="A simple example.">
 
 .. only:: html
@@ -42,6 +93,9 @@ Examples
 .. toctree::
    :hidden:
 
+   /examples/plot_slab_field
+   /examples/plot_material
+   /examples/plot_slab_modes
    /examples/plot_slab
 
 
