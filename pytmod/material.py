@@ -335,11 +335,6 @@ class Material:
         )
         return normas
 
-    def _normalize(self, modes, normas):
-        return bk.array([modes[:, i] / normas[i] for i in range(self.nh)]).swapaxes(
-            1, 0
-        )
-
     def normalize(self, modes_right, modes_left):
         """
         Normalize the eigenmodes of the material.
@@ -364,20 +359,8 @@ class Material:
         eigenmodes are biorthogonal. Then, the right eigenmodes are
         normalized so that the maximum value of each eigenmode is 1.
         """
-        # normalize so that left and right eigenmodes are biorthogonal
         normas = self.get_modes_normalization(modes_right, modes_left)
-        modes_right = self._normalize(modes_right, normas)
-        modes_left = self._normalize(modes_left, normas)
-
-        # normalize so max value for the right eigenmodes is 1
-        max_indices = bk.argmax(bk.abs(modes_right), axis=0)
-        modes_right_max_values = bk.take_along_axis(
-            modes_right, bk.expand_dims(max_indices, axis=0), axis=0
-        )
-        modes_right = modes_right / modes_right_max_values
-        modes_left = modes_left * modes_right_max_values
-
-        return modes_right, modes_left
+        return normalize_modes(normas, modes_right, modes_left)
 
     def get_deigenvalues_domega(
         self,

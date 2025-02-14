@@ -7,6 +7,7 @@
 
 import pytest
 import numpy as bk
+from pytmod.helpers import *
 
 bk.random.seed(1234)
 from pytmod import Material, Slab
@@ -249,7 +250,7 @@ def test_incident():
 
 
 def test_solve_raises_error():
-    slab = Slab(None, None)  # Assuming a default constructor for simplicity
+    slab = Slab(Material([1], 1), 1)
     matrix_slab = bk.zeros((0, 0, 0, 0, 0), dtype=bk.complex128)  # 5D array
     rhs_slab = bk.zeros((0, 0, 0), dtype=bk.complex128)  # 3D array
     with pytest.raises(ValueError, match="Unsupported number of dimensions"):
@@ -257,7 +258,7 @@ def test_solve_raises_error():
 
 
 def test_extract_coefficients_raises_error():
-    slab = Slab(None, None)  # Assuming a default constructor for simplicity
+    slab = Slab(Material([1], 1), 1)
     Eis, kns, ens = None, None, None
     solution = bk.zeros((0, 0, 0, 0, 0), dtype=bk.complex128)  # 3D array
     with pytest.raises(ValueError, match="Unsupported number of dimensions"):
@@ -301,3 +302,73 @@ def test_field():
     fig, ax = plt.subplots()
     anim1 = slab.animate_field(x, t, E, (fig, ax))
     anim2 = slab.animate_field(x, t, E)
+
+
+def test_modes():
+    eps_fourier = [2, 6, 2]
+    # eps_fourier = [6]
+    material = Material(eps_fourier, 1, Npad=0)
+    slab = Slab(material, 3)
+    evs_slab, modes_slab_right, modes_slab_left = slab.eigensolve(
+        0.01 - 0.2j,
+        1.2 - 0.001j,
+        peak_ref=5,
+        recursive=True,
+        tol=1e-12,
+        return_left=True,
+        refine=True,
+    )
+
+    nmodes = len(evs_slab)
+    omegas = evs_slab
+    eigenvalues, modes_right, modes_left = material.eigensolve(
+        omegas, left=True, normalize=True
+    )
+    matrix_derivative = slab.build_dmatrix_domega(
+        omegas, eigenvalues, modes_right, modes_left
+    )
+    modes_slab_right, modes_slab_left = slab.normalize(
+        modes_slab_right, modes_slab_left, matrix_derivative
+    )
+
+    check_ortho = bk.zeros((nmodes, nmodes), dtype=complex)
+    for i in range(nmodes):
+        eigenvalue_left = evs_slab[i]
+        matrix_left = slab.build_matrix(
+            eigenvalue_left, eigenvalues[:, i], modes_right[:, :, i]
+        )
+        matrix_derivative = slab.build_dmatrix_domega(
+            eigenvalue_left,
+            eigenvalues[:, i],
+            modes_right[:, :, i],
+            modes_left[:, :, i],
+        )
+        for j in range(nmodes):
+            eigenvalue_right = evs_slab[j]
+            matrix_right = slab.build_matrix(
+                eigenvalue_right, eigenvalues[:, j], modes_right[:, :, j]
+            )
+            diag = i == j
+            q = slab.scalar_product(
+                modes_slab_right[:, j],
+                modes_slab_left[:, i],
+                eigenvalue_right,
+                eigenvalue_left,
+                matrix_right,
+                matrix_left,
+                matrix_derivative,
+                diag=diag,
+            )
+
+            check_ortho[i, j] = q
+    # plt.close("all")
+    # plt.ion()
+    # fig, ax = plt.subplots(1, 2, figsize=(11, 4))
+    # _ = ax[0].imshow(check_ortho.real - bk.eye(nmodes))
+    # plt.colorbar(_)
+    # _ = ax[1].imshow(check_ortho.imag)
+    # plt.colorbar(_)
+    # plt.tight_layout()
+    # # plt.imshow(bk.abs(check_ortho))
+    # plt.show()
+    assert bk.allclose(bk.eye(nmodes), check_ortho)

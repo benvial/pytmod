@@ -34,6 +34,7 @@ class Slab:
         self.thickness = thickness
         self.eps_plus = eps_plus
         self.eps_minus = eps_minus
+        self.dim = self.material.nh * 2
 
     def __repr__(self):
         return f"Slab(thickness={self.thickness}, material={self.material}), eps_plus={self.eps_plus}, eps_minus={self.eps_minus}"
@@ -636,3 +637,42 @@ class Slab:
             fig, animate, blit=False, repeat=True, frames=len(t) - 1, interval=10
         )
         return ani
+
+    def get_modes_normalization(self, modes_right, modes_left, matrix_derivative):
+        dim = modes_right.shape[1]
+        normas = bk.zeros((dim,) + modes_right.shape[2:], dtype=complex)
+        for i in range(dim):
+            normas[i] = (
+                dot(
+                    modes_left[:, i],
+                    matvecprod(matrix_derivative[:, :, i], modes_right[:, i]),
+                )
+                ** 0.5
+            )
+
+        return normas
+
+    def normalize(self, modes_right, modes_left, matrix_derivative):
+        normas = self.get_modes_normalization(
+            modes_right, modes_left, matrix_derivative
+        )
+        return normalize_modes(normas, modes_right, modes_left)
+
+    def scalar_product(
+        self,
+        modes_right,
+        modes_left,
+        eigenvalue_right,
+        eigenvalue_left,
+        matrix_right,
+        matrix_left,
+        matrix_derivative,
+        diag=True,
+    ):
+
+        if diag:
+            return dot(modes_left, matvecprod(matrix_derivative, modes_right))
+        else:
+            R = dot(modes_left, matvecprod(matrix_left, modes_right))
+            L = dot(vecmatprod(modes_left, matrix_left), modes_right)
+            return (L - R) / (eigenvalue_right - eigenvalue_left)

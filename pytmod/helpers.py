@@ -9,6 +9,50 @@
 import numpy as bk
 
 
+def normalize_batch(modes, normas):
+    dim = modes.shape[1]
+    return bk.array([modes[:, i] / normas[i] for i in range(dim)]).swapaxes(1, 0)
+
+
+def normalize_modes(normas, modes_right, modes_left):
+    """
+    Normalize the eigenmodes.
+
+    Parameters
+    ----------
+    modes_right : array_like
+        The right eigenvectors
+    modes_left : array_like
+        The left eigenvectors
+
+    Returns
+    -------
+    modes_right : array_like
+        The normalized right eigenvectors.
+    modes_left : array_like
+        The normalized left eigenvectors.
+
+    Notes
+    -----
+    First, the eigenmodes are normalized so that the left and right
+    eigenmodes are biorthogonal. Then, the right eigenmodes are
+    normalized so that the maximum value of each eigenmode is 1.
+    """
+    # normalize so that left and right eigenmodes are biorthogonal
+    modes_right = normalize_batch(modes_right, normas)
+    modes_left = normalize_batch(modes_left, normas)
+
+    # normalize so max value for the right eigenmodes is 1
+    max_indices = bk.argmax(bk.abs(modes_right), axis=0)
+    modes_right_max_values = bk.take_along_axis(
+        modes_right, bk.expand_dims(max_indices, axis=0), axis=0
+    )
+    modes_right = modes_right / modes_right_max_values
+    modes_left = modes_left * modes_right_max_values
+
+    return modes_right, modes_left
+
+
 def dot(a, b):
     """
     Compute the dot product of two arrays using Einstein summation convention.
@@ -46,6 +90,25 @@ def matvecprod(a, b):
         The matrix-vector product of the input arrays.
     """
     return bk.einsum("ij...,j...->i...", a, b)
+
+
+def vecmatprod(a, b):
+    """
+    Compute the vector-matrix product of two arrays using Einstein summation convention.
+
+    Parameters
+    ----------
+    a : array_like
+        The matrix input array.
+    b : array_like
+        The vector input array.
+
+    Returns
+    -------
+    array
+        The matrix-vector product of the input arrays.
+    """
+    return bk.einsum("i...,ij...->j...", a, b)
 
 
 def matmatprod(a, b):
