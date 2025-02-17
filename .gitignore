@@ -102,6 +102,7 @@ pylint.json
 # Doc css (we use less to generate those):
 doc/_custom/static/css/*.css
 doc/generated
+doc/examples
 doc/biblio
 
 
