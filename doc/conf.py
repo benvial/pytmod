@@ -7,33 +7,12 @@
 
 import warnings
 import datetime
-import subprocess
-import re
-from packaging.version import Version
+import os
+import sys
 
-
-def get_latest_version_tag():
-    try:
-        # Get all tags from git
-        result = subprocess.run(
-            ["git", "tag"], capture_output=True, text=True, check=True
-        )
-        tags = result.stdout.splitlines()
-
-        # Filter tags matching vX.Y.Z format
-        version_tags = [tag for tag in tags if re.fullmatch(r"v\d+\.\d+\.\d+", tag)]
-
-        if not version_tags:
-            return None
-
-        # Sort tags using Version class from packaging
-        latest_tag = max(version_tags, key=lambda v: Version(v[1:]))
-        return latest_tag
-    except subprocess.CalledProcessError as e:
-        print("Error executing git command:", e)
-        return None
-
-
+# Add the current directory to the Python path
+sys.path.insert(0, os.path.abspath("."))
+from get_versions import get_latest_version_tag
 import toml
 
 tomldata = toml.load("../pyproject.toml")
@@ -406,8 +385,8 @@ warnings.filterwarnings(
 # -- Sphinx Multiversion --------------------------------------------------
 # https://holzhaus.github.io/sphinx-multiversion/master/configuration.html#
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
-smv_branch_whitelist = r"^.*$"
-smv_remote_whitelist = r"^.*$"
+smv_branch_whitelist = None
+smv_remote_whitelist = None
 smv_latest_version = get_latest_version_tag()
 # smv_released_pattern = r"^\d+\.\d+\.\d+$"
 smv_released_pattern = r"^refs/tags/.*$"

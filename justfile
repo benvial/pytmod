@@ -35,7 +35,8 @@ doc:
 
 # Build documentation (no examples)
 doc-noplot:
-    cd doc && make html-noplot
+    cd doc && make html-noplot && make index
+
 
 # Build documentation and watch
 autodoc:

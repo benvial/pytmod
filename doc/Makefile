@@ -199,4 +199,4 @@ show:
 
 
 index:
-	cp redirect.html $(BUILDDIR)/html/index.html
+	python redirect.py
