@@ -385,7 +385,7 @@ warnings.filterwarnings(
 # -- Sphinx Multiversion --------------------------------------------------
 # https://holzhaus.github.io/sphinx-multiversion/master/configuration.html#
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
-smv_branch_whitelist = None
+smv_branch_whitelist = "main"
 smv_remote_whitelist = None
 smv_latest_version = get_latest_version_tag()
 # smv_released_pattern = r"^\d+\.\d+\.\d+$"

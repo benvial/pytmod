@@ -9,18 +9,20 @@
 from get_versions import get_latest_version_tag
 
 
+last_tag = get_latest_version_tag()
+
 content = f"""
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Redirecting to main branch</title>
+    <title>Redirecting to latest version</title>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=./main/index.html" />
-    <link rel="canonical" href="https://benvial.github.io/pytmod/{get_latest_version_tag()}/index.html" />
+    <meta http-equiv="refresh" content="0; url=./{last_tag}/index.html" />
+    <link rel="canonical" href="https://benvial.github.io/pytmod/{last_tag}/index.html" />
   </head>
 </html>
 """
 
 
-with open("_build/html/redirect.html", "w") as f:
+with open("_build/html/index.html", "w") as f:
     f.write(content)
