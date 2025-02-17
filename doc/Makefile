@@ -196,3 +196,7 @@ html_abort_on_example_error:
 
 show:
 	firefox $(BUILDDIR)/html/main/index.html
+
+
+index:
+	cp redirect.html $(BUILDDIR)/html/index.html

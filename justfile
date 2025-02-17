@@ -31,7 +31,7 @@ clean:
 
 # Build documentation
 doc:
-    cd doc && make html
+    cd doc && make html && make index
 
 # Build documentation (no examples)
 doc-noplot:

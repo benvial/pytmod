@@ -11,18 +11,21 @@ import subprocess
 import re
 from packaging.version import Version
 
+
 def get_latest_version_tag():
     try:
         # Get all tags from git
-        result = subprocess.run(['git', 'tag'], capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            ["git", "tag"], capture_output=True, text=True, check=True
+        )
         tags = result.stdout.splitlines()
-        
+
         # Filter tags matching vX.Y.Z format
-        version_tags = [tag for tag in tags if re.fullmatch(r'v\d+\.\d+\.\d+', tag)]
-        
+        version_tags = [tag for tag in tags if re.fullmatch(r"v\d+\.\d+\.\d+", tag)]
+
         if not version_tags:
             return None
-        
+
         # Sort tags using Version class from packaging
         latest_tag = max(version_tags, key=lambda v: Version(v[1:]))
         return latest_tag
@@ -37,7 +40,6 @@ tomldata = toml.load("../pyproject.toml")
 
 
 pyproject = tomldata["project"]
-
 
 
 # -- General configuration ------------------------------------------------
@@ -201,6 +203,7 @@ html_theme_options = {
     "light_logo": "_static/pytmod-name.svg",
     "dark_logo": "_static/pytmod-name-dark.svg",
     "accent_color": "blue",
+    "announcement": "This is a community project. Any contribution is welcome!",
 }
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
