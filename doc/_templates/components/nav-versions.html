@@ -8,7 +8,7 @@
     <div class="nav-versions-choices">
       {%- if versions -%}
       <ul>
-        {%- for version in versions -%}
+        {%- for version in versions|reverse -%}
           <li><a href="{{ version.url }}">{{ version.name }}</a></li>
         {%- endfor -%}
       </ul>

@@ -9,9 +9,19 @@
 </div>
 {%- endif %}
 
-{% if current_version and latest_version and current_version != latest_version %}
 <div class="announcement">
   <div class="announcement-inner">
+    <p>xsxsxsx </p>
+    <button class="announcement-close" aria-label="Close announcement">
+      <i class="i-lucide close"></i>
+    </button>
+  </div>
+</div>
+
+
+{% if current_version and latest_version and current_version != latest_version %}
+<div class="version-banner">
+  <div class="version-banner-inner">
     <p>
       {% if current_version.is_released %}
       You're reading an old version of this documentation.
@@ -22,7 +32,7 @@
       For the latest released version, please have a look at <a
         href="{{ vpathto(latest_version.name) }}">{{latest_version.name}}</a>.
       {% endif %}
-      <button class="announcement-close" aria-label="Close announcement">
+      <button class="version-banner-close" aria-label="Close version banner">
         <i class="i-lucide close"></i>
       </button>
     </p>

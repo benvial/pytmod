@@ -1,5 +1,3 @@
-
-
 /* You can generate colors with radix custom paletteuse. */
 /* https://www.radix-ui.com/colors/custom */
 /* Then replace --violet or --whatever with --accent */
@@ -98,7 +96,6 @@ html[data-accent-color='blue'] {
     --gray-track: oklch(64.6% 0.0165 277.7);
     --color-background: #fff;
     --syntax-light-keyword: #cf226a;
-
 }
 
 /* 
@@ -126,3 +123,39 @@ footer {
     font-weight: 700;
     padding-right: 1rem
 } */
+
+.version-banner {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    color: var(--sy-c-banner, var(--accent-contrast));
+    background-color: var(--sy-c-banner-bg, var(--accent-a12));
+    z-index: 20;
+}
+
+.version-banner a {
+    text-decoration: underline;
+}
+
+.version-banner ::selection {
+    color: var(--sy-c-banner, var(--accent-contrast));
+}
+
+.version-banner-inner {
+    width: 100%;
+    text-align: center;
+}
+
+.version-banner-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+}
+
+.announcement-inner {
+    text-align: center;
+}

@@ -7,7 +7,37 @@
 
 import warnings
 import datetime
-import pytmod as package
+import subprocess
+import re
+from packaging.version import Version
+
+def get_latest_version_tag():
+    try:
+        # Get all tags from git
+        result = subprocess.run(['git', 'tag'], capture_output=True, text=True, check=True)
+        tags = result.stdout.splitlines()
+        
+        # Filter tags matching vX.Y.Z format
+        version_tags = [tag for tag in tags if re.fullmatch(r'v\d+\.\d+\.\d+', tag)]
+        
+        if not version_tags:
+            return None
+        
+        # Sort tags using Version class from packaging
+        latest_tag = max(version_tags, key=lambda v: Version(v[1:]))
+        return latest_tag
+    except subprocess.CalledProcessError as e:
+        print("Error executing git command:", e)
+        return None
+
+
+import toml
+
+tomldata = toml.load("../pyproject.toml")
+
+
+pyproject = tomldata["project"]
+
 
 
 # -- General configuration ------------------------------------------------
@@ -114,7 +144,7 @@ copyright = f"Copyright © {datetime.date.today().year}, Benjamin Vial"
 # The short X.Y version.
 
 
-version = package.__version__
+version = pyproject["version"]
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -196,6 +226,7 @@ html_favicon = "_static/favicon.ico"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
+html_js_files = ["version-banner.js"]
 
 
 # # Custom sidebar templates, maps document names to template names.
@@ -345,7 +376,7 @@ sphinx_gallery_conf = {
     # ),
     # "image_scrapers": ("matplotlib", PNGScraper()),
     # Modules for which function level galleries are created.
-    "doc_module": package.__name__,
+    "doc_module": pyproject["name"],
     "thumbnail_size": (800, 800),
     "default_thumb_file": "./_static/pytmod.png",
     "show_memory": True,
@@ -371,6 +402,13 @@ warnings.filterwarnings(
 
 # -- Sphinx Multiversion --------------------------------------------------
 # https://holzhaus.github.io/sphinx-multiversion/master/configuration.html#
-smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'
-smv_branch_whitelist = r'^.*$'
-smv_remote_whitelist = r'^.*$'
+smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
+smv_branch_whitelist = r"^.*$"
+smv_remote_whitelist = r"^.*$"
+smv_latest_version = get_latest_version_tag()
+# smv_released_pattern = r"^\d+\.\d+\.\d+$"
+smv_released_pattern = r"^refs/tags/.*$"
+
+
+print(smv_latest_version)
+print(version)
