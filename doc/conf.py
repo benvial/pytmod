@@ -201,6 +201,10 @@ html_css_files = ["custom.css"]
 # # Custom sidebar templates, maps document names to template names.
 # html_sidebars = {"**": ["sidebar_links.html"]}
 
+# html_sidebars = [
+#     "banner-version.html",
+# ]
+
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 # html_additional_pages = {}

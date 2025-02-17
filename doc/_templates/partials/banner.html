@@ -1,0 +1,31 @@
+{%- if theme_announcement -%}
+<div class="announcement">
+  <div class="announcement-inner">
+    <p>{{ theme_announcement }}</p>
+    <button class="announcement-close" aria-label="Close announcement">
+      <i class="i-lucide close"></i>
+    </button>
+  </div>
+</div>
+{%- endif %}
+
+{% if current_version and latest_version and current_version != latest_version %}
+<div class="announcement">
+  <div class="announcement-inner">
+    <p>
+      {% if current_version.is_released %}
+      You're reading an old version of this documentation.
+      If you want up-to-date information, please have a look at <a
+        href="{{ vpathto(latest_version.name) }}">{{latest_version.name}}</a>.
+      {% else %}
+      You're reading the documentation for a development version.
+      For the latest released version, please have a look at <a
+        href="{{ vpathto(latest_version.name) }}">{{latest_version.name}}</a>.
+      {% endif %}
+      <button class="announcement-close" aria-label="Close announcement">
+        <i class="i-lucide close"></i>
+      </button>
+    </p>
+  </div>
+</div>
+{% endif %}

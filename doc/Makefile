@@ -195,4 +195,4 @@ html_abort_on_example_error:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 show:
-	firefox $(BUILDDIR)/html/index.html
+	firefox $(BUILDDIR)/html/main/index.html
