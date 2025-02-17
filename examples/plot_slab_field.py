@@ -38,7 +38,7 @@ Npad = 7
 Ei0 = 1
 L = 5
 
-omega = 1.0 * Omega + 1e-12
+omega = 1.2 * Omega
 
 eps_fourier = [
     -deps / (2 * 1j),
@@ -109,9 +109,6 @@ T = bk.sum(Tn)
 df_sum = pd.DataFrame(data={"R": R, "T": T, "Balance": R + T}, index=[""])
 df_sum
 
-
-print(df)
-print(df_sum)
 
 ####################################################################################
 # Get the field
