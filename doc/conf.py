@@ -34,6 +34,7 @@ extensions = [
     "sphinx_tabs.tabs",
     "sphinx_togglebutton",
     "numpydoc",
+    "sphinx_multiversion",
 ]
 
 myst_enable_extensions = [
@@ -363,3 +364,9 @@ warnings.filterwarnings(
     message="Matplotlib is currently using agg, which is a"
     " non-GUI backend, so cannot show the figure.",
 )
+
+# -- Sphinx Multiversion --------------------------------------------------
+# https://holzhaus.github.io/sphinx-multiversion/master/configuration.html#
+smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'
+smv_branch_whitelist = r'^.*$'
+smv_remote_whitelist = r'^.*$'
