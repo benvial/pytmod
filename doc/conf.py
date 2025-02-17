@@ -411,7 +411,3 @@ smv_remote_whitelist = r"^.*$"
 smv_latest_version = get_latest_version_tag()
 # smv_released_pattern = r"^\d+\.\d+\.\d+$"
 smv_released_pattern = r"^refs/tags/.*$"
-
-
-print(smv_latest_version)
-print(version)

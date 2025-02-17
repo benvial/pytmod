@@ -4,12 +4,12 @@ on: [push]
 jobs:
   # Build job
   build:
-    # <Not provided for brevity>
-    # At a minimum this job should upload artifacts using actions/upload-pages-artifact
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -19,7 +19,7 @@ jobs:
       - name: Install package and build doc
         run: |
           pip install .[doc] -v
-          cd doc && make html
+          cd doc && make html && make index
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
