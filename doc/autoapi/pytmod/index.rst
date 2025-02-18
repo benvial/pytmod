@@ -348,7 +348,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: eigensolve(omegas, matrix=None, left=False, normalize=False, sort=True)
+   .. py:method:: eigensolve(omegas, matrix=None, left=False, normalize=True, sort=True)
 
 
       Solve the eigenvalue problem for the material.

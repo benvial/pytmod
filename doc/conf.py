@@ -9,10 +9,13 @@ import sys
 import warnings
 from pathlib import Path
 
-# Add the current directory to the Python path
-sys.path.insert(0, Path.resolve("."))
 import toml
-from get_versions import get_latest_version_tag
+
+# Add the current directory to the Python path
+proj_dir = Path(__file__).parents[0]
+sys.path.insert(0, str(proj_dir))
+
+from get_versions import get_latest_version_tag  # noqa: E402
 
 tomldata = toml.load("../pyproject.toml")
 
