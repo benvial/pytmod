@@ -5,7 +5,7 @@ pytmod
 
 .. autoapi-nested-parse::
 
-   
+
    This module implements the pytmod API.
 
 
@@ -41,7 +41,7 @@ Package Contents
 
 .. py:class:: Material(eps_fourier, modulation_frequency, Npad=0)
 
-   
+
    Material object
 
 
@@ -81,7 +81,7 @@ Package Contents
 
    .. py:method:: pad(x)
 
-      
+
       Pad an array with zeros if `Npad` is positive
 
 
@@ -113,7 +113,7 @@ Package Contents
 
    .. py:property:: eps_fourier
 
-      
+
       The Fourier coefficients of the dielectric function
 
 
@@ -141,7 +141,7 @@ Package Contents
 
    .. py:property:: Npad
 
-      
+
       The number of zeros to pad the Fourier coefficients with
 
 
@@ -169,7 +169,7 @@ Package Contents
 
    .. py:property:: modulation_period
 
-      
+
       The modulation period of the dielectric function
 
 
@@ -197,7 +197,7 @@ Package Contents
 
    .. py:property:: nh
 
-      
+
       The length of the Fourier coefficients array
 
 
@@ -225,7 +225,7 @@ Package Contents
 
    .. py:property:: Nh
 
-      
+
       The integer corresponding to order 0 in the Fourier coefficients array
 
 
@@ -253,7 +253,7 @@ Package Contents
 
    .. py:method:: index_shift(i)
 
-      
+
       Shift an index to the index of the Fourier coefficient of the same order
       in the padded array.
 
@@ -286,7 +286,7 @@ Package Contents
 
    .. py:method:: build_matrix(omegas)
 
-      
+
       Build the matrix of the linear system to be solved.
 
 
@@ -318,7 +318,7 @@ Package Contents
 
    .. py:method:: build_dmatrix_domega(omegas)
 
-      
+
       Build the matrix derivative wrt omega of the linear system to be solved.
 
 
@@ -350,7 +350,7 @@ Package Contents
 
    .. py:method:: eigensolve(omegas, matrix=None, left=False, normalize=False, sort=True)
 
-      
+
       Solve the eigenvalue problem for the material.
 
 
@@ -400,7 +400,7 @@ Package Contents
 
    .. py:method:: get_modes_normalization(modes_right, modes_left)
 
-      
+
       Compute the normalization constants for the modes.
 
 
@@ -435,7 +435,7 @@ Package Contents
 
    .. py:method:: normalize(modes_right, modes_left)
 
-      
+
       Normalize the eigenmodes of the material.
 
 
@@ -478,7 +478,7 @@ Package Contents
 
    .. py:method:: get_deigenvalues_domega(omegas, eigenvalues, normalized_modes_right, normalized_modes_left, dmatrix=None)
 
-      
+
       Compute the derivative of the eigenvalues wrt omega.
 
 
@@ -522,7 +522,7 @@ Package Contents
 
    .. py:method:: get_deigenmodes_right_domega(omegas, eigenvalues, normalized_modes_right, normalized_modes_left, dmatrix=None)
 
-      
+
       Compute the derivative of the right eigenmodes wrt omega.
 
 
@@ -566,7 +566,7 @@ Package Contents
 
    .. py:method:: freq2time(coeff, t)
 
-      
+
       Compute the time-domain representation of a coefficient array.
 
 
@@ -601,7 +601,7 @@ Package Contents
 
    .. py:method:: get_eps_time(t)
 
-      
+
       Compute the time-domain representation of the dielectric function.
 
 
@@ -633,7 +633,7 @@ Package Contents
 
 .. py:class:: Slab(material, thickness, eps_plus=1, eps_minus=1)
 
-   
+
    Slab object
 
 
@@ -688,7 +688,7 @@ Package Contents
 
    .. py:method:: build_matrix(omegas, eigenvalues, modes)
 
-      
+
       Build the matrix of the linear system to be solved.
 
 
@@ -726,7 +726,7 @@ Package Contents
 
    .. py:method:: build_dmatrix_domega(omegas, eigenvalues, modes, modes_left)
 
-      
+
       Build the of the linear system to be solved.
 
 
@@ -767,7 +767,7 @@ Package Contents
 
    .. py:method:: build_rhs(omegas, Eis)
 
-      
+
       Build the right-hand side (RHS) of the linear system for the slab.
 
 
@@ -802,7 +802,7 @@ Package Contents
 
    .. py:method:: solve(matrix_slab, rhs_slab)
 
-      
+
       Solve the linear system defined by the matrix and RHS of the slab.
 
 
@@ -837,7 +837,7 @@ Package Contents
 
    .. py:method:: extract_coefficients(solution, Eis, kns, ens)
 
-      
+
       Extracts the coefficients of the waves from the solution of the linear system.
 
 
@@ -887,7 +887,7 @@ Package Contents
 
    .. py:method:: fresnel_static(omegas)
 
-      
+
       Compute the Fresnel coefficients for a static slab with the same thickness
       and dielectric properties as the current slab.
 
@@ -923,7 +923,7 @@ Package Contents
 
    .. py:method:: eigenvalue_static(n)
 
-      
+
       Calculate the static eigenvalue for a given mode number.
 
 
@@ -956,7 +956,7 @@ Package Contents
 
    .. py:method:: eigensolve(*args, **kwargs)
 
-      
+
       Solve the eigenvalue problem of the time-modulated slab.
 
 
@@ -994,7 +994,7 @@ Package Contents
 
    .. py:method:: init_incident_field(omegas)
 
-      
+
       Initialize the incident field.
 
 
@@ -1026,7 +1026,7 @@ Package Contents
 
    .. py:method:: get_incident_field(x, t, omega, Eis)
 
-      
+
       Compute the incident field at the given points in space and time.
 
 
@@ -1067,7 +1067,7 @@ Package Contents
 
    .. py:method:: get_scattered_field(x, t, omega, psi, ks, modes)
 
-      
+
       Compute the scattered electric field at positions x and times t.
 
 
@@ -1115,7 +1115,7 @@ Package Contents
 
    .. py:method:: animate_field(x, t, E, fig_ax=None)
 
-      
+
       Create an animation of the electric field over time within the slab.
 
 
@@ -1162,5 +1162,3 @@ Package Contents
 
 
    .. py:method:: scalar_product(modes_right, modes_left, eigenvalue_right, eigenvalue_left, matrix_right, matrix_left, matrix_derivative, diag=True)
-
-

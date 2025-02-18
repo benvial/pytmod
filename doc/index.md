@@ -20,15 +20,12 @@ Solver for materials with time modulated properties.
 **Version:** {sub-ref}`release` | Built on {sub-ref}`today`
 ```
 
-
 ```{container} buttons
-[Docs](install)  
+[Docs](install)
 [GitHub](https://github.com/benvial/pytmod)
 ```
 
-
-
-<!-- 
+<!--
 ```{grid} 1 1 2 3
 :gutter: 2
 :padding: 0
@@ -53,7 +50,6 @@ Example
 Example
 ~~~
 ``` -->
-
 
 ```{toctree}
 :caption: Getting started

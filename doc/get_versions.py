@@ -1,13 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
-
-import subprocess
 import re
+import subprocess
+
 from packaging.version import Version
 
 
@@ -26,12 +25,10 @@ def get_latest_version_tag():
             return None
 
         # Sort tags using Version class from packaging
-        latest_tag = max(version_tags, key=lambda v: Version(v[1:]))
-        return latest_tag
-    except subprocess.CalledProcessError as e:
-        print("Error executing git command:", e)
+        return max(version_tags, key=lambda v: Version(v[1:]))
+    except subprocess.CalledProcessError:
         return None
 
 
 if __name__ == "__main__":
-    print(get_latest_version_tag())
+    pass

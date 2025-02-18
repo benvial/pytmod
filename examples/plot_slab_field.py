@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
@@ -14,15 +12,15 @@ Calculate the field in response to an incident plane wave.
 
 """
 
-
 ####################################################################################
 # First import the packages
-
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+import numpy as np
+import pandas as pd
+
 import pytmod as pm
-import numpy as bk
 
 plt.ion()
 plt.close("all")
@@ -87,37 +85,35 @@ rn = Er / Ei0
 tn = Et / Ei0
 
 
-import pandas as pd
-
 pd.set_option("display.float_format", lambda x: f"{x:.4e}")
 
-Rn = bk.abs(rn) ** 2
-Tn = bk.abs(tn) ** 2
+Rn = np.abs(rn) ** 2
+Tn = np.abs(tn) ** 2
 
-df = pd.DataFrame(
+coeffs_n = pd.DataFrame(
     data={"r_n": rn, "t_n": tn, "R_n": Rn, "T_n": Tn}, index=range(-mat.Nh, mat.Nh + 1)
 )
-# df.index.name = "n"
-df
+# coeffs_n.index.name = "n"
+coeffs_n  # noqa: B018
 
 ####################################################################################
 # Total reflection and transmission coefficients
 
-R = bk.sum(Rn)
-T = bk.sum(Tn)
+R = np.sum(Rn)
+T = np.sum(Tn)
 
-df_sum = pd.DataFrame(data={"R": R, "T": T, "Balance": R + T}, index=[""])
-df_sum
+coeffs_sum = pd.DataFrame(data={"R": R, "T": T, "Balance": R + T}, index=[""])
+coeffs_sum  # noqa: B018
 
 
 ####################################################################################
 # Get the field
 
-T0 = 2 * bk.pi / omega
+T0 = 2 * np.pi / omega
 T = mat.modulation_period
-t = bk.linspace(0, 3 * T, 300)
+t = np.linspace(0, 3 * T, 300)
 Lhom = 3 * L
-x = bk.linspace(-Lhom, Lhom + L, 1000)
+x = np.linspace(-Lhom, Lhom + L, 1000)
 psi = Eslab_plus, Eslab_minus, Er, Et
 Es = slab.get_scattered_field(x, t, omega, psi, kns, ens)
 Einc = slab.get_incident_field(x, t, omega, Eis)
@@ -127,7 +123,7 @@ E = Einc + Es
 # Animate the field
 
 fig, ax = plt.subplots()
-ax.set_title(rf"$\omega = {omega/Omega}\,\Omega$")
+ax.set_title(rf"$\omega = {omega / Omega}\,\Omega$")
 anim = slab.animate_field(x, t, E, (fig, ax))
 
 # writer = animation.PillowWriter(fps=15,
@@ -139,7 +135,7 @@ anim = slab.animate_field(x, t, E, (fig, ax))
 # Space time map
 
 plt.figure()
-plt.pcolormesh(x / L - 0.5, t / T, bk.real(E.T), cmap="RdBu_r")
+plt.pcolormesh(x / L - 0.5, t / T, np.real(E.T), cmap="RdBu_r")
 plt.axvline(-0.5, color="#949494", lw=1)
 plt.axvline(0.5, color="#949494", lw=1)
 # for i in range(5):

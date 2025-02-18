@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
-
-from .helpers import *
-from .eig import nonlinear_eigensolver
-import numpy as bk
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+import numpy as np
+from matplotlib import animation
+
+from .eig import nonlinear_eigensolver
+from .helpers import dimhandler, dot, fresnel, matvecprod, normalize_modes, vecmatprod
 
 
 class Slab:
@@ -61,32 +60,32 @@ class Slab:
         matrix_slab : array_like
             The matrix of the linear system.
         """
-        omegas = bk.array(omegas)
+        omegas = np.array(omegas)
         Nh = self.material.Nh
         eigenvalues = eigenvalues.T
         modes = modes.T
         # modes = bk.transpose(modes, (2, 0, 1))
 
-        harm_index = bk.arange(-Nh, Nh + 1)
-        harm_index = bk.broadcast_to(harm_index, eigenvalues.shape)
+        harm_index = np.arange(-Nh, Nh + 1)
+        harm_index = np.broadcast_to(harm_index, eigenvalues.shape)
 
-        harm_index = bk.transpose(harm_index)
+        harm_index = np.transpose(harm_index)
         omegas_shift = omegas - harm_index * self.material.modulation_frequency
-        omegas_shift = bk.transpose(omegas_shift)
+        omegas_shift = np.transpose(omegas_shift)
         L = self.thickness
-        phi_plus = bk.exp(1j * eigenvalues * L)
-        phi_minus = bk.exp(-1j * eigenvalues * L)
-        ks = bk.broadcast_to(eigenvalues[:, :, bk.newaxis], modes.shape)
-        phi_plus = bk.broadcast_to(phi_plus[:, :, bk.newaxis], modes.shape)
-        phi_minus = bk.broadcast_to(phi_minus[:, :, bk.newaxis], modes.shape)
-        omegas_shift = bk.broadcast_to(omegas_shift[:, :, bk.newaxis], modes.shape)
-        ks = bk.transpose(ks, (0, 2, 1))
-        phi_plus = bk.transpose(phi_plus, (0, 2, 1))
-        phi_minus = bk.transpose(phi_minus, (0, 2, 1))
-        modes = bk.transpose(modes, (0, 2, 1))
+        phi_plus = np.exp(1j * eigenvalues * L)
+        phi_minus = np.exp(-1j * eigenvalues * L)
+        ks = np.broadcast_to(eigenvalues[:, :, np.newaxis], modes.shape)
+        phi_plus = np.broadcast_to(phi_plus[:, :, np.newaxis], modes.shape)
+        phi_minus = np.broadcast_to(phi_minus[:, :, np.newaxis], modes.shape)
+        omegas_shift = np.broadcast_to(omegas_shift[:, :, np.newaxis], modes.shape)
+        ks = np.transpose(ks, (0, 2, 1))
+        phi_plus = np.transpose(phi_plus, (0, 2, 1))
+        phi_minus = np.transpose(phi_minus, (0, 2, 1))
+        modes = np.transpose(modes, (0, 2, 1))
         n_plus = self.eps_plus**0.5
         n_minus = self.eps_minus**0.5
-        matrix_slab = bk.block(
+        matrix_slab = np.block(
             [
                 [
                     (omegas_shift * n_plus + ks) * modes,
@@ -98,8 +97,7 @@ class Slab:
                 ],
             ]
         )
-        matrix_slab = bk.transpose(matrix_slab, (1, 2, 0))
-        return matrix_slab
+        return np.transpose(matrix_slab, (1, 2, 0))
 
     @dimhandler
     def build_dmatrix_domega(self, omegas, eigenvalues, modes, modes_left):
@@ -122,7 +120,7 @@ class Slab:
         matrix_slab : array_like
             The matrix derivative wrt omega of the linear system.
         """
-        omegas = bk.array(omegas)
+        omegas = np.array(omegas)
         Nh = self.material.Nh
 
         dmatrix = self.material.build_dmatrix_domega(omegas)
@@ -148,33 +146,33 @@ class Slab:
         dmodes = dmodes.T
         # modes = bk.transpose(modes, (2, 0, 1))
 
-        harm_index = bk.arange(-Nh, Nh + 1)
-        harm_index = bk.broadcast_to(harm_index, eigenvalues.shape)
+        harm_index = np.arange(-Nh, Nh + 1)
+        harm_index = np.broadcast_to(harm_index, eigenvalues.shape)
 
-        harm_index = bk.transpose(harm_index)
+        harm_index = np.transpose(harm_index)
         omegas_shift = omegas - harm_index * self.material.modulation_frequency
-        omegas_shift = bk.transpose(omegas_shift)
+        omegas_shift = np.transpose(omegas_shift)
         L = self.thickness
-        phi_plus = bk.exp(1j * eigenvalues * L)
-        phi_minus = bk.exp(-1j * eigenvalues * L)
-        ks = bk.broadcast_to(eigenvalues[:, :, bk.newaxis], modes.shape)
+        phi_plus = np.exp(1j * eigenvalues * L)
+        phi_minus = np.exp(-1j * eigenvalues * L)
+        ks = np.broadcast_to(eigenvalues[:, :, np.newaxis], modes.shape)
 
         deigenvalues = deigenvalues.T
-        dks = bk.broadcast_to(deigenvalues[:, :, bk.newaxis], modes.shape)
+        dks = np.broadcast_to(deigenvalues[:, :, np.newaxis], modes.shape)
 
-        phi_plus = bk.broadcast_to(phi_plus[:, :, bk.newaxis], modes.shape)
-        phi_minus = bk.broadcast_to(phi_minus[:, :, bk.newaxis], modes.shape)
-        omegas_shift = bk.broadcast_to(omegas_shift[:, :, bk.newaxis], modes.shape)
+        phi_plus = np.broadcast_to(phi_plus[:, :, np.newaxis], modes.shape)
+        phi_minus = np.broadcast_to(phi_minus[:, :, np.newaxis], modes.shape)
+        omegas_shift = np.broadcast_to(omegas_shift[:, :, np.newaxis], modes.shape)
 
         dphi_plus = 1j * L * dks * phi_plus
         dphi_minus = -1j * L * dks * phi_minus
 
-        ks = bk.transpose(ks, (0, 2, 1))
-        dks = bk.transpose(dks, (0, 2, 1))
-        phi_plus = bk.transpose(phi_plus, (0, 2, 1))
-        phi_minus = bk.transpose(phi_minus, (0, 2, 1))
-        modes = bk.transpose(modes, (0, 2, 1))
-        dmodes = bk.transpose(dmodes, (0, 2, 1))
+        ks = np.transpose(ks, (0, 2, 1))
+        dks = np.transpose(dks, (0, 2, 1))
+        phi_plus = np.transpose(phi_plus, (0, 2, 1))
+        phi_minus = np.transpose(phi_minus, (0, 2, 1))
+        modes = np.transpose(modes, (0, 2, 1))
+        dmodes = np.transpose(dmodes, (0, 2, 1))
 
         n_plus = self.eps_plus**0.5
         n_minus = self.eps_minus**0.5
@@ -191,9 +189,8 @@ class Slab:
             modes * dphi_minus + dmodes * phi_minus
         ) + (n_minus + dks) * phi_minus * modes
 
-        dmatrix_slab = bk.block([[dm11, dm12], [dm21, dm22]])
-        dmatrix_slab = bk.transpose(dmatrix_slab, (1, 2, 0))
-        return dmatrix_slab
+        dmatrix_slab = np.block([[dm11, dm12], [dm21, dm22]])
+        return np.transpose(dmatrix_slab, (1, 2, 0))
 
     def build_rhs(self, omegas, Eis):
         """
@@ -212,9 +209,9 @@ class Slab:
             The RHS matrix of the linear system.
         """
 
-        omegas = bk.array(omegas)
-        Eis = bk.array(Eis)
-        rhs_slab = bk.zeros((2 * self.material.nh,) + omegas.shape, dtype=bk.complex128)
+        omegas = np.array(omegas)
+        Eis = np.array(Eis)
+        rhs_slab = np.zeros((2 * self.material.nh, *omegas.shape), dtype=np.complex128)
         for n in range(self.material.nh):
             nshift = self.material.index_shift(n)
             omegas_shift = omegas - nshift * self.material.modulation_frequency
@@ -241,24 +238,25 @@ class Slab:
             The solution of the linear system.
         """
         if matrix_slab.ndim == 2:
-            return bk.linalg.solve(matrix_slab, rhs_slab)
-        sol = bk.empty_like(rhs_slab)
+            return np.linalg.solve(matrix_slab, rhs_slab)
+        sol = np.empty_like(rhs_slab)
         if matrix_slab.ndim == 3:
             for i in range(matrix_slab.shape[-1]):
-                sol[:, i] = bk.linalg.solve(matrix_slab[:, :, i], rhs_slab[:, i])
+                sol[:, i] = np.linalg.solve(matrix_slab[:, :, i], rhs_slab[:, i])
             return sol
         if matrix_slab.ndim == 4:
             for i in range(matrix_slab.shape[-2]):
                 for j in range(matrix_slab.shape[-1]):
-                    sol[:, i, j] = bk.linalg.solve(
+                    sol[:, i, j] = np.linalg.solve(
                         matrix_slab[:, :, i, j], rhs_slab[:, i, j]
                     )
             return sol
-        raise ValueError(f"Unsupported number of dimensions: {matrix_slab.ndim}")
+        msg = f"Unsupported number of dimensions: {matrix_slab.ndim}"
+        raise ValueError(msg)
 
     def _extract_coefficients(self, solution, Eis, kns, ens):
-        phi_plus = bk.exp(1j * kns * self.thickness)
-        phi_minus = bk.exp(-1j * kns * self.thickness)
+        phi_plus = np.exp(1j * kns * self.thickness)
+        phi_minus = np.exp(-1j * kns * self.thickness)
         nh = self.material.nh
         Eslab_plus = solution[:nh]
         Eslab_minus = solution[nh : 2 * nh]
@@ -299,10 +297,10 @@ class Slab:
         if solution.ndim == 1:
             return self._extract_coefficients(solution, Eis, kns, ens)
 
-        Eslab_plus = bk.empty_like(kns)
-        Eslab_minus = bk.empty_like(kns)
-        Er = bk.empty_like(kns)
-        Et = bk.empty_like(kns)
+        Eslab_plus = np.empty_like(kns)
+        Eslab_minus = np.empty_like(kns)
+        Er = np.empty_like(kns)
+        Et = np.empty_like(kns)
         if solution.ndim == 2:
             for i in range(solution.shape[-1]):
                 Eslab_plus[:, i], Eslab_minus[:, i], Er[:, i], Et[:, i] = (
@@ -314,7 +312,6 @@ class Slab:
         if solution.ndim == 3:
             for i in range(solution.shape[-2]):
                 for j in range(solution.shape[-1]):
-
                     (
                         Eslab_plus[:, i, j],
                         Eslab_minus[:, i, j],
@@ -327,7 +324,8 @@ class Slab:
                         ens[:, :, i, j],
                     )
             return Eslab_plus, Eslab_minus, Er, Et
-        raise ValueError(f"Unsupported number of dimensions: {solution.ndim}")
+        msg = f"Unsupported number of dimensions: {solution.ndim}"
+        raise ValueError(msg)
 
     def fresnel_static(self, omegas):
         """
@@ -372,7 +370,7 @@ class Slab:
         r23 = (eps_slab**0.5 - eps_minus**0.5) / (eps_slab**0.5 + eps_minus**0.5)
         alpha = r21 * r23
         return (
-            1 / (self.thickness * eps_slab**0.5) * (n * bk.pi + 1j / 2 * bk.log(alpha))
+            1 / (self.thickness * eps_slab**0.5) * (n * np.pi + 1j / 2 * np.log(alpha))
         )
 
     def eigensolve(self, *args, **kwargs):
@@ -395,9 +393,10 @@ class Slab:
         """
 
         def _build_matrix(omegas):
-            eigenvalues, modes = self.material.eigensolve(omegas)
-            out = self.build_matrix(omegas, eigenvalues, modes)
-            return out
+            eigenvalues, modes, _ = self.material.eigensolve(
+                omegas, left=True, normalize=True
+            )
+            return self.build_matrix(omegas, eigenvalues, modes)
 
         if "dim" not in kwargs:
             kwargs["dim"] = self.material.nh * 2
@@ -418,8 +417,8 @@ class Slab:
         incident_field : array_like
             The initialized incident field.
         """
-        omegas = bk.array(omegas)
-        return bk.zeros((2 * self.material.nh,) + omegas.shape, dtype=bk.complex128)
+        omegas = np.array(omegas)
+        return np.zeros((2 * self.material.nh, *omegas.shape), dtype=np.complex128)
 
     def get_incident_field(self, x, t, omega, Eis):
         """
@@ -450,13 +449,13 @@ class Slab:
         Omega = self.material.modulation_frequency
         L = self.thickness
 
-        Einc = bk.zeros((Nx, Nt), dtype=bk.complex128)
+        Einc = np.zeros((Nx, Nt), dtype=np.complex128)
         for ix, x_ in enumerate(x):
             if x_ < 0:
                 _E = 0
                 for n in range(-Nh, Nh + 1):
                     kn = eps_plus**0.5 * (omega - n * Omega)
-                    _E += Eis[n + Nh] * bk.exp(
+                    _E += Eis[n + Nh] * np.exp(
                         1j * (kn * (x_) - (omega - n * Omega) * t)
                     )
                 Einc[ix] = _E
@@ -464,7 +463,7 @@ class Slab:
                 _E = 0
                 for n in range(-Nh, Nh + 1):
                     kn = eps_minus**0.5 * (omega - n * Omega)
-                    _E += Eis[n + nh + Nh] * bk.exp(
+                    _E += Eis[n + nh + Nh] * np.exp(
                         -1j * (kn * (x_ - L) + (omega - n * Omega) * t)
                     )
                 Einc[ix] = _E
@@ -515,13 +514,13 @@ class Slab:
         Nh = self.material.Nh
         L = self.thickness
 
-        E = bk.zeros((Nx, Nt), dtype=bk.complex128)
+        E = np.zeros((Nx, Nt), dtype=np.complex128)
         for ix, x_ in enumerate(x):
             if x_ < 0:
                 _E = 0
                 for n in range(-Nh, Nh + 1):
                     kn = eps_plus**0.5 * (omega - n * Omega)
-                    _E += Enr[n + Nh] * bk.exp(
+                    _E += Enr[n + Nh] * np.exp(
                         -1j * (kn * (x_) + (omega - n * Omega) * t)
                     )
                 E[ix] = _E
@@ -529,22 +528,22 @@ class Slab:
                 _E = 0
                 for n in range(-Nh, Nh + 1):
                     kn = eps_minus**0.5 * (omega - n * Omega)
-                    _E += Ent[n + Nh] * bk.exp(
+                    _E += Ent[n + Nh] * np.exp(
                         1j * (kn * (x_ - L) - (omega - n * Omega) * t)
                     )
                 E[ix] = _E
             else:
                 _E = 0
-                for p in range(0, nh):
+                for p in range(nh):
                     _En = 0
                     for n in range(-Nh, Nh + 1):
                         _En += (
                             (
-                                Eslab_plus[p] * bk.exp(1j * ks[p] * x_)
-                                + Eslab_minus[p] * bk.exp(-1j * ks[p] * x_)
+                                Eslab_plus[p] * np.exp(1j * ks[p] * x_)
+                                + Eslab_minus[p] * np.exp(-1j * ks[p] * x_)
                             )
                             * modes[n + Nh, p]
-                            * bk.exp(-1j * (omega - n * Omega) * t)
+                            * np.exp(-1j * (omega - n * Omega) * t)
                         )
                     _E += _En
                 E[ix] = _E
@@ -579,23 +578,23 @@ class Slab:
 
         L = self.thickness
         T = self.material.modulation_period
-        Emaxi = bk.max(E.real)
-        Emini = bk.min(E.real)
+        Emaxi = np.max(E.real)
+        Emini = np.min(E.real)
         xs = x / L - 0.5
-        ymax = bk.max(bk.real(E))
-        ymin = bk.min(bk.real(E))
-        ymaxmin = max(bk.abs(ymax), bk.abs(ymin))
+        ymax = np.max(np.real(E))
+        ymin = np.min(np.real(E))
+        ymaxmin = max(np.abs(ymax), np.abs(ymin))
         ymax += ymaxmin * 0.2
         ymin -= ymaxmin * 0.2
 
         eps_time = self.material.get_eps_time(t)
         eps_slab = eps_time[0].real
-        eps_slab_map = eps_slab * bk.ones((1, 1))
+        eps_slab_map = eps_slab * np.ones((1, 1))
 
         xslab = [-0.5, 0.5]
         yslab = [ymin, ymax]
-        eps_min = bk.min(eps_time.real)
-        eps_max = bk.max(eps_time.real)
+        eps_min = np.min(eps_time.real)
+        eps_max = np.max(eps_time.real)
 
         plt.axvline(-0.5, color="#949494", lw=1)
         plt.axvline(0.5, color="#949494", lw=1)
@@ -612,35 +611,34 @@ class Slab:
             shading="flat",
             alpha=0.5,
         )
-        (line,) = ax.plot(xs, bk.real(E[:, 0]), c="#4c4c4c")
+        (line,) = ax.plot(xs, np.real(E[:, 0]), c="#4c4c4c")
         cbar = plt.colorbar()
-        cbar.ax.set_title(rf"$\epsilon(t)$")
+        cbar.ax.set_title(r"$\epsilon(t)$")
 
         ax.set_xlim(xs[0], xs[-1])
         ax.set_ylim(ymin, ymax)
         # title = ax.set_title(rf"$t = {t[0]/T:.2f}T$")
         title = ax.text(
-            0.13, 0.93, rf"$t = {t[0]/T:.2f}\,T$", transform=ax.transAxes, ha="center"
+            0.13, 0.93, rf"$t = {t[0] / T:.2f}\,T$", transform=ax.transAxes, ha="center"
         )
 
         def animate(it):  # pragma: no cover
             eps_slab = eps_time[it].real
-            cax.set_array(eps_slab * bk.ones((1, 1)))
-            line.set_ydata(bk.real(E[:, it]))
-            title.set_text(f"$t = {t[it]/T:.2f}T$")
+            cax.set_array(eps_slab * np.ones((1, 1)))
+            line.set_ydata(np.real(E[:, it]))
+            title.set_text(f"$t = {t[it] / T:.2f}T$")
             return (
                 line,
                 cax,
             )
 
-        ani = animation.FuncAnimation(
+        return animation.FuncAnimation(
             fig, animate, blit=False, repeat=True, frames=len(t) - 1, interval=10
         )
-        return ani
 
     def get_modes_normalization(self, modes_right, modes_left, matrix_derivative):
         dim = modes_right.shape[1]
-        normas = bk.zeros((dim,) + modes_right.shape[2:], dtype=complex)
+        normas = np.zeros((dim,) + modes_right.shape[2:], dtype=complex)
         for i in range(dim):
             normas[i] = (
                 dot(
@@ -669,10 +667,8 @@ class Slab:
         matrix_derivative,
         diag=True,
     ):
-
         if diag:
             return dot(modes_left, matvecprod(matrix_derivative, modes_right))
-        else:
-            R = dot(modes_left, matvecprod(matrix_left, modes_right))
-            L = dot(vecmatprod(modes_left, matrix_left), modes_right)
-            return (L - R) / (eigenvalue_right - eigenvalue_left)
+        R = dot(modes_left, matvecprod(matrix_right, modes_right))
+        L = dot(vecmatprod(modes_left, matrix_left), modes_right)
+        return (L - R) / (eigenvalue_right - eigenvalue_left)

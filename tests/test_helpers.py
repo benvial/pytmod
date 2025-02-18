@@ -1,19 +1,27 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
-
-import pytest
 import numpy as np
-from pytmod.helpers import *
+import pytest
+
+from pytmod.helpers import (
+    dimhandler,
+    dot,
+    matmatprod,
+    matvecprod,
+    move_first_axes_to_end,
+)
+
+rng = np.random.default_rng(12345)
 
 
 # Define a dummy function to test the decorator
 def dummy_function(self, omegas, eigenvalues, modes):
-    return modes.copy()
+    _ = eigenvalues, omegas, self
+    return modes
 
 
 # Apply the decorator to the dummy function
@@ -34,28 +42,28 @@ class TestDimHandler:
     def test_1d_array_input(self):
         N = 2
         mx = 5
-        omegas = np.random.rand(mx)
-        eigenvalues = np.random.rand(N, mx)
-        modes = np.random.rand(N, N, mx)
+        omegas = rng.random(mx)
+        eigenvalues = rng.random((N, mx))
+        modes = rng.random((N, N, mx))
         result = dummy_function(None, omegas, eigenvalues, modes)
         assert np.allclose(result, modes)
 
     def test_2d_array_input(self):
         N = 2
         mx, my = 3, 5
-        omegas = np.random.rand(mx, my)
-        eigenvalues = np.random.rand(N, mx, my)
-        modes = np.random.rand(N, N, mx, my)
+        omegas = rng.random((mx, my))
+        eigenvalues = rng.random((N, mx, my))
+        modes = rng.random((N, N, mx, my))
         result = dummy_function(None, omegas, eigenvalues, modes)
         assert np.allclose(result, modes)
 
     def test_invalid_input(self):
         N = 2
         mx, my, mz = 7, 3, 5
-        omegas = np.random.rand(mx, my, mz)
-        eigenvalues = np.random.rand(N, mx, my, mz)
-        modes = np.random.rand(N, N, mx, my, mz)
-        with pytest.raises(ValueError):
+        omegas = rng.random((mx, my, mz))
+        eigenvalues = rng.random((N, mx, my, mz))
+        modes = rng.random((N, N, mx, my, mz))
+        with pytest.raises(ValueError, match="Unsupported number of dimensions"):
             dummy_function(None, omegas, eigenvalues, modes)
 
 
@@ -77,7 +85,10 @@ def test_dot_product_2d_arrays():
 def test_dot_product_arrays_different_shapes():
     a = np.array([1, 2, 3])
     b = np.array([[4, 5], [6, 7]])
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError,
+        match="operands could not be broadcast together with remapped shapes",
+    ):
         dot(a, b)
 
 
@@ -104,12 +115,11 @@ def test_matvecprod_2d_matrix_1d_vector():
 
 
 def test_matvecprod_3d_matrix_2d_vector():
-
     N = 2
     mx, my = 7, 3
-    a = np.random.rand(N, N, mx, my)
-    b = np.random.rand(N, mx, my)
-    result = matvecprod(a, b)
+    a = rng.random((N, N, mx, my))
+    b = rng.random((N, mx, my))
+    matvecprod(a, b)
 
 
 def test_matmatprod_2d_arrays():
@@ -133,10 +143,6 @@ def test_matmatprod_non_numeric_arrays():
     b = np.array([["5", 6], [7, 8]], dtype=object)
     with pytest.raises(TypeError):
         matmatprod(a, b)
-
-
-import pytest
-import numpy as np
 
 
 def test_move_first_axes_to_end_1d():

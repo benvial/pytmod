@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
@@ -15,15 +13,15 @@ eigenvalues and eigenvectors of this material.
 
 """
 
-
 ####################################################################################
 # Check results from :cite:t:`zurita-sanchez2009`
-
+from __future__ import annotations
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
+
 import pytmod as pm
-import numpy as bk
 
 plt.ion()
 plt.close("all")
@@ -47,7 +45,7 @@ mat = pm.Material(eps_fourier, Omega)
 
 T = mat.modulation_period
 
-t = bk.linspace(0, 3 * T, 3000)
+t = np.linspace(0, 3 * T, 3000)
 eps_time = mat.get_eps_time(t)
 
 plt.figure()
@@ -67,7 +65,6 @@ kns, ens = mat.eigensolve(omega)
 ####################################################################################
 # The eigenvalues are
 
-print(kns.real)
 
 ####################################################################################
 # We plot the eigenmodes in the time domain
@@ -95,7 +92,7 @@ en_cv = []
 for Npad in Npads:
     mat = pm.Material(eps_fourier, Omega, Npad=Npad)
     kns, ens = mat.eigensolve(omega)
-    idx = bk.argsort(kns)
+    idx = np.argsort(kns)
     kns = kns[idx]
     ens = ens[:, idx]
 
@@ -106,14 +103,14 @@ for Npad in Npads:
         mode_time = mat.freq2time(mode, t)
         modes_time.append(mode_time)
     en_cv.append(modes_time)
-ev_cv = bk.array(ev_cv)
-en_cv = bk.array(en_cv)
+ev_cv = np.array(ev_cv)
+en_cv = np.array(en_cv)
 
 ####################################################################################
 # Eigenvalues convergence
 
 
-Ns = 3 + 2 * bk.array(Npads)
+Ns = 3 + 2 * np.array(Npads)
 
 
 plt.figure()
@@ -130,7 +127,7 @@ plt.show()
 
 mat = pm.Material(eps_fourier, Omega, Npad=100)
 kns, ens = mat.eigensolve(omega)
-idx = bk.argsort(kns)
+idx = np.argsort(kns)
 kns = kns[idx]
 ens = ens[:, idx]
 evs_check = kns[:3].real
@@ -139,7 +136,7 @@ ens_check = ens[::3].real
 
 plt.figure()
 for i in range(3):
-    plt.plot(Ns, bk.abs(1 - ev_cv[:, i] / evs_check[i]), label=i)
+    plt.plot(Ns, np.abs(1 - ev_cv[:, i] / evs_check[i]), label=i)
     plt.yscale("log")
     plt.tight_layout()
     plt.show()
@@ -150,7 +147,7 @@ for i in range(3):
 plt.xlabel("$N$")
 plt.ylabel("relative error")
 plt.xlim(3, 21)
-xticks = bk.arange(3, 2 * Nmax + 2, 2)
+xticks = np.arange(3, 2 * Nmax + 2, 2)
 plt.xticks(xticks, xticks)
 plt.legend()
 plt.tight_layout()
@@ -161,7 +158,7 @@ plt.show()
 # Eigenstates convergence
 
 cmap = mpl.colormaps["Blues"]
-colors = cmap(bk.linspace(0, 1, 11)[1:])
+colors = cmap(np.linspace(0, 1, 11)[1:])
 
 for i in range(3):
     plt.figure()

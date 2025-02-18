@@ -67,8 +67,8 @@ format:
 
 # Lint with flake8
 lint:
-	@flake8 --exit-zero --ignore={{LINT_FLAGS}} {{PROJECT_NAME}} 
-	
+	@flake8 --exit-zero --ignore={{LINT_FLAGS}} {{PROJECT_NAME}}
+
 # Lint using flake8
 lint-extra:
 	@flake8 --exit-zero --ignore={{LINT_FLAGS}} {{PROJECT_NAME}}  test/ examples/ --exclude "dev*"

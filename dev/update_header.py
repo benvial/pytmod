@@ -1,16 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
-
+from __future__ import annotations
 
 import os
+from pathlib import Path
 
-header = """#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Authors: Benjamin Vial
+header = """# Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
@@ -18,7 +15,7 @@ header = """#!/usr/bin/env python
 
 
 def rep_header(python_file, header):
-    with open(python_file, "r") as f:
+    with Path.open(python_file) as f:
         lines = f.readlines()
     i = 0
     current_header = []
@@ -32,18 +29,17 @@ def rep_header(python_file, header):
     new_header = header.splitlines()
     new_header = [h + "\n" for h in new_header]
     if new_header != current_header:
-        print(f"updating header in {python_file}")
         new_header = "".join(new_header)
         data = new_header + "".join(lines[i:])
-        with open(python_file, "w") as f:
+        with Path.open(python_file, "w") as f:
             f.write(data)
 
 
 def update(directory):
-    for root, dirs, files in os.walk(directory):
+    for root, _dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(".py"):
-                python_file = os.path.abspath(os.path.join(root, file))
+                python_file = Path(Path(root) / file).resolve()
                 rep_header(python_file, header)
 
 

@@ -1,13 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
+from pathlib import Path
 
 from get_versions import get_latest_version_tag
-
 
 last_tag = get_latest_version_tag()
 
@@ -24,5 +23,5 @@ content = f"""
 """
 
 
-with open("_build/html/index.html", "w") as f:
+with Path.open("_build/html/index.html", "w") as f:
     f.write(content)

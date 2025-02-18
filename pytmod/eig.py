@@ -1,23 +1,21 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
 __all__ = ["nonlinear_eigensolver"]
 
 import logging
 import time
 
-import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+import numpy as np
 import scipy.linalg as la
+from matplotlib import patches
 from skimage.feature import peak_local_max
-import numpy as bk
-import random
 
-random.seed(0)
+rng = np.random.default_rng(12345)
 
 
 def get_backend():
@@ -52,7 +50,7 @@ def get_residual(M, phi):
         The norm of the residual
     """
 
-    return bk.abs(phi @ M @ phi)
+    return np.abs(phi @ M @ phi)
 
 
 def eig(C, D):
@@ -74,8 +72,8 @@ def eig(C, D):
         The eigenvectors
     """
     if get_backend() == "torch":
-        invD = bk.linalg.inv(D)
-        return bk.linalg.eig(invD @ C)
+        invD = np.linalg.inv(D)
+        return np.linalg.eig(invD @ C)
     return la.eig(C, D)
 
 
@@ -103,8 +101,8 @@ def null(M, mult=1):
     array
         The nullspace of M
     """
-    e, v = bk.linalg.eig(M)
-    srt = bk.argsort(bk.abs(e))
+    e, v = np.linalg.eig(M)
+    srt = np.argsort(np.abs(e))
     return v[:, srt[0:mult]]
 
 
@@ -123,8 +121,8 @@ def block(matrices):
         The stacked matrix
     """
     if get_backend() == "torch":
-        return bk.cat([bk.cat(m, dim=1) for m in matrices], dim=0)
-    return bk.block(matrices)
+        return np.cat([np.cat(m, dim=1) for m in matrices], dim=0)
+    return np.block(matrices)
 
 
 def dot(a, b):
@@ -144,9 +142,8 @@ def dot(a, b):
         The dot product of a and b
     """
     if get_backend() == "torch":
-        return bk.matmul(a, b)
-    else:
-        return bk.dot(a, b)
+        return np.matmul(a, b)
+    return np.dot(a, b)
 
 
 # adapted from https://github.com/DavidPowell/OpenModes/blob/161bd0b30036c98caf4ab0cd463032a4ba22a382/openmodes/eig.py#L193
@@ -159,8 +156,7 @@ def eig_newton(
     tol=1e-6,
     max_iter=20,
     func_gives_der=False,
-    G=None,
-    args=[],
+    args=None,
     weight="rayleigh symmetric",
     y_0=None,
 ):
@@ -219,7 +215,7 @@ def eig_newton(
         Oxford: Pergamon, 1966.
 
     2.  A. Ruhe, “Algorithms for the Nonlinear Eigenvalue Problem,”
-        SIAM J. Numer. Anal., vol. 10, no. 4, pp. 674–689, Sep. 1973.
+        SIAM J. Numer. Anal., vol. 10, no. 4, pp. 674-689, Sep. 1973.
 
     """
 
@@ -227,13 +223,15 @@ def eig_newton(
     # import numpy as np
     # t = -time.time()
 
+    if args is None:
+        args = []
     has_y_0 = y_0 is not None
     has_x_0 = x_0 is not None
     x_s = x_0
     lambda_s = lambda_0
 
     logging.debug("Searching for zeros with eig_newton")
-    logging.debug("Starting guess %+.4e %+.4ej" % (lambda_0.real, lambda_0.imag))
+    logging.debug("Starting guess = %s ", lambda_0)
 
     converged = False
 
@@ -276,9 +274,9 @@ def eig_newton(
             # pivots_solvable = A_LU[info != 0]
             # X = torch.linalg.lu_solve(B, A_LU_solvable, pivots_solvable)
 
-            T_s_lu = bk.linalg.lu_factor_ex(T_s, check_errors=False)
+            T_s_lu = np.linalg.lu_factor_ex(T_s, check_errors=False)
             # T_s_lu = bk.linalg.lu_factor(T_s)
-            u = bk.linalg.lu_solve(*T_s_lu[:2], bk.stack([w]).T).flatten()
+            u = np.linalg.lu_solve(*T_s_lu[:2], np.stack([w]).T).flatten()
         else:
             T_s_lu = la.lu_factor(T_s)
             u = la.lu_solve(T_s_lu, w)
@@ -287,8 +285,8 @@ def eig_newton(
         # if known_vects is supplied, we should take this into account when
         # finding v
         if weight.lower() == "max element":
-            v_s = bk.zeros_like(x_s)
-            v_s[bk.argmax(bk.abs(x_s))] = 1.0
+            v_s = np.zeros_like(x_s)
+            v_s[np.argmax(np.abs(x_s))] = 1.0
         elif weight.lower() == "rayleigh":
             v_s = dot(T_s.T, x_s.conj())
         elif weight.lower() == "rayleigh symmetric":
@@ -297,27 +295,28 @@ def eig_newton(
             w = dot(T_ds.T, y_s)
 
             if get_backend() == "torch":
-                y_s = bk.linalg.lu_solve(
-                    *T_s_lu[:2], bk.stack([w]), left=False
+                y_s = np.linalg.lu_solve(
+                    *T_s_lu[:2], np.stack([w]), left=False
                 ).flatten()
             else:
                 y_s = la.lu_solve(T_s_lu, w, trans=1)
             # y_s = bk.linalg.lu_solve(T_s_lu, dot(T_ds.T, y_s), trans=1)
-            y_s /= bk.sqrt(bk.sum(bk.abs(y_s) ** 2))
+            y_s /= np.sqrt(np.sum(np.abs(y_s) ** 2))
             v_s = dot(T_s.T, y_s)
         else:
-            raise ValueError("Unknown weighting method %s" % weight)
+            msg = f"Wrong weighting method {weight}"
+            raise ValueError(msg)
 
         delta_lambda_abs = dot(v_s, x_s) / dot(v_s, u)
 
-        delta_lambda = bk.abs(delta_lambda_abs / lambda_s)
+        delta_lambda = np.abs(delta_lambda_abs / lambda_s)
         converged = delta_lambda < tol
 
         if converged:
             break
 
         lambda_s1 = lambda_s - delta_lambda_abs
-        x_s1 = u / bk.sqrt(bk.sum(bk.abs(u) ** 2))
+        x_s1 = u / np.sqrt(np.sum(np.abs(u) ** 2))
         x_s1 = u / (u @ T_ds @ u)
 
         # update variables for next iteration
@@ -332,7 +331,8 @@ def eig_newton(
         #     _u = null(T_s)[:, 0]
         #     x_s +=  _u/ bk.sqrt(bk.sum(bk.abs(u) ** 2))
         #     x_s /= 2
-        logging.debug("%+.4e %+.4ej" % (lambda_s.real, lambda_s.imag))
+
+        logging.debug("Current eigenvalue = %s ", lambda_s)
 
         # if iter_count>0:
         #     line_cur[0].remove()
@@ -352,8 +352,9 @@ def eig_newton(
 
     if not converged:
         # return
-        raise ConvergenceError("maximum iterations reached, no convergence")
-        return
+        msg = "maximum iterations reached, no convergence"
+        raise ConvergenceError(msg)
+        return None
 
     res = {
         "eigval": lambda_s,
@@ -363,27 +364,24 @@ def eig_newton(
 
     if weight.lower() == "rayleigh asymmetric":
         # Scale both the left and right eigenvector identically first
-        y_s /= bk.sqrt(bk.vdot(y_s, y_s) / bk.vdot(x_s, x_s))
+        y_s /= np.sqrt(np.vdot(y_s, y_s) / np.vdot(x_s, x_s))
 
         # Then scale both to match the eigenvalue derivative
         dz_ds = dot(y_s, dot(T_ds, x_s))
-        y_s /= bk.sqrt(dz_ds)
+        y_s /= np.sqrt(dz_ds)
         res["eigvec_left"] = y_s
 
-        x_s /= bk.sqrt(dz_ds)
+        x_s /= np.sqrt(dz_ds)
         res["eigvec"] = x_s
 
     else:
         # scale the eigenvector so that the eigenvalue derivative is 1
         dz_ds = dot(x_s, dot(T_ds, x_s))
-        x_s /= bk.sqrt(dz_ds)
+        x_s /= np.sqrt(dz_ds)
         res["eigvec"] = x_s
         res["eigvec_left"] = x_s
 
     return res
-
-
-_bounds_im = None
 
 
 def _nonlinear_eigensolver(
@@ -412,7 +410,6 @@ def _nonlinear_eigensolver(
     return_left = kwargs["return_left"]
     if return_left:
         weight = "rayleigh asymmetric"
-    global _bounds_im
     tnlevp = -time.time()
     Nguess_re, Nguess_im = N_grid
 
@@ -431,17 +428,17 @@ def _nonlinear_eigensolver(
             return func(omega)
 
     if guesses is None:
-        guesses_re = bk.linspace(omega0.real, omega1.real, Nre)
-        guesses_im = bk.linspace(omega0.imag, omega1.imag, Nim)
-        guesses_re, guesses_im = bk.meshgrid(guesses_re, guesses_im, indexing="ij")
+        guesses_re = np.linspace(omega0.real, omega1.real, Nre)
+        guesses_im = np.linspace(omega0.imag, omega1.imag, Nim)
+        guesses_re, guesses_im = np.meshgrid(guesses_re, guesses_im, indexing="ij")
         guesses = guesses_re + 1j * guesses_im
         guesses0 = guesses.flatten()
         if strategy == "grid":
             guesses = guesses0
         elif strategy == "peaks":
-            omegas_re = bk.linspace(omega0.real, omega1.real, Nre)
-            omegas_im = bk.linspace(omega1.imag, omega0.imag, Nim)
-            omegas_re_, omegas_im_ = bk.meshgrid(omegas_re, omegas_im, indexing="ij")
+            omegas_re = np.linspace(omega0.real, omega1.real, Nre)
+            omegas_im = np.linspace(omega1.imag, omega0.imag, Nim)
+            omegas_re_, omegas_im_ = np.meshgrid(omegas_re, omegas_im, indexing="ij")
 
             #################################################################
             # Compute complex plane quantities
@@ -449,36 +446,30 @@ def _nonlinear_eigensolver(
             omegas_complex = omegas_re_ + 1j * omegas_im_
             Mc = func(omegas_complex)
             if get_backend() == "torch":
-                Mc = bk.permute(Mc, (2, 3, 0, 1))
+                Mc = np.permute(Mc, (2, 3, 0, 1))
             else:
-                Mc = bk.transpose(Mc, axes=(2, 3, 0, 1))
+                Mc = np.transpose(Mc, axes=(2, 3, 0, 1))
             if peaks_estimate == "eig":
-                evs = bk.linalg.eigvals(Mc)
-                srt = bk.argsort(bk.abs(evs), axis=-1)
+                evs = np.linalg.eigvals(Mc)
+                srt = np.argsort(np.abs(evs), axis=-1)
                 if get_backend() == "torch":
-                    min_evs = bk.gather(evs, -1, srt)[:, :, 0]
+                    min_evs = np.gather(evs, -1, srt)[:, :, 0]
                 else:
-                    min_evs = bk.take_along_axis(evs, srt, axis=-1)[:, :, 0]
+                    min_evs = np.take_along_axis(evs, srt, axis=-1)[:, :, 0]
 
-                im = -bk.log10(bk.abs(min_evs))
+                im = -np.log10(np.abs(min_evs))
             else:
-                im = -bk.log10(bk.abs(bk.linalg.det(Mc)))
+                im = -np.log10(np.abs(np.linalg.det(Mc)))
             if plot_solver:
-                if _bounds_im is None:
-                    # vmin = bk.min(im)
-                    vmax = bk.max(im)
-                    # vmin = bk.mean(im) - 1
-                    vmin = bk.min(im)
-                    _bounds_im = vmin, vmax
-                else:
-                    vmin, vmax = _bounds_im
-                cmap = plt.gca().pcolormesh(
+                vmax = np.max(im)
+                vmin = np.min(im)
+                plt.gca().pcolormesh(
                     omegas_re / scale,
                     omegas_im / scale,
                     im.T,
                     cmap="inferno",
-                    # vmin=vmin,
-                    # vmax=vmax,
+                    vmin=vmin,
+                    vmax=vmax,
                 )
 
                 # plt.pause(2)
@@ -488,32 +479,32 @@ def _nonlinear_eigensolver(
                 im = im.numpy()
             coordinates = peak_local_max(im, min_distance=1)
 
-            guess_peak = bk.array(
+            guess_peak = np.array(
                 [omegas_complex[coord[0], coord[1]] for coord in coordinates]
             )
-            tloc = bk.linspace(0, 2 * bk.pi, N_guess_loc + 1)[:-1]
+            tloc = np.linspace(0, 2 * np.pi, N_guess_loc + 1)[:-1]
             guesses = []
             for guess_loc in guess_peak:
                 guesses_ = (
                     guess_loc.real
-                    + Rloc * bk.cos(tloc)
-                    + 1j * (guess_loc.imag + Rloc * bk.sin(tloc))
+                    + Rloc * np.cos(tloc)
+                    + 1j * (guess_loc.imag + Rloc * np.sin(tloc))
                 )
-                guesses_ = bk.hstack([guesses_, guess_loc])
+                guesses_ = np.hstack([guesses_, guess_loc])
                 guesses.append(guesses_)
             if len(guesses) > 0:
-                guesses = bk.stack(guesses).flatten()
+                guesses = np.stack(guesses).flatten()
         elif strategy == "random":
-
-            rand_re = bk.array([random.random() for i in range(N_grid[0] * N_grid[1])])
-            rand_im = bk.array([random.random() for i in range(N_grid[0] * N_grid[1])])
+            rand_re = rng.random(N_grid)
+            rand_im = rng.random(N_grid)
             rand_re = (omega1.real - omega0.real) * rand_re + omega0.real
             rand_im = (omega1.imag - omega0.imag) * rand_im + omega0.imag
             guesses = rand_re + 1j * rand_im
-            guesses = bk.stack(guesses).flatten()
+            guesses = np.stack(guesses).flatten()
 
         else:
-            raise ValueError(f"Wrong strategy {strategy}")
+            msg = f"Wrong strategy {strategy}. Please use `grid`, `peaks` or `random`"
+            raise ValueError(msg)
             # ## linearize
             # guesses = []
             # for g in guesses0:
@@ -523,15 +514,12 @@ def _nonlinear_eigensolver(
             #     guesses.append(e[srt][0])
             # guesses = bk.stack(guesses).flatten()
 
-    guesses = bk.array(guesses)
-    if plot_solver:
-        if len(guesses) > 0:
-            guess_plot = plt.gca().plot(
-                guesses.real / scale, guesses.imag / scale, "xk"
-            )
-            plt.gca().set_xlabel(r"Re $\omega/\omega_p$")
-            plt.gca().set_ylabel(r"Im $\omega/\omega_p$")
-            plt.pause(0.01)
+    guesses = np.array(guesses)
+    if plot_solver and len(guesses) > 0:
+        guess_plot = plt.gca().plot(guesses.real / scale, guesses.imag / scale, "xk")
+        plt.gca().set_xlabel(r"Re $\omega/\omega_p$")
+        plt.gca().set_ylabel(r"Im $\omega/\omega_p$")
+        plt.pause(0.01)
 
     def compute_eigenvalues(guesses, tol, max_iter):
         evs = []
@@ -544,16 +532,14 @@ def _nonlinear_eigensolver(
                 vect_init = None
             elif init_vect == "random":
                 if dim is None:
-                    raise ValueError(
-                        f"Please provide the dimension of your matrix with the keyword argument dim if init_vect = random"
-                    )
+                    msg = "Please provide the dimension of your matrix with the keyword argument dim if init_vect = random"
+                    raise ValueError(msg)
 
-                vect_init = bk.random.rand(dim) + 1j * bk.random.rand(dim)
+                vect_init = rng.random(dim) + 1j * rng.random(dim)
                 vect_init /= (vect_init.conj() @ vect_init) ** 0.5
             else:
-                raise ValueError(
-                    f"Wrong eigenvector initialization init_vect {init_vect}"
-                )
+                msg = f"Wrong eigenvector initialization init_vect {init_vect}"
+                raise ValueError(msg)
             t0 = -time.time()
             try:
                 res = eig_newton(
@@ -597,11 +583,12 @@ def _nonlinear_eigensolver(
             #         plt.pause(0.01)
             #     except:
             #         pass
-            raise EigenvalueError("No eigenvalues found")
-        evs = bk.array(evs)
-        modes = bk.stack(modes).T
-        modes_left = bk.stack(modes_left).T
-        residuals = bk.array(residuals)
+            msg = "No eigenvalues found"
+            raise EigenvalueError(msg)
+        evs = np.array(evs)
+        modes = np.stack(modes).T
+        modes_left = np.stack(modes_left).T
+        residuals = np.array(residuals)
         if filter:
             unique_indices = unique(evs, precision=tol * 100)
             modes = modes[:, unique_indices]
@@ -612,7 +599,7 @@ def _nonlinear_eigensolver(
         if verbose:
             print_results(evs, residuals)
 
-        srt = bk.argsort(bk.real(evs))
+        srt = np.argsort(np.real(evs))
         if return_left:
             return evs[srt], modes[:, srt], modes_left[:, srt], residuals[srt]
         return evs[srt], modes[:, srt], residuals[srt]
@@ -626,33 +613,27 @@ def _nonlinear_eigensolver(
             evs, modes, residuals = compute_eigenvalues(guesses, tol, max_iter)
 
     else:
-        raise EigenvalueError("No eigenvalues found")
+        msg = "No eigenvalues found"
+        raise EigenvalueError(msg)
     if plot_solver:
         try:
             [_.remove() for _ in guess_plot]
             plt.pause(0.01)
-        except:
+        except ValueError:
             pass
     tnlevp += time.time()
     if verbose:
-        print(f"total time: {tnlevp:.4f}s")
+        pass
     if return_left:
         return evs, modes, modes_left
     return evs, modes
 
 
 def print_results(evs0, res0, message=None):
-    print("")
-    print("----------------------------------------------------")
     if message is not None:
-        print(message)
-    print(f"Found {len(evs0)} eigenvalues")
-    print("----------------------------------------------------")
-    print("              eigenvalue                 residual")
-    print("----------------------------------------------------")
-    for z0, r0 in zip(evs0, res0):
-        space = " " if z0.real > 0 else ""
-        print(f"{space}{z0:.14f}     {r0:.3e}")
+        pass
+    for _z0, _r0 in zip(evs0, res0, strict=False):
+        pass
 
 
 def unique(evs, precision):
@@ -660,9 +641,9 @@ def unique(evs, precision):
     unique_indices = []
     for i, ev in enumerate(evs):
         evfloor = (
-            bk.floor(ev.real / precision) + 1j * bk.floor(ev.imag / precision)
+            np.floor(ev.real / precision) + 1j * np.floor(ev.imag / precision)
         ) * precision
-        if not (evfloor in evs_unique):
+        if evfloor not in evs_unique:
             evs_unique.append(evfloor)
             unique_indices.append(i)
     return unique_indices
@@ -688,8 +669,8 @@ def gram_schmidt(A, dM):
         # previous vectors, subtract from it its projection onto
         # each of the previous vectors.
         for k in range(j):
-            A[:, j] -= bk.dot(A[:, k], dM[k] @ A[:, j]) * A[:, k]
-        A[:, j] /= bk.dot(A[:, j], dM[j] @ A[:, j]) ** 0.5
+            A[:, j] -= np.dot(A[:, k], dM[k] @ A[:, j]) * A[:, k]
+        A[:, j] /= np.dot(A[:, j], dM[j] @ A[:, j]) ** 0.5
     return A
 
 
@@ -824,11 +805,11 @@ def _nleigsolve_recursive(
     eigenvectors_left_ : list of array, optional
         The left eigenvectors found
     """
-    if evs_ == None:
+    if evs_ is None:
         evs_ = []
-    if eigenvectors_ == None:
+    if eigenvectors_ is None:
         eigenvectors_ = []
-    if eigenvectors_left_ == None:
+    if eigenvectors_left_ is None:
         eigenvectors_left_ = []
     Ncut += 1
 
@@ -837,9 +818,9 @@ def _nleigsolve_recursive(
     peak_ref0 = kwargs["peak_ref"]
     evs_old = evs_.copy()
     if evs_old != []:
-        _evs0 = bk.hstack(evs_old) if evs_old != [] else evs_old
+        _evs0 = np.hstack(evs_old) if evs_old != [] else evs_old
         unique_indices0 = unique(_evs0, precision=kwargs["tol"] * 100)
-        Nmodes0 = len(unique_indices0)
+        len(unique_indices0)
         Nmodes_in_region = 0
         for e in _evs0[unique_indices0]:
             if (
@@ -849,12 +830,11 @@ def _nleigsolve_recursive(
                 and e.imag < omega1.imag
             ):
                 Nmodes_in_region += 1
-        N_grid_ = max(kwargs["N_grid"])
+        max(kwargs["N_grid"])
         peak_ref1 = 1 / (Nmodes_in_region + 1) * peak_ref0
 
         peak_ref1 = max(peak_ref0, peak_ref1)
     else:
-        Nmodes0 = 0
         Nmodes_in_region = 0
         peak_ref1 = peak_ref0
     peak_ref1 = peak_ref0  # max(peak_ref1, 4*peak_ref0)
@@ -870,7 +850,7 @@ def _nleigsolve_recursive(
             alpha=0.1,
             edgecolor="#ff7c24",
         )
-        rectplot1 = plot_rectangle(
+        plot_rectangle(
             plt.gca(),
             omega0 / kwargs["scale"],
             omega1 / kwargs["scale"],
@@ -898,7 +878,7 @@ def _nleigsolve_recursive(
             eigenvectors_left_.append(eigenvectors_left)
 
     if evs_old != []:
-        _evs1 = bk.hstack(evs_)
+        _evs1 = np.hstack(evs_)
         unique_indices1 = unique(_evs1, precision=kwargs["tol"] * 100)
         cond = len(unique_indices0) == len(unique_indices1)
         # evs_ = [_evs1[i] for i in unique_indices1]
@@ -973,28 +953,28 @@ def nonlinear_eigensolver(
     If `recursive` is `True`, the function refines the guesses by dividing the
     frequency interval in four parts and solving the problem recursively.
     """
-    defkwargs = dict(
-        dfunc=None,
-        guesses=None,
-        recursive=False,
-        weight="max element",
-        init_vect="eig",
-        strategy="peaks",
-        peaks_estimate="det",
-        tol=1e-6,
-        max_iter=100,
-        N_grid=(10, 10),
-        N_guess_loc=0,
-        Rloc=0.01,
-        plot_solver=False,
-        peak_ref=10,
-        verbose=False,
-        filter=True,
-        scale=1,
-        return_left=False,
-    )
+    defkwargs = {
+        "dfunc": None,
+        "guesses": None,
+        "recursive": False,
+        "weight": "max element",
+        "init_vect": "eig",
+        "strategy": "peaks",
+        "peaks_estimate": "det",
+        "tol": 1e-6,
+        "max_iter": 100,
+        "N_grid": (10, 10),
+        "N_guess_loc": 0,
+        "Rloc": 0.01,
+        "plot_solver": False,
+        "peak_ref": 10,
+        "verbose": False,
+        "filter": True,
+        "scale": 1,
+        "return_left": False,
+    }
     for k, v in defkwargs.items():
-        if k not in kwargs.keys():
+        if k not in kwargs:
             kwargs[k] = v
 
     return_left = kwargs["return_left"]
@@ -1027,15 +1007,15 @@ def nonlinear_eigensolver(
             if return_left:
                 eigenvectors_left_ = [eigenvectors_left_]
             evs_ = [evs_]
-        evs = bk.hstack(evs_)
+        evs = np.hstack(evs_)
         unique_indices = unique(evs, precision=kwargs["tol"] * 100)
         evs = evs[unique_indices]
-        isort = bk.argsort(evs.real)
+        isort = np.argsort(evs.real)
         evs = evs[isort]
-        eigenvectors = bk.hstack(eigenvectors_)[:, unique_indices][:, isort]
+        eigenvectors = np.hstack(eigenvectors_)[:, unique_indices][:, isort]
 
         if return_left:
-            eigenvectors_left = bk.hstack(eigenvectors_left_)[:, unique_indices][
+            eigenvectors_left = np.hstack(eigenvectors_left_)[:, unique_indices][
                 :, isort
             ]
 
@@ -1062,29 +1042,32 @@ def polyeig(A):
 
     """
     if len(A) <= 0:
-        raise Exception("Provide at least one matrix")
+        msg = "Provide at least one matrix"
+        raise ValueError(msg)
     for Ai in A:
         if Ai.shape[0] != Ai.shape[1]:
-            raise Exception("Matrices must be square")
+            msg = "Matrices must be square"
+            raise ValueError(msg)
         if Ai.shape != A[0].shape:
-            raise Exception("All matrices must have the same shapes")
+            msg = "All matrices must have the same shapes"
+            raise ValueError(msg)
 
     n = A[0].shape[0]
-    l = len(A) - 1
+    m = len(A) - 1
     # Assemble matrices for generalized problem
     C = block(
-        [[bk.zeros((n * (l - 1), n)), bk.eye(n * (l - 1))], [-bk.column_stack(A[0:-1])]]
+        [[np.zeros((n * (m - 1), n)), np.eye(n * (m - 1))], [-np.column_stack(A[0:-1])]]
     )
     D = block(
         [
-            [bk.eye(n * (l - 1)), bk.zeros((n * (l - 1), n))],
-            [bk.zeros((n, n * (l - 1))), A[-1]],
+            [np.eye(n * (m - 1)), np.zeros((n * (m - 1), n))],
+            [np.zeros((n, n * (m - 1))), A[-1]],
         ]
     )
     # Solve generalized eigenvalue problem
     e, X = eig(C, D)
-    if bk.all(bk.isreal(e)):
-        e = bk.real(e)
+    if np.all(np.isreal(e)):
+        e = np.real(e)
     X = X[:n, :]
 
     # Sort eigenvalues/vectors
@@ -1093,10 +1076,10 @@ def polyeig(A):
     # e = e[I]
 
     # Scaling each mode by max
-    maxi = bk.max(bk.abs(X), axis=0)
+    maxi = np.max(np.abs(X), axis=0)
 
     if get_backend() == "torch":
         maxi = maxi[0]
-    X /= bk.tile(maxi, (n, 1))
+    X /= np.tile(maxi, (n, 1))
 
     return e, X

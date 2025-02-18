@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
@@ -14,14 +12,14 @@ A simple example.
 
 """
 
-
 ####################################################################################
 # Check results from :cite:t:`zurita-sanchez2009`
-
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
+import numpy as np
+
 import pytmod as pm
-import numpy as bk
 
 plt.ion()
 plt.close("all")
@@ -32,16 +30,15 @@ Omega = 1
 Npad = 5
 
 Nomega = 500
-omegas = bk.linspace(0, 1 * Omega, Nomega)
+omegas = np.linspace(0, 1 * Omega, Nomega)
 
 
 def get_eps_fourier(deps):
-    eps_fourier = [
+    return [
         -deps / (2 * 1j),
         eps0,
         deps / (2 * 1j),
     ]
-    return eps_fourier
 
 
 ####################################################################################
@@ -67,7 +64,7 @@ fig3.tight_layout()
 # Figures 4 and 5
 
 Nomega = 1500
-omegas = bk.linspace(0.0001, 10 + 0.00001 * Omega, Nomega)
+omegas = np.linspace(0.0001, 10 + 0.00001 * Omega, Nomega)
 
 Nharmo_plot = 0
 
@@ -94,18 +91,18 @@ for i, Ln in enumerate([0.5, 2]):
         tn = Et / Ei0
 
         imode = mat.Nh + Nharmo_plot
-        r_ = bk.abs(rn[imode])
-        t_ = bk.abs(tn[imode])
-        ax4[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax4[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.abs(rn[imode])
+        t_ = np.abs(tn[imode])
+        ax4[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax4[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax4[i, j].set_title(rf"$L_N = {Ln}, $n=${Nharmo_plot}$")
         ax4[i, j].set_ylim(0, 1)
         ax4[i, j].set_xlim(0, 10)
 
-        r_ = bk.angle(rn[imode]) / bk.pi
-        t_ = bk.angle(tn[imode]) / bk.pi
-        ax5[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax5[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.angle(rn[imode]) / np.pi
+        t_ = np.angle(tn[imode]) / np.pi
+        ax5[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax5[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax5[i, j].set_title(rf"$L_N = {Ln}, $n=${Nharmo_plot}$")
         ax5[i, j].set_ylim(-1, 1)
         ax5[i, j].set_xlim(0, 10)
@@ -113,9 +110,9 @@ for i, Ln in enumerate([0.5, 2]):
 ax4[0, 1].legend()
 ax5[0, 1].legend()
 fig4.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig4.supylabel(rf"magnitude")
+fig4.supylabel(r"magnitude")
 fig5.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig5.supylabel(rf"phase")
+fig5.supylabel(r"phase")
 fig4.tight_layout()
 fig5.tight_layout()
 
@@ -147,18 +144,18 @@ for i, Ln in enumerate([0.5, 8]):
     tn = Et / Ei0
     for j, Nharmo_plot in enumerate([1, -1]):
         imode = mat.Nh + Nharmo_plot
-        r_ = bk.abs(rn[imode])
-        t_ = bk.abs(tn[imode])
-        ax6[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax6[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.abs(rn[imode])
+        t_ = np.abs(tn[imode])
+        ax6[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax6[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax6[i, j].set_title(rf"$L_N = {Ln}, $n=${Nharmo_plot}$")
         ax6[i, j].set_ylim(0)
         ax6[i, j].set_xlim(0, 10)
 
-        r_ = bk.angle(rn[imode]) / bk.pi
-        t_ = bk.angle(tn[imode]) / bk.pi
-        ax7[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax7[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.angle(rn[imode]) / np.pi
+        t_ = np.angle(tn[imode]) / np.pi
+        ax7[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax7[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax7[i, j].set_title(rf"$L_N = {Ln}, $n=${Nharmo_plot}$")
         ax7[i, j].set_ylim(-1, 1)
         xmax = 2 if Ln == 8 else 10
@@ -170,9 +167,9 @@ for i, Ln in enumerate([0.5, 8]):
 ax6[0, 1].legend()
 ax7[0, 1].legend()
 fig6.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig6.supylabel(rf"magnitude")
+fig6.supylabel(r"magnitude")
 fig7.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig7.supylabel(rf"phase")
+fig7.supylabel(r"phase")
 fig6.tight_layout()
 fig7.tight_layout()
 
@@ -201,18 +198,18 @@ for j, Ln in enumerate([0.5, 8]):
     tn = Et / Ei0
     for i, Nharmo_plot in enumerate([1, -1, 2, -2]):
         imode = mat.Nh + Nharmo_plot
-        r_ = bk.abs(rn[imode])
-        t_ = bk.abs(tn[imode])
-        ax8[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax8[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.abs(rn[imode])
+        t_ = np.abs(tn[imode])
+        ax8[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax8[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax8[i, j].set_title(rf"$L_N = {Ln}, n = {Nharmo_plot}$")
         ax8[i, j].set_ylim(0)
         ax8[i, j].set_xlim(0, 10)
 
-        r_ = bk.angle(rn[imode]) / bk.pi
-        t_ = bk.angle(tn[imode]) / bk.pi
-        ax9[i, j].plot(omegas, t_, "-", c="#5000ca", label=rf"$t$")
-        ax9[i, j].plot(omegas, r_, "-", c="#e49649", label=rf"$r$")
+        r_ = np.angle(rn[imode]) / np.pi
+        t_ = np.angle(tn[imode]) / np.pi
+        ax9[i, j].plot(omegas, t_, "-", c="#5000ca", label=r"$t$")
+        ax9[i, j].plot(omegas, r_, "-", c="#e49649", label=r"$r$")
         ax9[i, j].set_title(rf"$L_N = {Ln}, n = {Nharmo_plot}$")
         ax9[i, j].set_ylim(-1, 1)
         xmax = 2 if Ln == 8 else 10
@@ -224,9 +221,9 @@ for j, Ln in enumerate([0.5, 8]):
 ax8[1, 0].legend()
 ax9[1, 0].legend()
 fig8.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig8.supylabel(rf"magnitude")
+fig8.supylabel(r"magnitude")
 fig9.supxlabel(r"normalized frequency $\omega_0/\Omega$")
-fig9.supylabel(rf"phase")
+fig9.supylabel(r"phase")
 
 fig8.tight_layout()
 fig9.tight_layout()

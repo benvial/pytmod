@@ -1,24 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
-import random
-
-random.seed(0)
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
 import pytest
-import numpy as bk
-from pytmod.helpers import *
 
 from pytmod import Material, Slab
 from pytmod.eig import get_residual
-import matplotlib
+from pytmod.helpers import matvecprod, vecmatprod
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-
+mpl.use("Agg")
 
 eps0 = 5.25
 deps = 0.85
@@ -32,10 +27,9 @@ slab = Slab(mat, 3)
 def test_multidim():
     test = []
     omegas0D = 0.15
-    omegas1D = bk.array([0.15, 0.15])
-    omegas2D = bk.array([[0.15, 0.15], [0.15, 0.15]])
+    omegas1D = np.array([0.15, 0.15])
+    omegas2D = np.array([[0.15, 0.15], [0.15, 0.15]])
     for om in [omegas0D, omegas1D, omegas2D]:
-        om = bk.array(om)
         kns, ens = mat.eigensolve(om)
         matrix_slab = slab.build_matrix(om, kns, ens)
         Eis = slab.init_incident_field(om)
@@ -44,9 +38,9 @@ def test_multidim():
         C, D, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
         test.append(matrix_slab)
         r, t = slab.fresnel_static(om)
-        evstatic = slab.eigenvalue_static(om)
-    assert bk.allclose(test[0], test[1][:, :, 0])
-    assert bk.allclose(test[0], test[2][:, :, 0, 0])
+        slab.eigenvalue_static(om)
+    assert np.allclose(test[0], test[1][:, :, 0])
+    assert np.allclose(test[0], test[2][:, :, 0, 0])
 
 
 def test_fresnel():
@@ -55,7 +49,7 @@ def test_fresnel():
     slab = Slab(mat, 3, eps_plus=2, eps_minus=4)
     print(slab)
 
-    omegas = bk.linspace(0.1, 2.3, 5)
+    omegas = np.linspace(0.1, 2.3, 5)
     kns, ens = mat.eigensolve(omegas)
     matrix_slab = slab.build_matrix(omegas, kns, ens)
     Eis = slab.init_incident_field(omegas)
@@ -67,14 +61,15 @@ def test_fresnel():
     rs, ts = slab.fresnel_static(omegas)
     r = Er / Ei0
     t = Et / Ei0
-    assert bk.allclose(rs, r)
-    assert bk.allclose(ts, t)
-    assert bk.allclose(
-        bk.abs(rs) ** 2 + slab.eps_minus**0.5 / slab.eps_plus**0.5 * bk.abs(ts) ** 2, 1
+    assert np.allclose(rs, r)
+    assert np.allclose(ts, t)
+    assert np.allclose(
+        np.abs(rs) ** 2 + slab.eps_minus**0.5 / slab.eps_plus**0.5 * np.abs(ts) ** 2, 1
     )
 
 
-def test_eigensolve():
+# def test_eigensolve():
+if True:
     eps_fourier = [6]
     mat = Material(eps_fourier, 1)
     slab = Slab(mat, 3, eps_plus=2, eps_minus=4)
@@ -86,9 +81,9 @@ def test_eigensolve():
         tol=1e-7,
     )
 
-    evstatic = bk.array([slab.eigenvalue_static(n) for n in range(1, 10)])
+    evstatic = np.array([slab.eigenvalue_static(n) for n in range(1, 10)])
 
-    assert bk.allclose(evs, evstatic)
+    assert np.allclose(evs, evstatic)
 
     eps_fourier = [1, 6, -1]
     mat = Material(eps_fourier, 1)
@@ -111,9 +106,8 @@ def test_eigensolve():
         peaks_estimate="eig",
     )
     omega = evs[0]
-    kns, smodes = mat.eigensolve(omega)
+    kns, smodes, _ = mat.eigensolve(omega, left=True)
     M = slab.build_matrix(omega, kns, smodes)
-
     res = get_residual(M, modes[:, 0])
     assert res < 1e-6
     print(res)
@@ -149,17 +143,20 @@ def test_eigensolve():
         peak_ref=1,
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError,
+        match="Please provide the dimension of your matrix with the keyword argument dim",
+    ):
         slab.eigensolve(
             0.01 - 0.4j,
             0.25 - 0.001j,
             init_vect="random",
             dim=None,
         )
-    with pytest.raises(ValueError):
-        slab.eigensolve(0.01 - 0.4j, 0.25 - 0.001j, strategy="unkown")
-    with pytest.raises(ValueError):
-        slab.eigensolve(0.01 - 0.4j, 0.25 - 0.001j, init_vect="unkown")
+    with pytest.raises(ValueError, match="Wrong strategy"):
+        slab.eigensolve(0.01 - 0.4j, 0.25 - 0.001j, strategy="unknown")
+    with pytest.raises(ValueError, match="Wrong eigenvector initialization"):
+        slab.eigensolve(0.01 - 0.4j, 0.25 - 0.001j, init_vect="unknown")
 
     for return_left in [True, False]:
         slab.eigensolve(
@@ -171,14 +168,13 @@ def test_eigensolve():
         "rayleigh asymmetric",
         "max element",
     ]:
-
         slab.eigensolve(
             0.01 - 0.4j,
             0.25 - 0.001j,
             weight=weight,
         )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Wrong weighting method"):
         slab.eigensolve(
             0.01 - 0.4j,
             0.25 - 0.001j,
@@ -187,12 +183,11 @@ def test_eigensolve():
 
 
 def test_matrix_derivative():
-
     eps_fourier = [0.5, 2.0, 0.5]
     eps_fourier = [2.0]
     modulation_frequency = 1.2
     material = Material(eps_fourier, modulation_frequency)
-    omegas = bk.linspace(1, 10, 5)
+    omegas = np.linspace(1, 10, 5)
 
     eigenvalues, modes_right, modes_left = material.eigensolve(
         omegas, left=True, normalize=True
@@ -209,7 +204,7 @@ def test_matrix_derivative():
     )
     delta_M = slab.build_matrix(omegas + delta_omega, deigenvalues, dmodes_right)
     dM_fd = (delta_M - M) / delta_omega
-    assert bk.allclose(dM_fd, dM, atol=1e-6)
+    assert np.allclose(dM_fd, dM, atol=1e-6)
 
 
 def test_incident():
@@ -247,14 +242,14 @@ def test_incident():
         rn2 = Er / Ei0
         tn2 = Et / Ei0
 
-        assert bk.allclose(rn1, tn2)
-        assert bk.allclose(rn2, tn1)
+        assert np.allclose(rn1, tn2)
+        assert np.allclose(rn2, tn1)
 
 
 def test_solve_raises_error():
     slab = Slab(Material([1], 1), 1)
-    matrix_slab = bk.zeros((0, 0, 0, 0, 0), dtype=bk.complex128)  # 5D array
-    rhs_slab = bk.zeros((0, 0, 0), dtype=bk.complex128)  # 3D array
+    matrix_slab = np.zeros((0, 0, 0, 0, 0), dtype=np.complex128)  # 5D array
+    rhs_slab = np.zeros((0, 0, 0), dtype=np.complex128)  # 3D array
     with pytest.raises(ValueError, match="Unsupported number of dimensions"):
         slab.solve(matrix_slab, rhs_slab)
 
@@ -262,7 +257,7 @@ def test_solve_raises_error():
 def test_extract_coefficients_raises_error():
     slab = Slab(Material([1], 1), 1)
     Eis, kns, ens = None, None, None
-    solution = bk.zeros((0, 0, 0, 0, 0), dtype=bk.complex128)  # 3D array
+    solution = np.zeros((0, 0, 0, 0, 0), dtype=np.complex128)  # 3D array
     with pytest.raises(ValueError, match="Unsupported number of dimensions"):
         slab.extract_coefficients(solution, Eis, kns, ens)
 
@@ -291,19 +286,19 @@ def test_field():
     solution = slab.solve(matrix_slab, rhs_slab)
     Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
 
-    T0 = 2 * bk.pi / omega
+    2 * np.pi / omega
     T = mat.modulation_period
-    t = bk.linspace(0, 3 * T, 6)
+    t = np.linspace(0, 3 * T, 6)
     Lhom = 3 * L
-    x = bk.linspace(-Lhom, Lhom + L, 10)
+    x = np.linspace(-Lhom, Lhom + L, 10)
     psi = Eslab_plus, Eslab_minus, Er, Et
     Es = slab.get_scattered_field(x, t, omega, psi, kns, ens)
     Einc = slab.get_incident_field(x, t, omega, Eis)
     E = Einc + Es
 
     fig, ax = plt.subplots()
-    anim1 = slab.animate_field(x, t, E, (fig, ax))
-    anim2 = slab.animate_field(x, t, E)
+    slab.animate_field(x, t, E, (fig, ax))
+    slab.animate_field(x, t, E)
 
 
 def test_modes():
@@ -323,9 +318,22 @@ def test_modes():
 
     nmodes = len(evs_slab)
     omegas = evs_slab
+
     eigenvalues, modes_right, modes_left = material.eigensolve(
         omegas, left=True, normalize=True
     )
+
+    for i in range(len(omegas)):
+        omega = omegas[i]
+        ev = eigenvalues[:, i]
+        vr = modes_right[:, :, i]
+        vl = modes_left[:, :, i]
+        matrix_mat = material.build_matrix(omega)
+        for j in range(len(ev)):
+            D = np.eye(matrix_mat.shape[0]) * ev[j] ** 2
+            assert np.allclose(matvecprod(matrix_mat - D, vr[:, j]), 0)
+            assert np.allclose(vecmatprod(vl[:, j], matrix_mat - D), 0)
+
     matrix_derivative = slab.build_dmatrix_domega(
         omegas, eigenvalues, modes_right, modes_left
     )
@@ -333,12 +341,15 @@ def test_modes():
         modes_slab_right, modes_slab_left, matrix_derivative
     )
 
-    check_ortho = bk.zeros((nmodes, nmodes), dtype=complex)
+    check_ortho = np.zeros((nmodes, nmodes), dtype=complex)
     for i in range(nmodes):
         eigenvalue_left = evs_slab[i]
         matrix_left = slab.build_matrix(
             eigenvalue_left, eigenvalues[:, i], modes_right[:, :, i]
         )
+
+        res_left = vecmatprod(modes_slab_left[:, i], matrix_left)
+        assert np.allclose(res_left, 0)
         matrix_derivative = slab.build_dmatrix_domega(
             eigenvalue_left,
             eigenvalues[:, i],
@@ -361,16 +372,9 @@ def test_modes():
                 matrix_derivative,
                 diag=diag,
             )
+            res_right = matvecprod(matrix_right, modes_slab_right[:, j])
+            assert np.allclose(res_right, 0)
 
             check_ortho[i, j] = q
-    # plt.close("all")
-    # plt.ion()
-    # fig, ax = plt.subplots(1, 2, figsize=(11, 4))
-    # _ = ax[0].imshow(check_ortho.real - bk.eye(nmodes))
-    # plt.colorbar(_)
-    # _ = ax[1].imshow(check_ortho.imag)
-    # plt.colorbar(_)
-    # plt.tight_layout()
-    # # plt.imshow(bk.abs(check_ortho))
-    # plt.show()
-    assert bk.allclose(bk.eye(nmodes), check_ortho)
+
+    assert np.allclose(np.eye(nmodes), check_ortho)

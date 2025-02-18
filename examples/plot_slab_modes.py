@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
@@ -14,15 +12,14 @@ Solve the slab nonlinear eigenproblem and plot the quasi normal modes
 
 """
 
-
 ####################################################################################
 # Imports and parameters
-
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
+import numpy as np
+
 import pytmod as pm
-import numpy as bk
-import sys
 
 plt.ion()
 plt.close("all")
@@ -51,10 +48,10 @@ omega1 = 0.92 - 0.019j
 
 nc = 101
 
-omegasr = bk.linspace(omega0.real, omega1.real, nc)
-omegasi = bk.linspace(omega0.imag, omega1.imag, nc)
+omegasr = np.linspace(omega0.real, omega1.real, nc)
+omegasi = np.linspace(omega0.imag, omega1.imag, nc)
 
-re, im = bk.meshgrid(omegasr, omegasi)
+re, im = np.meshgrid(omegasr, omegasi)
 omegas = re + 1j * im
 
 # for Omega in bk.linspace(0.1, 1.7, 51):
@@ -92,9 +89,7 @@ evs, modes = slab.eigensolve(
     # peaks_estimate="det",
 )
 
-print("eigenvalues:")
-print(evs)
-evs = bk.array(evs)
+evs = np.array(evs)
 Nevs = len(evs)
 
 plt.figure()
@@ -102,15 +97,15 @@ plt.figure()
 
 kns, ens = mat.eigensolve(omegas)
 matrix_slab_c = slab.build_matrix(omegas, kns, ens)
-matrix_slab_c = bk.transpose(matrix_slab_c, (2, 3, 0, 1))
+matrix_slab_c = np.transpose(matrix_slab_c, (2, 3, 0, 1))
 
-D = bk.linalg.det(matrix_slab_c)
+D = np.linalg.det(matrix_slab_c)
 # D = bk.min(bk.abs(bk.linalg.eigvals(matrix_slab_c)), axis=-1)
 
-plt.pcolormesh(omegasr / Omega, omegasi / Omega, bk.log10(bk.abs(D)), cmap="inferno")
+plt.pcolormesh(omegasr / Omega, omegasi / Omega, np.log10(np.abs(D)), cmap="inferno")
 plt.colorbar()
 plt.title(r"det $M(\omega)$")
-for i in range(0, 10):
+for i in range(10):
     eigenvalue_static = slab.eigenvalue_static(i)
     plt.plot(eigenvalue_static.real / Omega, eigenvalue_static.imag / Omega, "xg")
 
@@ -135,11 +130,8 @@ for i in range(-50, 50):
 if Nevs != 0:
     kns_eig, ens_eig = mat.eigensolve(evs)
     matrix_slab_eig = slab.build_matrix(evs, kns_eig, ens_eig)
-    matrix_slab_eig = bk.transpose(matrix_slab_eig, (2, 0, 1))
-    Deig = bk.linalg.det(matrix_slab_eig)
-
-    print("det(eigenvalues):")
-    print(bk.abs(Deig))
+    matrix_slab_eig = np.transpose(matrix_slab_eig, (2, 0, 1))
+    Deig = np.linalg.det(matrix_slab_eig)
 
 
 ####################################################################################
@@ -147,9 +139,9 @@ if Nevs != 0:
 
 
 T = mat.modulation_period
-t = bk.linspace(0, 3 * T, 300)
+t = np.linspace(0, 3 * T, 300)
 Lhom = 6 * L
-x = bk.linspace(-Lhom, Lhom + L, 1000)
+x = np.linspace(-Lhom, Lhom + L, 1000)
 
 qnms = []
 for imode in range(Nevs):
@@ -167,7 +159,7 @@ for imode in range(Nevs):
 plt.figure()
 for imode in range(Nevs):
     mode = qnms[imode][:, 0].real
-    mode /= bk.max(bk.abs(mode)) * 2
+    mode /= np.max(np.abs(mode)) * 2
     plt.plot(x / L - 0.5, 1 * imode + mode.real)
 plt.axvline(-0.5, color="#949494", lw=1)
 plt.axvline(0.5, color="#949494", lw=1)
@@ -188,7 +180,7 @@ anim = slab.animate_field(x, t, qnms[0])
 # Space time map
 
 plt.figure()
-plt.pcolormesh(x / L - 0.5, t / T, bk.real(qnms[0].T), cmap="RdBu_r")
+plt.pcolormesh(x / L - 0.5, t / T, np.real(qnms[0].T), cmap="RdBu_r")
 plt.axvline(-0.5, color="#949494", lw=1)
 plt.axvline(0.5, color="#949494", lw=1)
 plt.ylim(0, t[-1] / T)

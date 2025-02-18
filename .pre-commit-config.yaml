@@ -18,16 +18,26 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.9.4"
     hooks:
-      #  id: ruff would go here if using both
-      - id: ruff-format
       - id: ruff
         args: ["--fix", "--show-fixes"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.9.4"
+    hooks:
+      - id: ruff-format
+
+  - repo: https://github.com/adamchainz/blacken-docs
+    rev: "1.19.1"
+    hooks:
+      - id: blacken-docs
+        additional_dependencies: [black==24.*]
 
   - repo: https://github.com/codespell-project/codespell
     rev: "v2.4.1"
     hooks:
       - id: codespell
-        # args: ["-L", "sur,nd"]
+        args: ["-L", "Numer"]
+
   - repo: local
     hooks:
       - id: disallow-caps
@@ -35,11 +45,13 @@ repos:
         language: pygrep
         entry: PyBind|Numpy|Cmake|CCache|Github|PyTest
         exclude: .pre-commit-config.yaml
+
   - repo: https://github.com/rbubley/mirrors-prettier
     rev: "v3.4.2"
     hooks:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
+        exclude: doc/_templates/components/nav-versions.html
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: "v0.23"
@@ -52,4 +64,3 @@ repos:
     hooks:
       - id: check-dependabot
       - id: check-github-workflows
-      - id: check-readthedocs

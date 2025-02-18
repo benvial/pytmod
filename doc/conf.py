@@ -1,19 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
-import warnings
 import datetime
-import os
 import sys
+import warnings
+from pathlib import Path
 
 # Add the current directory to the Python path
-sys.path.insert(0, os.path.abspath("."))
-from get_versions import get_latest_version_tag
+sys.path.insert(0, Path.resolve("."))
 import toml
+from get_versions import get_latest_version_tag
 
 tomldata = toml.load("../pyproject.toml")
 
@@ -90,7 +89,7 @@ autoapi_keep_files = True
 # autoapi_generate_api_docs = False
 
 
-def skip_member(app, what, name, obj, skip, options):
+def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
     # skip submodules
     if what == "module":
         skip = True
