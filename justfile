@@ -31,11 +31,19 @@ clean:
 
 # Build documentation
 doc:
-    cd doc && make html && make index
+    cd doc && make html
 
 # Build documentation (no examples)
 doc-noplot:
-    cd doc && make html-noplot && make index
+    cd doc && make html-noplot
+
+# Build documentation (all versions)
+vdoc:
+    cd doc && make versions && make index
+
+# Build documentation (all versions, no examples)
+vdoc-noplot:
+    cd doc && make versions-noplot && make index
 
 
 # Build documentation and watch

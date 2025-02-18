@@ -2,7 +2,7 @@
 /* https://www.radix-ui.com/colors/custom */
 /* Then replace --violet or --whatever with --accent */
 
-html[data-accent-color='blue'] {
+html[data-accent-color='blue'].light {
     --accent-9: #5000ca;
     --accent-1: #fdfdff;
     --accent-2: #f8f8ff;
@@ -98,6 +98,9 @@ html[data-accent-color='blue'] {
     --syntax-light-keyword: #cf226a;
 }
 
+html[data-accent-color='blue'].dark {
+    --accent-9: #5000ca;
+}
 /* 
 .highlight {
     background-color: #f5f3f36b !important;

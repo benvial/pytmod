@@ -88,6 +88,8 @@ gen_modules/
 auto_examples/
 doc/examples/
 doc/tutorials/
+doc/generated
+doc/autoapi
 .pytest_cache/
 .hypothesis/
 .coverage
@@ -97,18 +99,3 @@ coverage.json
 pylint.html
 pylint.json
 .ipynb_checkpoints
-
-
-# Doc css (we use less to generate those):
-doc/_custom/static/css/*.css
-doc/generated
-doc/examples
-doc/biblio
-
-
-# # include test data directory
-# !tests/data/
-# !tests/data/*
-
-# # include benchmarks results
-# !examples/benchmarks/*/*.npz

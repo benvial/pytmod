@@ -182,7 +182,7 @@ html_theme_options = {
     "light_logo": "_static/pytmod-name.svg",
     "dark_logo": "_static/pytmod-name-dark.svg",
     "accent_color": "blue",
-    "announcement": "This is a community project. Any contribution is welcome!",
+    # "announcement": "This is a community project. Any contribution is welcome!",
 }
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -364,8 +364,8 @@ sphinx_gallery_conf = {
     "show_memory": True,
     "matplotlib_animations": (True, "html5"),
     # "binder": {
-    #     "org": "phokaia",
-    #     "repo": "phokaia.gitlab.io/emustack",
+    #     "org": "your-org",
+    #     "repo": "your-org.gitlab.io/repo",
     #     "branch": "doc",
     #     "binderhub_url": "https://mybinder.org",
     #     "dependencies": "../environment.yml",
@@ -383,10 +383,9 @@ warnings.filterwarnings(
 )
 
 # -- Sphinx Multiversion --------------------------------------------------
-# https://holzhaus.github.io/sphinx-multiversion/master/configuration.html#
+# https://sphinx-contrib.github.io/multiversion/main/configuration.html
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
 smv_latest_version = get_latest_version_tag()
-# smv_released_pattern = r"^\d+\.\d+\.\d+$"
 smv_released_pattern = r"^refs/tags/.*$"

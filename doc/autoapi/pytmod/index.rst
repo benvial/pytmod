@@ -683,6 +683,9 @@ Package Contents
 
 
 
+   .. py:attribute:: dim
+
+
    .. py:method:: build_matrix(omegas, eigenvalues, modes)
 
       
@@ -1150,5 +1153,14 @@ Package Contents
 
       ..
           !! processed by numpydoc !!
+
+
+   .. py:method:: get_modes_normalization(modes_right, modes_left, matrix_derivative)
+
+
+   .. py:method:: normalize(modes_right, modes_left, matrix_derivative)
+
+
+   .. py:method:: scalar_product(modes_right, modes_left, eigenvalue_right, eigenvalue_left, matrix_right, matrix_left, matrix_derivative, diag=True)
 
 

@@ -3,10 +3,11 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-# SPHINXBUILD   = sphinx-build
-SPHINXBUILD   = sphinx-multiversion
+SPHINXBUILD   = sphinx-build
+SPHINXVERSIONSBUILD   = sphinx-multiversion
 PAPER         =
 BUILDDIR      = _build
+
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -51,13 +52,39 @@ clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf examples
 	rm -rf generated
+	rm -rf autoapi
 	rm -rf sg_execution_times.rst
 
 html:
-	# $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	$(SPHINXBUILD) . $(BUILDDIR)/html
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+
+html-noplot: export SPHX_GLR_THEME = $(theme)
+html-noplot:
+	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+versions:
+	$(SPHINXVERSIONSBUILD) $(SPHINXOPTS) . $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+
+versions-noplot: export SPHX_GLR_THEME = $(theme)
+versions-noplot:
+	$(SPHINXVERSIONSBUILD) -D plot_gallery=0 $(SPHINXOPTS) . $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+html_abort_on_example_error: export SPHX_GLR_THEME = $(theme)
+html_abort_on_example_error:
+	$(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
@@ -181,22 +208,19 @@ pseudoxml:
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 	
-html-noplot: export SPHX_GLR_THEME = $(theme)
-html-noplot:
-	# $(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	$(SPHINXBUILD) -D plot_gallery=0 . $(BUILDDIR)/html  -v
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-
-html_abort_on_example_error: export SPHX_GLR_THEME = $(theme)
-html_abort_on_example_error:
-	$(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 show:
-	firefox $(BUILDDIR)/html/index.html
-
+	@pid=$$(lsof -ti :8084); \
+	if [ -n "$$pid" ]; then \
+		echo "Port 8084 is already in use. Killing process $$pid..."; \
+		kill $$pid; \
+		sleep 1; \
+	fi; \
+	python -m http.server 8084 & \
+	server_pid=$$!; \
+	xdg-open "http://0.0.0.0:8084/$(BUILDDIR)/html/index.html"; \
+	trap "echo 'Stopping server...'; kill $$server_pid" INT TERM; \
+	wait $$server_pid
 
 index:
 	python redirect.py
