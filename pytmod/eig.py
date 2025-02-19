@@ -2,6 +2,8 @@
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+
+
 from __future__ import annotations
 
 __all__ = ["nonlinear_eigensolver"]
@@ -12,11 +14,14 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as la
-from matplotlib import patches
+from matplotlib import patches, is_interactive
 from skimage.feature import peak_local_max
 
 rng = np.random.default_rng(12345)
 
+def _pause(t):
+    if is_interactive():
+        plt.pause(t)
 
 def get_backend():
     return "numpy"
@@ -341,7 +346,7 @@ def eig_newton(
     #     pnt_cur = plt.plot(lambda_s.real,lambda_s.imag,"ob",ms=5)
     #     hst = np.array(lambda_history)
     #     line_cur = plt.plot(hst.real,hst.imag,"-ob",alpha=0.2,ms=5)
-    #     # plt.pause(0.2)
+    #     # _pause(0.2)
 
     # t += time.time()
     # print(f"elapsed time {t:0.4f}s")
@@ -472,7 +477,7 @@ def _nonlinear_eigensolver(
                     vmax=vmax,
                 )
 
-                # plt.pause(2)
+                # _pause(2)
                 # plt.colorbar(cmap)
 
             if get_backend() == "torch":
@@ -519,7 +524,7 @@ def _nonlinear_eigensolver(
         guess_plot = plt.gca().plot(guesses.real / scale, guesses.imag / scale, "xk")
         plt.gca().set_xlabel(r"Re $\omega/\omega_p$")
         plt.gca().set_ylabel(r"Im $\omega/\omega_p$")
-        plt.pause(0.01)
+        _pause(0.01)
 
     def compute_eigenvalues(guesses, tol, max_iter):
         evs = []
@@ -574,13 +579,13 @@ def _nonlinear_eigensolver(
                         plt.gca().plot(ev.real / scale, ev.imag / scale, ".b")
                         # plt.xlim(omega0.real, omega1.real)
                         # plt.ylim(omega0.imag, omega1.imag)
-                        plt.pause(0.001)
+                        _pause(0.001)
 
         if evs == []:
             # if plot_solver:
             #     try:
             #         [_.remove() for _ in guess_plot]
-            #         plt.pause(0.01)
+            #         _pause(0.01)
             #     except:
             #         pass
             msg = "No eigenvalues found"
@@ -618,7 +623,7 @@ def _nonlinear_eigensolver(
     if plot_solver:
         try:
             [_.remove() for _ in guess_plot]
-            plt.pause(0.01)
+            _pause(0.01)
         except ValueError:
             pass
     tnlevp += time.time()
@@ -757,7 +762,7 @@ def plot_rectangle(ax, z0, z1, **kwargs):
         **kwargs,
     )
     ax.add_patch(patch)
-    plt.pause(0.01)
+    _pause(0.01)
     return patch
 
 
@@ -859,7 +864,7 @@ def _nleigsolve_recursive(
             facecolor="none",
             edgecolor="#ff7c24",
         )
-        plt.pause(0.001)
+        _pause(0.001)
 
     kwargs["peak_ref"] = peak_ref1
     if return_left:

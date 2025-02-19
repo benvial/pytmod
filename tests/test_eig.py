@@ -2,6 +2,8 @@
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+
+
 from __future__ import annotations
 
 import numpy as np
@@ -43,7 +45,7 @@ def test_polyeig_error_for_empty_list():
 
 
 def test_gram_schmidt_two_vectors():
-    N = 4
-    A = rng.random((N, N))
-    dM = rng.random((N, N))
+    N = 5
+    A = rng.random((N, N)) + 1j * rng.random((N, N))
+    dM = rng.random((N, N)) + 1j * rng.random((N, N))
     gram_schmidt(A, dM)

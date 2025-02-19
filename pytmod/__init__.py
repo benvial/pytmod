@@ -3,6 +3,7 @@
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
 
+
 """This module implements the pytmod API."""
 
 from __future__ import annotations

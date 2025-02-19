@@ -2,16 +2,24 @@
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+
+
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 header = """# Authors: Benjamin Vial
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
 """
+
+
+DIR = Path(__file__).parents[1].resolve()
 
 
 def rep_header(python_file, header):
@@ -40,8 +48,9 @@ def update(directory):
         for file in files:
             if file.endswith(".py"):
                 python_file = Path(Path(root) / file).resolve()
+                logging.info("Updating header in %s ...", python_file)
                 rep_header(python_file, header)
 
 
-for directory in ["../"]:
+for directory in [DIR]:
     update(directory)

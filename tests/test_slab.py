@@ -2,7 +2,11 @@
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+
+
 from __future__ import annotations
+
+import warnings
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -297,8 +301,11 @@ def test_field():
     E = Einc + Es
 
     fig, ax = plt.subplots()
-    slab.animate_field(x, t, E, (fig, ax))
-    slab.animate_field(x, t, E)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        slab.animate_field(x, t, E, (fig, ax))
+        slab.animate_field(x, t, E)
 
 
 def test_modes():

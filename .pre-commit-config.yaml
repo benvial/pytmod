@@ -1,4 +1,10 @@
 repos:
+  # - repo: local
+  #   hooks:
+  #     - id: update-header
+  #       name: Update Python files header comments
+  #       entry: python dev/update_header.py
+  #       language: system
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:

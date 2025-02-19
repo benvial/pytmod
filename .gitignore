@@ -99,3 +99,7 @@ coverage.json
 pylint.html
 pylint.json
 .ipynb_checkpoints
+
+
+.ruff_cache
+.nox
