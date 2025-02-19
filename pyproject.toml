@@ -35,7 +35,6 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-
 [project.optional-dependencies]
 test = [
   "pytest",
@@ -61,9 +60,8 @@ doc = [
   "sphinx-togglebutton",
   "numpydoc",
   "sphinx-multiversion",
-  "toml",
 ]
-dev = ["hatch", "pre-commit", "nox", "uv", "hatch-vcs"]
+dev = ["hatch", "pre-commit", "nox", "uv", "hatch-vcs", "ipython"]
 
 [project.urls]
 Homepage = "https://bvial.info/pytmod"

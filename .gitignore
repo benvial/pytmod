@@ -43,8 +43,8 @@ MANIFEST
 .coverage
 .coverage*
 bin
-doc/package-lock.json
-doc/package.json
+docs/package-lock.json
+docs/package.json
 
 # Logs and databases #
 ######################
@@ -86,10 +86,10 @@ __pycache__/
 _build/
 gen_modules/
 auto_examples/
-doc/examples/
-doc/tutorials/
-doc/generated
-doc/autoapi
+docs/examples/
+docs/tutorials/
+docs/generated
+docs/autoapi
 .pytest_cache/
 .hypothesis/
 .coverage
@@ -103,3 +103,5 @@ pylint.json
 
 .ruff_cache
 .nox
+
+pytmod/_version.py

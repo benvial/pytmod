@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 import logging
-import os
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -43,14 +42,16 @@ def rep_header(python_file, header):
             f.write(data)
 
 
-def update(directory):
-    for root, _dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".py"):
-                python_file = Path(Path(root) / file).resolve()
-                logging.info("Updating header in %s ...", python_file)
-                rep_header(python_file, header)
+def process_python_files(directory):
+    directory = Path(directory)  # Ensure it's a Path object
+    for path in directory.rglob("*.py"):  # Find all .py files recursively
+        if any(
+            part.startswith(".") or part in ["__pycache__", "build"]
+            for part in path.parts
+        ):
+            continue  # Skip files in hidden or __pycache__ directories
+        logging.info("Updating header in %s ...", path)
+        rep_header(path, header)
 
 
-for directory in [DIR]:
-    update(directory)
+process_python_files(DIR)

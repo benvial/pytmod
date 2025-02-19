@@ -23,10 +23,9 @@ def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
     """
-    # session.install("-e.[test]")
-
+    session.install("-e.[test]")
     session.install("pytest")
-    session.run("pytest","--version", *session.posargs)
+    session.run("pytest", *session.posargs)
 
 
 @nox.session(reuse_venv=True)
@@ -43,9 +42,10 @@ def docs(session: nox.Session) -> None:
     args, posargs = parser.parse_known_args(session.posargs)
     serve = args.builder == "html" and session.interactive
 
-    session.install("-e.[docs]", "sphinx-autobuild")
+    session.install("-e.[doc]", "sphinx-autobuild")
 
     shared_args = (
+        "--port=1984",
         "-n",  # nitpicky mode
         "-T",  # full tracebacks
         f"-b={args.builder}",

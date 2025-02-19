@@ -10,19 +10,47 @@ import datetime
 import sys
 import warnings
 from pathlib import Path
+import pytmod as package
+import argparse
+import re
+import subprocess
 
-import toml
-
-# Add the current directory to the Python path
-proj_dir = Path(__file__).parents[0]
-sys.path.insert(0, str(proj_dir))
-
-from get_versions import get_latest_version_tag  # noqa: E402
-
-tomldata = toml.load("../pyproject.toml")
+from packaging.version import Version
 
 
-pyproject = tomldata["project"]
+def get_latest_version_tag():
+    try:
+        # Get all tags from git
+        result = subprocess.run(
+            ["git", "tag"], capture_output=True, text=True, check=True
+        )
+        tags = result.stdout.splitlines()
+
+        # Filter tags matching vX.Y.Z format
+        version_tags = [tag for tag in tags if re.fullmatch(r"v\d+\.\d+\.\d+", tag)]
+
+        if not version_tags:
+            return None
+
+        # Sort tags using Version class from packaging
+        return max(version_tags, key=lambda v: Version(v[1:]))
+    except subprocess.CalledProcessError:
+        return None
+
+
+latest_tag = get_latest_version_tag()
+
+redirect_contents = f"""
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redirecting to latest version</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=./{latest_tag}/index.html" />
+    <link rel="canonical" href="https://benvial.github.io/pytmod/{latest_tag}/index.html" />
+  </head>
+</html>
+"""
 
 
 # -- General configuration ------------------------------------------------
@@ -101,8 +129,24 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
     return skip
 
 
-def setup(sphinx):
-    sphinx.connect("autoapi-skip-member", skip_member)
+def run_after_build(app, exception):
+    print("Generating")
+    with Path.open(Path(app.outdir) / "index.html", "w") as f:
+        f.write(redirect_contents)
+
+
+from sphinx.util import logging
+
+logger = logging.getLogger(__name__)
+
+
+def setup(app):
+    app.connect("autoapi-skip-member", skip_member)
+    app.add_config_value("versions", False, "env")  # Default is False
+    versions = app.config.versions
+    if versions:
+        logger.info("Building multiple versions of docs")
+        app.connect("build-finished", run_after_build)
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -129,7 +173,7 @@ copyright = f"Copyright © {datetime.date.today().year}, Benjamin Vial"
 # The short X.Y version.
 
 
-version = pyproject["version"]
+version = package.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -362,7 +406,7 @@ sphinx_gallery_conf = {
     # ),
     # "image_scrapers": ("matplotlib", PNGScraper()),
     # Modules for which function level galleries are created.
-    "doc_module": pyproject["name"],
+    "doc_module": package.__name__,
     "thumbnail_size": (800, 800),
     "default_thumb_file": "./_static/pytmod.png",
     "show_memory": True,
@@ -391,5 +435,7 @@ warnings.filterwarnings(
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
-smv_latest_version = get_latest_version_tag()
+smv_latest_version = latest_tag
 smv_released_pattern = r"^refs/tags/.*$"
+
+print(smv_latest_version)

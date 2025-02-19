@@ -14,14 +14,16 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as la
-from matplotlib import patches, is_interactive
+from matplotlib import is_interactive, patches
 from skimage.feature import peak_local_max
 
 rng = np.random.default_rng(12345)
 
+
 def _pause(t):
     if is_interactive():
         plt.pause(t)
+
 
 def get_backend():
     return "numpy"
