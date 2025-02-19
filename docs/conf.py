@@ -130,8 +130,9 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
 
 
 def run_after_build(app, exception):
-    print("Generating")
-    with Path.open(Path(app.outdir) / "index.html", "w") as f:
+    outdir = Path(app.outdir).parents[0]
+    logger.info("Writing redirection page index.html in %s", outdir)
+    with Path.open(outdir / "index.html", "w") as f:
         f.write(redirect_contents)
 
 
@@ -144,6 +145,7 @@ def setup(app):
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
     versions = app.config.versions
+    logger.info("versions %s",versions)
     if versions:
         logger.info("Building multiple versions of docs")
         app.connect("build-finished", run_after_build)
@@ -437,5 +439,3 @@ smv_branch_whitelist = "main"
 smv_remote_whitelist = None
 smv_latest_version = latest_tag
 smv_released_pattern = r"^refs/tags/.*$"
-
-print(smv_latest_version)
