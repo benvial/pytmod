@@ -437,5 +437,5 @@ warnings.filterwarnings(
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
-smv_latest_version = latest_tag
+# smv_latest_version = latest_tag
 smv_released_pattern = r"^refs/tags/.*$"
