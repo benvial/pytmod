@@ -1,5 +1,5 @@
 name: Doc
-run-name: ${{ github.repository }} doc
+run-name: ${{ github.repository }} documentation
 on: [push]
 jobs:
   # Build job
@@ -16,15 +16,19 @@ jobs:
           python-version: "3.13"
       - name: Install ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v3
-      - name: Install package and build doc
-        run: |
-          pip install .[doc] -v
-          cd docs && make versions
+      - name: Setup uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-venv: ".venv"
+      - name: Install nox
+        run: uv pip install nox
+      - name: Test package
+        run: nox -s docs --non-interactive -- --versions
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: doc/_build/html/
+          path: docs/_build/html/
 
   # Deploy job
   deploy:

@@ -90,6 +90,7 @@ docs/examples/
 docs/tutorials/
 docs/generated
 docs/autoapi
+docs/sg_execution_times.rst
 .pytest_cache/
 .hypothesis/
 .coverage

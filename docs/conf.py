@@ -149,8 +149,13 @@ def setup(app):
         app.connect("build-finished", run_after_build)
 
 
+
+conf_dir = Path(__file__).parent.resolve()
+static = conf_dir / "_static"
+
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = [str(conf_dir / "_templates")]
 
 # The suffix of source filenames.
 source_suffix = ".rst"
@@ -244,21 +249,18 @@ html_title = "pytmod"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-conf_dir = Path(__file__).parent.resolve()
-static = conf_dir / "_static"
-
-html_logo = "pytmod-name.svg"
+html_logo = "_static/pytmod-name.svg"# str(static / "pytmod-name.svg")
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "favicon.ico"
+html_favicon = "_static/favicon.ico"#str(static / "favicon.ico")
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 
-html_static_path = [str(static)]
+html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 html_js_files = ["version-banner.js"]
 

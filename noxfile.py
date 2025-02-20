@@ -13,12 +13,12 @@ import argparse
 import nox
 import shutil
 import os
-
+import glob
 
 nox.needs_version = ">=2024.3.2"
 # nox.options.default_venv_backend = "uv|virtualenv"
 
-nox.options.sessions = ["lint", "tests"]
+nox.options.sessions = ["lint", "tests", "docs", "clean"]
 
 
 @nox.session
@@ -107,7 +107,6 @@ def lint(session: nox.Session) -> None:
     )
 
 
-import glob
 @nox.session
 def clean(session):
     """Remove build artifacts and temporary files."""
