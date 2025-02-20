@@ -8,7 +8,7 @@ jobs:
       matrix:
         venv: ["venv", "mamba"]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -30,8 +30,6 @@ jobs:
         uses: yezz123/setup-uv@v4
         with:
           uv-venv: ".venv"
-      - name: Run tests
-        run: pytest -svvv
       - name: Install nox
         run: uv pip install nox
       - name: Test package

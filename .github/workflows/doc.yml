@@ -19,7 +19,7 @@ jobs:
       - name: Install package and build doc
         run: |
           pip install .[doc] -v
-          cd doc && make versions && make index
+          cd docs && make versions && make index
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
