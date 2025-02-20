@@ -14,6 +14,7 @@ import nox
 import shutil
 import os
 import glob
+from pathlib import Path
 
 nox.needs_version = ">=2024.3.2"
 # nox.options.default_venv_backend = "uv|virtualenv"
@@ -67,12 +68,14 @@ def docs(session: nox.Session) -> None:
 
     session.install("-e.[doc]", "sphinx-autobuild")
 
+    output=args.output or f"docs/_build/{args.builder}"
+
     shared_args = (
         "-n",  # nitpicky mode
         "-T",  # full tracebacks
         f"-b={args.builder}",
         "docs",
-        args.output or f"docs/_build/{args.builder}",
+        output,
         *posargs,
     )
     autobuild_args = (
@@ -85,12 +88,23 @@ def docs(session: nox.Session) -> None:
     if not args.plot:
         shared_args += ("-D", "plot_gallery=0")
 
+    if args.versions:
+        shared_args += ("-D", "versions=1")
+
     if serve:
-        session.run(
-            "sphinx-autobuild",
-            *autobuild_args,
-            *shared_args,
-        )
+        if args.versions:
+            import webbrowser
+            session.run("sphinx-multiversion", *shared_args)
+            
+            path = Path(output).resolve()  # Convert to absolute path
+            webbrowser.open(f"file://{path}/index.html")
+
+        else:
+            session.run(
+                "sphinx-autobuild",
+                *autobuild_args,
+                *shared_args,
+            )
     else:
         cmd = "sphinx-multiversion" if args.versions else "sphinx-build"
         session.run(cmd, "--keep-going", *shared_args)

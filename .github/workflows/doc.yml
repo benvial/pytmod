@@ -22,7 +22,7 @@ jobs:
           uv-venv: ".venv"
       - name: Install nox
         run: uv pip install nox
-      - name: Test package
+      - name: Build multiple versions of the documentation
         run: nox -s docs --non-interactive -- --versions
       - name: Upload static files as artifact
         id: deployment
