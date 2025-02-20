@@ -11,6 +11,9 @@ from __future__ import annotations
 import argparse
 
 import nox
+import shutil
+import os
+
 
 nox.needs_version = ">=2024.3.2"
 # nox.options.default_venv_backend = "uv|virtualenv"
@@ -102,3 +105,47 @@ def lint(session: nox.Session) -> None:
     session.run(
         "pre-commit", "run", "--all-files", "--show-diff-on-failure", *session.posargs
     )
+
+
+import glob
+@nox.session
+def clean(session):
+    """Remove build artifacts and temporary files."""
+    paths = [
+        "build",
+        "dist",
+        ".venv",
+        ".nox",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        "htmlcov",
+        "builddir",
+        "build",
+        ".coverage",
+        "coverage.xml",
+        "coverage.json",
+        "docs/_build",
+        "docs/examples",
+        "docs/autoapi",
+        "docs/generated",
+        "docs/sg_execution_times.rst",
+    ]
+
+    for path in paths:
+        if os.path.isdir(path):
+            shutil.rmtree(path, ignore_errors=True)
+        elif os.path.isfile(path):
+            os.remove(path)
+
+    # Remove all __pycache__ directories
+    for root, dirs, files in os.walk("."):
+        if "__pycache__" in dirs:
+            shutil.rmtree(os.path.join(root, "__pycache__"), ignore_errors=True)
+    # Remove all *.egg-info files and directories
+    for egg_info in glob.glob("*.egg-info"):
+        if os.path.isdir(egg_info):
+            shutil.rmtree(egg_info, ignore_errors=True)
+        else:
+            os.remove(egg_info)
+    session.log("Cleanup complete!")
