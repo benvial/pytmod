@@ -7,16 +7,15 @@
 from __future__ import annotations
 
 import datetime
-import sys
-import warnings
-from pathlib import Path
-import pytmod as package
-import argparse
 import re
 import subprocess
+import warnings
+from pathlib import Path
 
-from sphinx.util import logging
 from packaging.version import Version
+from sphinx.util import logging
+
+import pytmod as package
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +131,7 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
     return skip
 
 
-def run_after_build(app, exception):
+def run_after_build(app, exception):  # noqa: ARG001
     outdir = Path(app.outdir).parents[0]
     logger.info("Writing redirection page index.html in %s", outdir)
     with Path.open(outdir / "index.html", "w") as f:
@@ -147,7 +146,6 @@ def setup(app):
     if versions:
         logger.info("Building multiple versions of docs")
         app.connect("build-finished", run_after_build)
-
 
 
 conf_dir = Path(__file__).parent.resolve()
@@ -249,12 +247,12 @@ html_title = "pytmod"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/pytmod-name.svg"# str(static / "pytmod-name.svg")
+html_logo = "_static/pytmod-name.svg"  # str(static / "pytmod-name.svg")
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "_static/favicon.ico"#str(static / "favicon.ico")
+html_favicon = "_static/favicon.ico"  # str(static / "favicon.ico")
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

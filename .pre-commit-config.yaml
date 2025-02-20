@@ -1,4 +1,4 @@
-exclude: "^(.*/)?(build|dist|venv|node_modules|.nox|pytmod/_version.py)/.*$"
+exclude: "^(.*/)?(build|dist|venv|node_modules|.nox)/.*$|pytmod/_version.py"
 
 repos:
   - repo: local

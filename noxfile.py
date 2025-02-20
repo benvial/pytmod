@@ -9,12 +9,11 @@
 from __future__ import annotations
 
 import argparse
+import os
+import shutil
+from pathlib import Path
 
 import nox
-import shutil
-import os
-import glob
-from pathlib import Path
 
 nox.needs_version = ">=2024.3.2"
 # nox.options.default_venv_backend = "uv|virtualenv"
@@ -68,7 +67,7 @@ def docs(session: nox.Session) -> None:
 
     session.install("-e.[doc]", "sphinx-autobuild")
 
-    output=args.output or f"docs/_build/{args.builder}"
+    output = args.output or f"docs/_build/{args.builder}"
 
     shared_args = (
         "-n",  # nitpicky mode
@@ -94,8 +93,9 @@ def docs(session: nox.Session) -> None:
     if serve:
         if args.versions:
             import webbrowser
+
             session.run("sphinx-multiversion", *shared_args)
-            
+
             path = Path(output).resolve()  # Convert to absolute path
             webbrowser.open(f"file://{path}/index.html")
 
@@ -146,19 +146,19 @@ def clean(session):
     ]
 
     for path in paths:
-        if os.path.isdir(path):
+        if Path.is_dir(Path(path)):
             shutil.rmtree(path, ignore_errors=True)
-        elif os.path.isfile(path):
-            os.remove(path)
+        elif Path.is_file(Path(path)):
+            Path.unlink(Path(path))
 
     # Remove all __pycache__ directories
-    for root, dirs, files in os.walk("."):
+    for root, dirs, _ in os.walk("."):
         if "__pycache__" in dirs:
-            shutil.rmtree(os.path.join(root, "__pycache__"), ignore_errors=True)
+            shutil.rmtree(Path(root) / "__pycache__", ignore_errors=True)
     # Remove all *.egg-info files and directories
-    for egg_info in glob.glob("*.egg-info"):
-        if os.path.isdir(egg_info):
+    for egg_info in Path().glob("*.egg-info"):
+        if Path.is_dir(egg_info):
             shutil.rmtree(egg_info, ignore_errors=True)
         else:
-            os.remove(egg_info)
+            Path.unlink(egg_info)
     session.log("Cleanup complete!")
