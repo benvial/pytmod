@@ -26,6 +26,8 @@ jobs:
           environment-file: environment.yml
           python-version: ${{ matrix.python-version }}
           auto-activate-base: false
+          channels: conda-forge,defaults
+          channel-priority: strict
       - name: Setup uv
         uses: yezz123/setup-uv@v4
         with:
