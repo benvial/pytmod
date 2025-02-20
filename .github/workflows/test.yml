@@ -33,4 +33,4 @@ jobs:
       - name: Install nox
         run: uv pip install nox
       - name: Test package
-        run: nox -s test --default-venv-backend ${{ matrix.venv }}
+        run: nox -s tests --default-venv-backend ${{ matrix.venv }}
