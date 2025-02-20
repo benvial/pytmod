@@ -58,7 +58,7 @@ def tag(session: nox.Session) -> None:
     session.log(f"Tagging version: {tag_name}")
 
     # Run Git commands
-    session.run("git", "tag", "-a", tag_name, "-m", "Version {tag_name[1:]}")
+    session.run("git", "tag", "-a", tag_name, "-m", f"Version {tag_name[1:]}")
     session.run("git", "push", "origin", tag_name)
     session.run("git", "push", "--tags")
     session.run("git", "tag", "-f", "latest", tag_name)

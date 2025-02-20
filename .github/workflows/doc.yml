@@ -1,6 +1,11 @@
 name: Doc
 run-name: ${{ github.repository }} documentation
-on: [push]
+on:
+  push:
+    branches:
+      - dev
+    tags:
+      - "v*"
 jobs:
   # Build job
   build:
