@@ -36,7 +36,27 @@ def docs(session: nox.Session) -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-b", dest="builder", default="html", help="Build target (default: html)"
+        "-b",
+        "--builder",
+        dest="builder",
+        default="html",
+        help="Build target (default: html)",
+    )
+    parser.add_argument(
+        "-v",
+        "--versions",
+        dest="versions",
+        action="store_true",
+        default=False,
+        help="Build multiple versions (default: False)",
+    )
+    parser.add_argument(
+        "-p",
+        "--plot",
+        dest="plot",
+        action="store_false",
+        default=True,
+        help="Build gallery (default: True)",
     )
     parser.add_argument("output", nargs="?", help="Output directory")
     args, posargs = parser.parse_known_args(session.posargs)
@@ -45,7 +65,6 @@ def docs(session: nox.Session) -> None:
     session.install("-e.[doc]", "sphinx-autobuild")
 
     shared_args = (
-        "--port=1984",
         "-n",  # nitpicky mode
         "-T",  # full tracebacks
         f"-b={args.builder}",
@@ -53,11 +72,25 @@ def docs(session: nox.Session) -> None:
         args.output or f"docs/_build/{args.builder}",
         *posargs,
     )
+    autobuild_args = (
+        "--open-browser",
+        "--port=8009",
+        "--ignore",
+        "*.html",
+    )
+
+    if not args.plot:
+        shared_args += ("-D", "plot_gallery=0")
 
     if serve:
-        session.run("sphinx-autobuild", "--open-browser", *shared_args)
+        session.run(
+            "sphinx-autobuild",
+            *autobuild_args,
+            *shared_args,
+        )
     else:
-        session.run("sphinx-build", "--keep-going", *shared_args)
+        cmd = "sphinx-multiversion" if args.versions else "sphinx-build"
+        session.run(cmd, "--keep-going", *shared_args)
 
 
 @nox.session

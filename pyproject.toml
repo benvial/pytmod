@@ -119,3 +119,8 @@ source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "pytmod/_version.py"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+addopts = "--cov=pytmod --cov-report html --cov-report term --cov-report xml --cov-report html"

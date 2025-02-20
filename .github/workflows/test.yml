@@ -1,45 +1,38 @@
-name: Test
+name: Testing
 run-name: ${{ github.repository }} testing
 on: [push]
 jobs:
   install-and-test:
-    name: system (${{ matrix.python-version }}, ${{ matrix.os }})
+    name: ${{ matrix.venv }} ${{ matrix.python-version }}
     strategy:
       matrix:
+        venv: ["venv", "mamba"]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-        os: ["ubuntu-24.04"] #, windows-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Python
+        if: matrix.venv == 'venv'
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install package and run tests
-        run: |
-          pip install .[test] -v
-          pytest -svvv
-
-  install-and-test-conda:
-    name: conda (${{ matrix.python-version }}, ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ["ubuntu-24.04"]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
       - name: Install conda
+        if: matrix.venv == 'mamba'
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-      - name: Install package and run tests
-        shell: bash -el {0}
-        run: |
-          mamba create -n pytmod python=${{ matrix.python-version }} -c conda-forge
-          mamba env update -n pytmod -f environment.yml
-          conda activate pytmod
-          pip install .[test] -v
-          pytest -svvv
+          activate-environment: pytmod
+          environment-file: environment.yml
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: false
+      - name: Setup uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-venv: ".venv"
+      - name: Run tests
+        run: pytest -svvv
+      - name: Install nox
+        run: uv pip install nox
+      - name: Test package
+        run: nox -s test --default-venv-backend ${{ matrix.venv }}

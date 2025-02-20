@@ -15,7 +15,10 @@ import argparse
 import re
 import subprocess
 
+from sphinx.util import logging
 from packaging.version import Version
+
+logger = logging.getLogger(__name__)
 
 
 def get_latest_version_tag():
@@ -136,16 +139,11 @@ def run_after_build(app, exception):
         f.write(redirect_contents)
 
 
-from sphinx.util import logging
-
-logger = logging.getLogger(__name__)
-
-
 def setup(app):
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
     versions = app.config.versions
-    logger.info("versions %s",versions)
+    logger.info("versions %s", versions)
     if versions:
         logger.info("Building multiple versions of docs")
         app.connect("build-finished", run_after_build)
@@ -246,17 +244,21 @@ html_title = "pytmod"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/pytmod-name.svg"
+conf_dir = Path(__file__).parent.resolve()
+static = conf_dir / "_static"
+
+html_logo = "pytmod-name.svg"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "_static/favicon.ico"
+html_favicon = "favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+
+html_static_path = [str(static)]
 html_css_files = ["custom.css"]
 html_js_files = ["version-banner.js"]
 
@@ -410,7 +412,7 @@ sphinx_gallery_conf = {
     # Modules for which function level galleries are created.
     "doc_module": package.__name__,
     "thumbnail_size": (800, 800),
-    "default_thumb_file": "./_static/pytmod.png",
+    "default_thumb_file": str(static / "pytmod.png"),
     "show_memory": True,
     "matplotlib_animations": (True, "html5"),
     # "binder": {
@@ -437,5 +439,5 @@ warnings.filterwarnings(
 smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
-# smv_latest_version = latest_tag
+smv_latest_version = latest_tag
 smv_released_pattern = r"^refs/tags/.*$"
