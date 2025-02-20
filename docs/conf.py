@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import datetime
 import re
+import shutil
 import subprocess
 import warnings
 from pathlib import Path
@@ -133,19 +134,19 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
 
 def run_after_build(app, exception):  # noqa: ARG001
     outdir = Path(app.outdir).parents[0]
-    # try:
-    #     logger.info("Renaming %s as latest", latest_tag)
-    #     old_dir = Path(outdir) / latest_tag
-    #     new_dir = Path(outdir) / "latest"
+    try:
+        logger.info("Renaming %s as latest", latest_tag)
+        old_dir = Path(outdir) / latest_tag
+        new_dir = Path(outdir) / "latest"
 
-    #     try:
-    #         old_dir.rename(new_dir)
-    #     except OSError:
-    #         shutil.rmtree(str(new_dir))
-    #         old_dir.rename(new_dir)
+        try:
+            old_dir.rename(new_dir)
+        except OSError:
+            shutil.rmtree(str(new_dir))
+            old_dir.rename(new_dir)
 
-    # except FileNotFoundError:
-    #     pass
+    except FileNotFoundError:
+        pass
     logger.info("Writing redirection page index.html in %s", outdir)
     with Path.open(outdir / "index.html", "w") as f:
         f.write(redirect_contents)

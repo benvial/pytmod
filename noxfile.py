@@ -12,6 +12,7 @@ import argparse
 import os
 import re
 import shutil
+import webbrowser
 from pathlib import Path
 
 import nox
@@ -125,8 +126,6 @@ def docs(session: nox.Session) -> None:
 
     if serve:
         if args.versions:
-            import webbrowser
-
             session.run("sphinx-multiversion", *shared_args)
 
             path = Path(output).resolve()  # Convert to absolute path
