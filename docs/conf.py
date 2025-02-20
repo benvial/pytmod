@@ -42,14 +42,14 @@ def get_latest_version_tag():
 
 latest_tag = get_latest_version_tag()
 
-redirect_contents = f"""
+redirect_contents = """
 <!DOCTYPE html>
 <html>
   <head>
     <title>Redirecting to latest version</title>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=./{latest_tag}/index.html" />
-    <link rel="canonical" href="https://benvial.github.io/pytmod/{latest_tag}/index.html" />
+    <meta http-equiv="refresh" content="0; url=./latest/index.html" />
+    <link rel="canonical" href="https://benvial.github.io/pytmod/latest/index.html" />
   </head>
 </html>
 """
@@ -133,6 +133,19 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
 
 def run_after_build(app, exception):  # noqa: ARG001
     outdir = Path(app.outdir).parents[0]
+    # try:
+    #     logger.info("Renaming %s as latest", latest_tag)
+    #     old_dir = Path(outdir) / latest_tag
+    #     new_dir = Path(outdir) / "latest"
+
+    #     try:
+    #         old_dir.rename(new_dir)
+    #     except OSError:
+    #         shutil.rmtree(str(new_dir))
+    #         old_dir.rename(new_dir)
+
+    # except FileNotFoundError:
+    #     pass
     logger.info("Writing redirection page index.html in %s", outdir)
     with Path.open(outdir / "index.html", "w") as f:
         f.write(redirect_contents)
@@ -434,9 +447,11 @@ warnings.filterwarnings(
     " non-GUI backend, so cannot show the figure.",
 )
 
+
 # -- Sphinx Multiversion --------------------------------------------------
 # https://sphinx-contrib.github.io/multiversion/main/configuration.html
-smv_tag_whitelist = r"^v\d+\.\d+\.\d+$"
+
+smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
 smv_latest_version = latest_tag

@@ -2,14 +2,26 @@
 <div class="nav-versions">
   <button type="button" aria-label="{{ _(" Versions ") }}">
     <span class="md:hidden">{{ _("Versions") }}</span>
-    <span class="hidden md:inline">{{ current_version.name }}</span>
+    <span class="hidden md:inline">
+      {{ current_version.name }}
+      {% if current_version == latest_version %}
+      (latest)
+      {% endif %}
+    </span>
     <i class="i-lucide chevron-down"></i>
   </button>
   <div class="nav-versions-choices">
     {%- if versions -%}
     <ul>
       {%- for version in versions|reverse -%}
-      <li><a href="{{ version.url }}">{{ version.name }}</a></li>
+      <li>
+      {% if version == latest_version %}
+        <a href="{{ version.url | replace(version.name, 'latest') }}">{{ version.name }}
+      (latest)
+      {% else %}
+        <a href="{{ version.url }}">{{ version.name }}
+      {% endif %}
+      </a></li>
       {%- endfor -%}
     </ul>
     {%- endif -%}

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import shutil
 from pathlib import Path
 
@@ -29,6 +30,38 @@ def tests(session: nox.Session) -> None:
     session.install("-e.[test]")
     session.install("pytest")
     session.run("pytest", *session.posargs)
+
+
+TAG_REGEX = re.compile(r"^v\d+\.\d+\.\d+$")
+
+
+@nox.session
+def tag(session: nox.Session) -> None:
+    """
+    Tag versions, ensuring the tag follows the format vX.Y.Z (e.g., v1.2.3).
+    Also adds a "latest" tag.
+    """
+    parser = argparse.ArgumentParser()
+    args, posargs = parser.parse_known_args(session.posargs)
+
+    if not posargs:
+        session.error("No tag provided! Usage: nox -s tag -- v1.2.3")
+
+    tag_name = posargs[0]
+
+    if not TAG_REGEX.match(tag_name):
+        session.error(
+            f"Invalid tag format: {tag_name}. Expected format: vX.Y.Z (e.g., v1.2.3)"
+        )
+
+    session.log(f"Tagging version: {tag_name}")
+
+    # Run Git commands
+    session.run("git", "tag", "-a", tag_name, "-m", "Version {tag_name[1:]}")
+    session.run("git", "push", "origin", tag_name)
+    session.run("git", "push", "--tags")
+    session.run("git", "tag", "-f", "latest", tag_name)
+    session.run("git", "push", "origin", "latest", "--force")
 
 
 @nox.session(reuse_venv=True)

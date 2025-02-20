@@ -6,14 +6,14 @@ jobs:
     name: ${{ matrix.venv }} ${{ matrix.python-version }}
     strategy:
       matrix:
-        venv: ["venv", "mamba"]
+        venv: ["virtualenv", "mamba"]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Install Python
-        if: matrix.venv == 'venv'
+        if: matrix.venv == 'virtualenv'
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}

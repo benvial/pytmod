@@ -162,3 +162,7 @@ footer {
 .announcement-inner {
   text-align: center;
 }
+
+.container.buttons a {
+  border-radius: 0;
+}
