@@ -8,8 +8,15 @@
 
 from __future__ import annotations
 
-from .__about__ import __author__, __description__, __version__
+from importlib import metadata
+
+from _version import __version__
+
 from .material import Material
 from .slab import Slab
+
+_data = metadata.metadata("pytmod")
+__author__ = _data.get("author")
+__description__ = _data.get("summary")
 
 __all__ = ["Material", "Slab", "__author__", "__description__", "__version__"]
