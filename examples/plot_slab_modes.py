@@ -25,9 +25,8 @@ plt.ion()
 plt.close("all")
 
 
-Omega = 1.3711034416945151
 Omega = 1
-Npad = 11
+Npad = 6
 
 eps0 = 5.25
 deps = 1
@@ -37,7 +36,6 @@ eps_fourier = [
     eps0,
     deps / (2 * 1j),
 ]
-# eps_fourier = [eps0]
 
 L = 2
 mat = pm.Material(eps_fourier, Omega, Npad)
@@ -53,30 +51,6 @@ omegasi = np.linspace(omega0.imag, omega1.imag, nc)
 
 re, im = np.meshgrid(omegasr, omegasi)
 omegas = re + 1j * im
-
-# for Omega in bk.linspace(0.1, 1.7, 51):
-#     Nh = mat.Nh
-#     Nh = 50
-#     M = 50
-#     ms = bk.arange(-M, M+1)
-#     eigenvalue_static = slab.eigenvalue_static(ms)
-#     static_evs = []
-#     for n in range(-Nh, Nh + 1):
-#         static_evs.append(eigenvalue_static-n*Omega)
-#     static_evs = bk.array(static_evs)
-#     plt.plot(static_evs.real, static_evs.imag, ".g")
-#     plt.plot(eigenvalue_static.real, eigenvalue_static.imag, "or")
-#     plt.axvline(Omega)
-
-#     plt.xlim(omegasr[0], omegasr[-1])
-#     plt.ylim(omegasi[0], omegasi[-1])
-#     plt.xlabel(r"Re $\omega/\Omega$")
-#     plt.ylabel(r"Im $\omega/\Omega$")
-#     plt.pause(0.1)
-#     plt.clf()
-
-
-# sys.exit(0)
 
 
 evs, modes = slab.eigensolve(
