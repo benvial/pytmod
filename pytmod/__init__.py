@@ -10,8 +10,7 @@ from __future__ import annotations
 
 from importlib import metadata
 
-from _version import __version__
-
+from ._version import __version__
 from .material import Material
 from .slab import Slab
 
