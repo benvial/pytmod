@@ -88,7 +88,7 @@ class Material:
         return Material(eps_fourier, Omega)
 
     def adjust_freq(self, omegas):
-        return _adjust_freq(omegas, self.modulation_frequency)
+        return _adjust_freq(omegas)
 
     def pad(self, x):
         """
