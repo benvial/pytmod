@@ -21,6 +21,19 @@ from .helpers import (
 )
 
 
+def _adjust_freq(omegas):
+    return np.array(omegas) + 0j
+    # epsilon = np.finfo(float).eps
+    # # omegas = (omegas.real % Omega) + 1j * omegas.imag
+    # if np.isscalar(omegas):  # If omegas is a scalar
+    #     if omegas.imag == 0 and np.isclose(omegas.real % Omega, 0):
+    #         omegas += epsilon  # Directly modify the scalar
+    # else:  # If omegas is an array
+    #     mask = (omegas.imag == 0) & np.isclose(omegas.real % Omega, 0)
+    #     omegas[mask] += epsilon
+    # return omegas
+
+
 class Material:
     """
     Material object
@@ -40,7 +53,8 @@ class Material:
         If the length of `eps_fourier` is even
     """
 
-    def __init__(self, eps_fourier, modulation_frequency, Npad=0):
+    def __init__(self, eps_fourier=None, modulation_frequency=1, Npad=0):
+        eps_fourier = [1] if eps_fourier is None else eps_fourier
         self._eps_fourier = np.array(eps_fourier)
 
         #: Syntax also works for class variables.
@@ -58,6 +72,23 @@ class Material:
 
     def __str__(self):
         return self.__repr__()
+
+    def from_signal(self, t, epsilon, Nmax=0):
+        Omega = 2 * np.pi / (t[-1] - t[0])
+        coeffs = []
+        for n in range(-Nmax, Nmax + 1):
+            _coeff = (
+                np.trapezoid(epsilon * np.exp(-n * 1j * Omega * t), t)
+                / 2
+                / np.pi
+                * Omega
+            )
+            coeffs.append(_coeff)
+        eps_fourier = np.array(coeffs).tolist()
+        return Material(eps_fourier, Omega)
+
+    def adjust_freq(self, omegas):
+        return _adjust_freq(omegas)
 
     def pad(self, x):
         """
@@ -209,9 +240,7 @@ class Material:
         matrix : array_like
             The matrix of the linear system.
         """
-        omegas = np.array(omegas)
-        # integ = bk.where(bk.int32(omegas.real / Omega) == omegas.real / Omega)
-        # omegas[integ] += 1e-12
+        omegas = self.adjust_freq(omegas)
         nh = self.nh
         matrix = np.zeros((nh, nh, *omegas.shape), dtype=np.complex128)
         for m in range(nh):
@@ -240,9 +269,7 @@ class Material:
         dmatrix : array_like
             The matrix matrix derivative wrt omega.
         """
-        omegas = np.array(omegas)
-        # integ = bk.where(bk.int32(omegas.real / Omega) == omegas.real / Omega)
-        # omegas[integ] += 1e-12
+        omegas = self.adjust_freq(omegas)
         nh = self.nh
         dmatrix = np.zeros((nh, nh, *omegas.shape), dtype=np.complex128)
         for m in range(nh):
@@ -258,7 +285,9 @@ class Material:
                 dmatrix[m, n] = coeff
         return dmatrix
 
-    def eigensolve(self, omegas, matrix=None, left=False, normalize=True, sort=True):
+    def eigensolve(
+        self, omegas, matrix=None, left=False, normalize=True, sort=False, sign=True
+    ):
         """
         Solve the eigenvalue problem for the material.
 
@@ -284,10 +313,12 @@ class Material:
         modes_left : array_like
             The left eigenvectors of the material, if left is True.
         """
+
         left0 = left
         if normalize:
             left = True
         omegas = np.array(omegas)
+
         if matrix is None:
             matrix = self.build_matrix(omegas)
         mat = move_first_two_axes_to_end(matrix)
@@ -295,11 +326,28 @@ class Material:
             matH = np.swapaxes(mat, -1, -2).conj()
             k2h, modes_left = np.linalg.eig(matH)
             modes_left = modes_left.conj()
+            # modes_left = np.concatenate([modes_left, -modes_left], axis=-1)
+            # modes_left = np.concatenate([modes_left, modes_left], axis=-2)
         k2, modes_right = np.linalg.eig(mat)
         eigenvalues = (k2 + 0j) ** 0.5
 
+        # eigenvalues = np.concatenate([eigenvalues, -eigenvalues], axis=-1)
+        # modes_right = np.concatenate([modes_right, -modes_right], axis=-1)
+        # modes_right = np.concatenate([modes_right, modes_right], axis=-2)
+
+        if sign:
+            eigenvalues1 = eigenvalues.copy()
+            for m in range(eigenvalues.shape[-1]):
+                im = self.index_shift(m)
+                tmp = omegas - self.modulation_frequency * im
+                eigenvalues_ = eigenvalues[..., m]
+                eigenvalues_ = np.where(tmp.real > 0, eigenvalues_, -eigenvalues_)
+                eigenvalues1[..., m] = eigenvalues_
+            eigenvalues = eigenvalues1
+
         if sort:
             sort_indices = np.argsort(eigenvalues.real, axis=-1)
+            # sort_indices = np.argsort(np.abs(eigenvalues), axis=-1)
 
             # Sort eigenvalues
             eigenvalues = np.take_along_axis(eigenvalues, sort_indices, axis=-1)
@@ -346,8 +394,9 @@ class Material:
         normas : array_like
             The normalization constants.
         """
+        N = modes_right.shape[1]
         return (
-            np.array([dot(modes_left[:, i], modes_right[:, i]) for i in range(self.nh)])
+            np.array([dot(modes_left[:, i], modes_right[:, i]) for i in range(N)])
             ** 0.5
         )
 
@@ -455,9 +504,11 @@ class Material:
             dmatrix = self.build_dmatrix_domega(omegas)
 
         max_indices = np.argmax(np.abs(normalized_modes_right), axis=0)
+        # max_indices = np.zeros_like(max_indices)
         modes_right_max_values = np.take_along_axis(
             normalized_modes_right, np.expand_dims(max_indices, axis=1), axis=0
         )
+
         deigvecs = []
         for i in range(self.nh):
             s = 0

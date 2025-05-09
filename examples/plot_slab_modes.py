@@ -143,24 +143,24 @@ plt.tight_layout()
 plt.show()
 
 
-####################################################################################
-# Animate the field
+# ####################################################################################
+# # Animate the field
 
 
-anim = slab.animate_field(x, t, qnms[0])
+# anim = slab.animate_field(x, t, qnms[0])
 
 
-####################################################################################
-# Space time map
+# ####################################################################################
+# # Space time map
 
-plt.figure()
-plt.pcolormesh(x / L - 0.5, t / T, np.real(qnms[0].T), cmap="RdBu_r")
-plt.axvline(-0.5, color="#949494", lw=1)
-plt.axvline(0.5, color="#949494", lw=1)
-plt.ylim(0, t[-1] / T)
-plt.xlabel("$x/L$")
-plt.ylabel("$t/T$")
-cb = plt.colorbar()
-cb.ax.set_title("Re $E$")
-plt.tight_layout()
-plt.show()
+# plt.figure()
+# plt.pcolormesh(x / L - 0.5, t / T, np.real(qnms[0].T), cmap="RdBu_r")
+# plt.axvline(-0.5, color="#949494", lw=1)
+# plt.axvline(0.5, color="#949494", lw=1)
+# plt.ylim(0, t[-1] / T)
+# plt.xlabel("$x/L$")
+# plt.ylabel("$t/T$")
+# cb = plt.colorbar()
+# cb.ax.set_title("Re $E$")
+# plt.tight_layout()
+# plt.show()

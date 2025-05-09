@@ -11,7 +11,14 @@ import numpy as np
 from matplotlib import animation
 
 from .eig import nonlinear_eigensolver
-from .helpers import dimhandler, dot, fresnel, matvecprod, normalize_modes, vecmatprod
+from .helpers import (
+    dimhandler,
+    dot,
+    fresnel,
+    matvecprod,
+    normalize_modes,
+    vecmatprod,
+)
 
 
 class Slab:
@@ -30,12 +37,13 @@ class Slab:
         The permittivity of the medium below the slab
     """
 
-    def __init__(self, material, thickness, eps_plus=1, eps_minus=1):
+    def __init__(self, material, thickness, eps_plus=1, eps_minus=1, alt=True):
         self.material = material
         self.thickness = thickness
         self.eps_plus = eps_plus
         self.eps_minus = eps_minus
         self.dim = self.material.nh * 2
+        self.alt = alt
 
     def __repr__(self):
         return f"Slab(thickness={self.thickness}, material={self.material}), eps_plus={self.eps_plus}, eps_minus={self.eps_minus}"
@@ -66,39 +74,45 @@ class Slab:
         Nh = self.material.Nh
         eigenvalues = eigenvalues.T
         modes = modes.T
-        # modes = bk.transpose(modes, (2, 0, 1))
 
         harm_index = np.arange(-Nh, Nh + 1)
+        # harm_index = np.hstack([harm_index, harm_index])
         harm_index = np.broadcast_to(harm_index, eigenvalues.shape)
-
         harm_index = np.transpose(harm_index)
+
         omegas_shift = omegas - harm_index * self.material.modulation_frequency
         omegas_shift = np.transpose(omegas_shift)
+
         L = self.thickness
         phi_plus = np.exp(1j * eigenvalues * L)
         phi_minus = np.exp(-1j * eigenvalues * L)
+
         ks = np.broadcast_to(eigenvalues[:, :, np.newaxis], modes.shape)
         phi_plus = np.broadcast_to(phi_plus[:, :, np.newaxis], modes.shape)
         phi_minus = np.broadcast_to(phi_minus[:, :, np.newaxis], modes.shape)
         omegas_shift = np.broadcast_to(omegas_shift[:, :, np.newaxis], modes.shape)
+
         ks = np.transpose(ks, (0, 2, 1))
+        modes = np.transpose(modes, (0, 2, 1))
         phi_plus = np.transpose(phi_plus, (0, 2, 1))
         phi_minus = np.transpose(phi_minus, (0, 2, 1))
-        modes = np.transpose(modes, (0, 2, 1))
+        # omegas_shift = np.transpose(omegas_shift, (0, 2, 1))
+
         n_plus = self.eps_plus**0.5
         n_minus = self.eps_minus**0.5
-        matrix_slab = np.block(
-            [
-                [
-                    (omegas_shift * n_plus + ks) * modes,
-                    (omegas_shift * n_plus - ks) * modes,
-                ],
-                [
-                    (omegas_shift * n_minus - ks) * phi_plus * modes,
-                    (omegas_shift * n_minus + ks) * phi_minus * modes,
-                ],
-            ]
-        )
+        if self.alt:
+            m11 = (n_plus + ks / omegas_shift) * modes
+            m12 = (n_plus - ks / omegas_shift) * modes
+            m21 = (n_minus - ks / omegas_shift) * phi_plus * modes
+            m22 = (n_minus + ks / omegas_shift) * phi_minus * modes
+
+        else:
+            m11 = (omegas_shift * n_plus + ks) * modes
+            m12 = (omegas_shift * n_plus - ks) * modes
+            m21 = (omegas_shift * n_minus - ks) * phi_plus * modes
+            m22 = (omegas_shift * n_minus + ks) * phi_minus * modes
+
+        matrix_slab = np.block([[m11, m12], [m21, m22]])
         return np.transpose(matrix_slab, (1, 2, 0))
 
     @dimhandler
@@ -146,50 +160,62 @@ class Slab:
         eigenvalues = eigenvalues.T
         modes = modes.T
         dmodes = dmodes.T
-        # modes = bk.transpose(modes, (2, 0, 1))
+        deigenvalues = deigenvalues.T
 
         harm_index = np.arange(-Nh, Nh + 1)
         harm_index = np.broadcast_to(harm_index, eigenvalues.shape)
-
         harm_index = np.transpose(harm_index)
+
         omegas_shift = omegas - harm_index * self.material.modulation_frequency
         omegas_shift = np.transpose(omegas_shift)
+
         L = self.thickness
         phi_plus = np.exp(1j * eigenvalues * L)
         phi_minus = np.exp(-1j * eigenvalues * L)
+
         ks = np.broadcast_to(eigenvalues[:, :, np.newaxis], modes.shape)
-
-        deigenvalues = deigenvalues.T
-        dks = np.broadcast_to(deigenvalues[:, :, np.newaxis], modes.shape)
-
         phi_plus = np.broadcast_to(phi_plus[:, :, np.newaxis], modes.shape)
         phi_minus = np.broadcast_to(phi_minus[:, :, np.newaxis], modes.shape)
         omegas_shift = np.broadcast_to(omegas_shift[:, :, np.newaxis], modes.shape)
+        dks = np.broadcast_to(deigenvalues[:, :, np.newaxis], modes.shape)
 
         dphi_plus = 1j * L * dks * phi_plus
         dphi_minus = -1j * L * dks * phi_minus
 
         ks = np.transpose(ks, (0, 2, 1))
-        dks = np.transpose(dks, (0, 2, 1))
+        modes = np.transpose(modes, (0, 2, 1))
         phi_plus = np.transpose(phi_plus, (0, 2, 1))
         phi_minus = np.transpose(phi_minus, (0, 2, 1))
-        modes = np.transpose(modes, (0, 2, 1))
+        dks = np.transpose(dks, (0, 2, 1))
         dmodes = np.transpose(dmodes, (0, 2, 1))
+        dphi_plus = np.transpose(dphi_plus, (0, 2, 1))
+        dphi_minus = np.transpose(dphi_minus, (0, 2, 1))
 
         n_plus = self.eps_plus**0.5
         n_minus = self.eps_minus**0.5
 
-        dm11 = (omegas_shift * n_plus + ks) * dmodes + (n_plus + dks) * modes
-
-        dm12 = (omegas_shift * n_plus - ks) * dmodes + (n_plus - dks) * modes
-
-        dm21 = (omegas_shift * n_minus - ks) * (
-            modes * dphi_plus + dmodes * phi_plus
-        ) + (n_minus - dks) * phi_plus * modes
-
-        dm22 = (omegas_shift * n_minus + ks) * (
-            modes * dphi_minus + dmodes * phi_minus
-        ) + (n_minus + dks) * phi_minus * modes
+        if self.alt:
+            dm11 = (n_plus + ks / omegas_shift) * dmodes + (
+                dks - ks / omegas_shift
+            ) / omegas_shift * modes
+            dm12 = (n_plus - ks / omegas_shift) * dmodes - (
+                dks - ks / omegas_shift
+            ) / omegas_shift * modes
+            dm21 = (n_minus - ks / omegas_shift) * (
+                modes * dphi_plus + dmodes * phi_plus
+            ) - (dks - ks / omegas_shift) / omegas_shift * phi_plus * modes
+            dm22 = (n_minus + ks / omegas_shift) * (
+                modes * dphi_minus + dmodes * phi_minus
+            ) + (dks - ks / omegas_shift) / omegas_shift * phi_minus * modes
+        else:
+            dm11 = (omegas_shift * n_plus + ks) * dmodes + (n_plus + dks) * modes
+            dm12 = (omegas_shift * n_plus - ks) * dmodes + (n_plus - dks) * modes
+            dm21 = (omegas_shift * n_minus - ks) * (
+                modes * dphi_plus + dmodes * phi_plus
+            ) + (n_minus - dks) * phi_plus * modes
+            dm22 = (omegas_shift * n_minus + ks) * (
+                modes * dphi_minus + dmodes * phi_minus
+            ) + (n_minus + dks) * phi_minus * modes
 
         dmatrix_slab = np.block([[dm11, dm12], [dm21, dm22]])
         return np.transpose(dmatrix_slab, (1, 2, 0))
@@ -215,12 +241,15 @@ class Slab:
         Eis = np.array(Eis)
         rhs_slab = np.zeros((2 * self.material.nh, *omegas.shape), dtype=np.complex128)
         for n in range(self.material.nh):
-            nshift = self.material.index_shift(n)
-            omegas_shift = omegas - nshift * self.material.modulation_frequency
-            rhs_slab[n] = self.eps_plus**0.5 * 2 * Eis[n] * omegas_shift
+            rhs_slab[n] = self.eps_plus**0.5 * 2 * Eis[n]
             rhs_slab[n + self.material.nh] = (
-                self.eps_minus**0.5 * 2 * Eis[n + self.material.nh] * omegas_shift
+                self.eps_minus**0.5 * 2 * Eis[n + self.material.nh]
             )
+            if not self.alt:
+                nshift = self.material.index_shift(n)
+                omegas_shift = omegas - nshift * self.material.modulation_frequency
+                rhs_slab[n] *= omegas_shift
+                rhs_slab[n + self.material.nh] *= omegas_shift
         return rhs_slab
 
     def solve(self, matrix_slab, rhs_slab):
@@ -375,7 +404,7 @@ class Slab:
             1 / (self.thickness * eps_slab**0.5) * (n * np.pi + 1j / 2 * np.log(alpha))
         )
 
-    def eigensolve(self, *args, **kwargs):
+    def eigensolve(self, *args, jac=False, **kwargs):
         """
         Solve the eigenvalue problem of the time-modulated slab.
 
@@ -393,15 +422,27 @@ class Slab:
         modes : array_like
             The eigenvectors of the system.
         """
+        if "dim" not in kwargs:
+            kwargs["dim"] = self.material.nh * 2
+
+        if jac:
+
+            def _build_matrix(omegas):
+                eigenvalues, modes, modes_left = self.material.eigensolve(
+                    omegas, left=True, normalize=True
+                )
+
+                return self.build_matrix(
+                    omegas, eigenvalues, modes
+                ), self.build_dmatrix_domega(omegas, eigenvalues, modes, modes_left)
+
+            return nonlinear_eigensolver(_build_matrix, *args, dfunc=True, **kwargs)
 
         def _build_matrix(omegas):
-            eigenvalues, modes, _ = self.material.eigensolve(
+            eigenvalues, modes, modes_left = self.material.eigensolve(
                 omegas, left=True, normalize=True
             )
             return self.build_matrix(omegas, eigenvalues, modes)
-
-        if "dim" not in kwargs:
-            kwargs["dim"] = self.material.nh * 2
 
         return nonlinear_eigensolver(_build_matrix, *args, **kwargs)
 
@@ -652,11 +693,25 @@ class Slab:
 
         return normas
 
-    def normalize(self, modes_right, modes_left, matrix_derivative):
+    def normalize(self, modes_right, modes_left, matrix_derivative, max_index=0):
         normas = self.get_modes_normalization(
             modes_right, modes_left, matrix_derivative
         )
-        return normalize_modes(normas, modes_right, modes_left)
+        return normalize_modes(normas, modes_right, modes_left, max_index=max_index)
+
+    # def normalize(self, modes_right, modes_left, matrix_derivative):
+    #     max_indices = np.argmax(np.abs(modes_right), axis=0)
+    #     # max_indices = np.zeros_like(max_indices)
+    #     modes_right_max_values = np.take_along_axis(
+    #         modes_right, np.expand_dims(max_indices, axis=0), axis=0
+    #     )
+    #     modes_right = modes_right / modes_right_max_values
+    #     # modes_right = normalize_batch(modes_right, modes_right[self.material.Nh])
+    #     normas = self.get_modes_normalization(
+    #         modes_right, modes_left, matrix_derivative
+    #     )
+    #     modes_left = normalize_batch(modes_left, normas**2)
+    #     return modes_right, modes_left
 
     def scalar_product(
         self,
@@ -674,3 +729,28 @@ class Slab:
         R = dot(modes_left, matvecprod(matrix_right, modes_right))
         L = dot(vecmatprod(modes_left, matrix_left), modes_right)
         return (L - R) / (eigenvalue_right - eigenvalue_left)
+
+    def get_multiplicities(self, eigenvalues, M=None, tol=1e-6):
+        """
+        Compute the multiplicity of each eigenvalue.
+
+        Parameters
+        ----------
+        eigenvalues : array
+            The eigenvalues
+        M : array, optional
+            The matrix at each eigenvalue. If None, it is computed.
+        tol : float
+            The tolerance for the rank computation
+
+        Returns
+        -------
+        multiplicities : array
+            The multiplicity of each eigenvalue
+        """
+        if M is None:
+            evs_mat, modes_mat, _ = self.material.eigensolve(
+                eigenvalues, left=True, normalize=True
+            )
+            M = self.build_matrix(eigenvalues, evs_mat, modes_mat).swapaxes(-1, 0)
+        return self.dim - np.linalg.matrix_rank(M, tol=tol)

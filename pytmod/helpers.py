@@ -11,10 +11,11 @@ import numpy as np
 
 def normalize_batch(modes, normas):
     dim = modes.shape[1]
+    normas = np.where(normas == 0, 1, normas)
     return np.array([modes[:, i] / normas[i] for i in range(dim)]).swapaxes(1, 0)
 
 
-def normalize_modes(normas, modes_right, modes_left):
+def normalize_modes(normas, modes_right, modes_left, max_index=None):
     """
     Normalize the eigenmodes.
 
@@ -39,16 +40,22 @@ def normalize_modes(normas, modes_right, modes_left):
     normalized so that the maximum value of each eigenmode is 1.
     """
     # normalize so that left and right eigenmodes are biorthogonal
+
     modes_right = normalize_batch(modes_right, normas)
     modes_left = normalize_batch(modes_left, normas)
 
     # normalize so max value for the right eigenmodes is 1
     max_indices = np.argmax(np.abs(modes_right), axis=0)
+    if max_index is not None:
+        max_indices = np.zeros_like(max_indices) + max_index
+
     modes_right_max_values = np.take_along_axis(
         modes_right, np.expand_dims(max_indices, axis=0), axis=0
     )
     modes_right = modes_right / modes_right_max_values
     modes_left = modes_left * modes_right_max_values
+
+    # modes_left = normalize_batch(modes_left, normas**2)
 
     return modes_right, modes_left
 

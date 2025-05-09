@@ -418,13 +418,16 @@ def _nonlinear_eigensolver(
     if return_left:
         weight = "rayleigh asymmetric"
     tnlevp = -time.time()
+
     Nguess_re, Nguess_im = N_grid
 
     Nre, Nim = int(Nguess_re * peak_ref), int(Nguess_im * peak_ref)
 
     func_gives_der = dfunc is not None
+    der_is_callable = callable(dfunc)
+    func_gives_der_true = dfunc and func_gives_der and not der_is_callable
 
-    if func_gives_der:
+    if func_gives_der and der_is_callable:
 
         def func_eig(omega):
             return func(omega), dfunc(omega)
@@ -435,8 +438,8 @@ def _nonlinear_eigensolver(
             return func(omega)
 
     if guesses is None:
-        guesses_re = np.linspace(omega0.real, omega1.real, Nre)
-        guesses_im = np.linspace(omega0.imag, omega1.imag, Nim)
+        guesses_re = np.linspace(omega0.real, omega1.real, Nre + 2)[1:-1]
+        guesses_im = np.linspace(omega0.imag, omega1.imag, Nim + 2)[1:-1]
         guesses_re, guesses_im = np.meshgrid(guesses_re, guesses_im, indexing="ij")
         guesses = guesses_re + 1j * guesses_im
         guesses0 = guesses.flatten()
@@ -452,6 +455,7 @@ def _nonlinear_eigensolver(
 
             omegas_complex = omegas_re_ + 1j * omegas_im_
             Mc = func(omegas_complex)
+            Mc = Mc[0] if func_gives_der_true else Mc
             if get_backend() == "torch":
                 Mc = np.permute(Mc, (2, 3, 0, 1))
             else:
@@ -502,8 +506,8 @@ def _nonlinear_eigensolver(
             if len(guesses) > 0:
                 guesses = np.stack(guesses).flatten()
         elif strategy == "random":
-            rand_re = rng.random(N_grid)
-            rand_im = rng.random(N_grid)
+            rand_re = rng.random(Nre)
+            rand_im = rng.random(Nim)
             rand_re = (omega1.real - omega0.real) * rand_re + omega0.real
             rand_im = (omega1.imag - omega0.imag) * rand_im + omega0.imag
             guesses = rand_re + 1j * rand_im
@@ -696,7 +700,7 @@ def _nleigsolve(func, *args, refine=False, **kwargs):
     *args : arguments
         Arguments to be passed to _nonlinear_eigensolver
     refine : bool, optional
-        Refine the guesses and try again if _nonlinear_eigensolver fails?
+        Refine the guesses
     **kwargs : keyword arguments
         Keyword arguments to be passed to _nonlinear_eigensolver
 
@@ -821,70 +825,97 @@ def _nleigsolve_recursive(
     Ncut += 1
 
     return_left = kwargs["return_left"]
+    peak_refinit = kwargs["peak_ref"]
 
-    peak_ref0 = kwargs["peak_ref"]
-    evs_old = evs_.copy()
-    if evs_old != []:
-        _evs0 = np.hstack(evs_old) if evs_old != [] else evs_old
-        unique_indices0 = unique(_evs0, precision=kwargs["tol"] * 100)
-        len(unique_indices0)
-        Nmodes_in_region = 0
-        for e in _evs0[unique_indices0]:
-            if (
-                e.real > omega0.real
-                and e.imag > omega0.imag
-                and e.real < omega1.real
-                and e.imag < omega1.imag
-            ):
-                Nmodes_in_region += 1
-        max(kwargs["N_grid"])
-        peak_ref1 = 1 / (Nmodes_in_region + 1) * peak_ref0
+    # N_grid = kwargs["N_grid"]
+    # dens0 = N_grid[0] * N_grid[1] * peak_refinit
+    # print(dens0)
 
-        peak_ref1 = max(peak_ref0, peak_ref1)
-    else:
-        Nmodes_in_region = 0
-        peak_ref1 = peak_ref0
-    peak_ref1 = peak_ref0  # max(peak_ref1, 4*peak_ref0)
+    Nmodes_in_region_old = None
 
-    if kwargs["plot_solver"]:
-        rectplot = plot_rectangle(
-            plt.gca(),
-            omega0 / kwargs["scale"],
-            omega1 / kwargs["scale"],
-            fill=True,
-            linewidth=1,
-            facecolor="#d8ff3d",
-            alpha=0.1,
-            edgecolor="#ff7c24",
-        )
-        plot_rectangle(
-            plt.gca(),
-            omega0 / kwargs["scale"],
-            omega1 / kwargs["scale"],
-            fill=True,
-            linewidth=1,
-            facecolor="none",
-            edgecolor="#ff7c24",
-        )
-        _pause(0.001)
+    iter_ref_peaks = False
+    Nref = 2 if iter_ref_peaks else 1
+    ref_map = np.linspace(1, 4, Nref)
+    for iref in range(Nref):
+        peak_ref0 = ref_map[iref] * peak_refinit
 
-    kwargs["peak_ref"] = peak_ref1
-    if return_left:
-        evs, eigenvectors, eigenvectors_left = _nleigsolve(
-            func, omega0, omega1, **kwargs
-        )
+        evs_old = evs_.copy()
+        if evs_old != []:
+            _evs0 = np.hstack(evs_old) if evs_old != [] else evs_old
+            unique_indices0 = unique(_evs0, precision=kwargs["tol"] * 100)
+            # len(unique_indices0)
+            Nmodes_in_region = 0
+            for e in _evs0[unique_indices0]:
+                if (
+                    e.real > omega0.real
+                    and e.imag > omega0.imag
+                    and e.real < omega1.real
+                    and e.imag < omega1.imag
+                ):
+                    Nmodes_in_region += 1
+            # max(kwargs["N_grid"])
+            peak_ref1 = 1 / (Nmodes_in_region + 1) * peak_ref0
+            # peak_ref1 = min(peak_ref0, peak_ref1)
+            peak_ref1 = peak_ref0
+        else:
+            Nmodes_in_region = 0
+            peak_ref1 = peak_ref0
+        # peak_ref1 = peak_ref0  # max(peak_ref1, 4*peak_ref0)
 
-    else:
-        evs, eigenvectors = _nleigsolve(func, omega0, omega1, **kwargs)
+        # if Nmodes_in_region ==0 and Ncut > 1:
+        #     peak_ref1 = 1
 
-    kwargs["peak_ref"] = peak_ref0
+        if kwargs["plot_solver"]:
+            rectplot = plot_rectangle(
+                plt.gca(),
+                omega0 / kwargs["scale"],
+                omega1 / kwargs["scale"],
+                fill=True,
+                linewidth=1,
+                facecolor="#d8ff3d",
+                alpha=0.1,
+                edgecolor="#ff7c24",
+            )
+            plot_rectangle(
+                plt.gca(),
+                omega0 / kwargs["scale"],
+                omega1 / kwargs["scale"],
+                fill=True,
+                linewidth=1,
+                facecolor="none",
+                edgecolor="#ff7c24",
+            )
+            _pause(0.001)
+
+        kwargs["peak_ref"] = peak_ref1
+
+        # print(Nmodes_in_region, peak_ref1)
+
+        if return_left:
+            evs, eigenvectors, eigenvectors_left = _nleigsolve(
+                func, omega0, omega1, **kwargs
+            )
+
+        else:
+            evs, eigenvectors = _nleigsolve(func, omega0, omega1, **kwargs)
+        # evs_ = np.array(evs).tolist()
+
+        if iter_ref_peaks and (
+            Ncut > 1
+            and Nmodes_in_region_old is not None
+            and Nmodes_in_region_old == Nmodes_in_region
+        ):
+            break
+        Nmodes_in_region_old = Nmodes_in_region
+
+    kwargs["peak_ref"] = peak_refinit
     if len(evs) > 0:
         evs_.append(evs)
         eigenvectors_.append(eigenvectors)
         if return_left:
             eigenvectors_left_.append(eigenvectors_left)
 
-    if evs_old != []:
+    if evs_old != [] and evs_ != []:
         _evs1 = np.hstack(evs_)
         unique_indices1 = unique(_evs1, precision=kwargs["tol"] * 100)
         cond = len(unique_indices0) == len(unique_indices1)

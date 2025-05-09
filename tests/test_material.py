@@ -100,6 +100,9 @@ def test_deigenpairs_domega():
     eigenvalues, modes_right, modes_left = material.eigensolve(
         omegas, left=True, normalize=True
     )
+
+    eigenvalues_1, _ = material.eigensolve(omegas, normalize=False)
+    assert np.allclose(eigenvalues_1, eigenvalues)
     for i in range(material.nh):
         for j in range(material.nh):
             test = dot(modes_right[:, i], modes_left[:, j])
