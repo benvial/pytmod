@@ -156,7 +156,6 @@ def setup(app):
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
     versions = app.config.versions
-    logger.info("versions %s", versions)
     if versions:
         logger.info("Building multiple versions of docs")
         app.connect("build-finished", run_after_build)
@@ -417,7 +416,7 @@ sphinx_gallery_conf = {
     # "pypandoc": {"extra_args": ["-C","--bibliography=_custom/latex/biblio.bib"], "filters": []},
     # "filename_pattern": "plot_homogenization\.py",
     "filename_pattern": "/plot_",
-    "ignore_pattern": r"^(?!plot_).*",  # ignore files that do not start with plot_
+    # "ignore_pattern": r"^(?!plot_).*",  # ignore files that do not start with plot_
     # "ignore_pattern": r"^((?!/plot_).)*$",  # ignore files that do not start with plot_
     # "first_notebook_cell": (
     #     "import matplotlib\n" "mpl.style.use('gyptis')\n" "%matplotlib inline"

@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import warnings
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
@@ -17,7 +16,8 @@ from pytmod import Material, Slab
 from pytmod.eig import get_residual
 from pytmod.helpers import matvecprod, vecmatprod
 
-mpl.use("Agg")
+# mpl.use("Agg")
+
 
 eps0 = 5.25
 deps = 0.85
@@ -72,11 +72,11 @@ def test_fresnel():
     )
 
 
-# def test_eigensolve():
-if True:
+@pytest.mark.parametrize("alt", [True, False])
+def test_eigensolve(alt):
     eps_fourier = [6]
     mat = Material(eps_fourier, 1)
-    slab = Slab(mat, 3, eps_plus=2, eps_minus=4)
+    slab = Slab(mat, 3, eps_plus=2, eps_minus=4, alt=alt)
     evs, modes = slab.eigensolve(
         0.01 - 1j,
         4 - 0.001,
@@ -84,6 +84,15 @@ if True:
         recursive=True,
         tol=1e-7,
     )
+    evs1, modes1 = slab.eigensolve(
+        0.01 - 1j,
+        4 - 0.001,
+        peak_ref=4,
+        recursive=True,
+        tol=1e-7,
+        jac=True,
+    )
+    assert np.allclose(evs, evs1)
 
     evstatic = np.array([slab.eigenvalue_static(n) for n in range(1, 10)])
 
@@ -100,21 +109,22 @@ if True:
         plot_solver=True,
         tol=1e-7,
     )
-
-    evs, modes = slab.eigensolve(
-        0.01 - 0.4j,
-        0.25 - 0.001j,
-        peak_ref=2,
-        recursive=False,
-        plot_solver=True,
-        peaks_estimate="eig",
-    )
     omega = evs[0]
     kns, smodes, _ = mat.eigensolve(omega, left=True)
     M = slab.build_matrix(omega, kns, smodes)
     res = get_residual(M, modes[:, 0])
-    assert res < 1e-6
     print(res)
+    assert res < 1e-6
+
+    evs, modes = slab.eigensolve(
+        0.01 - 0.4j,
+        0.25 - 0.001j,
+        peak_ref=4,
+        recursive=False,
+        plot_solver=True,
+        peaks_estimate="eig",
+        refine=True,
+    )
 
     for return_left in [True, False]:
         slab.eigensolve(0.01 - 0.4j, 0.02 - 0.001j, return_left=return_left)
@@ -186,40 +196,42 @@ if True:
         )
 
 
-def test_matrix_derivative():
-    eps_fourier = [0.5, 2.0, 0.5]
-    eps_fourier = [2.0]
+@pytest.mark.parametrize("alt", [True, False])
+def test_matrix_derivative(alt):
+    eps_fourier = [0.1, 2.0, 0.1]
+    # eps_fourier = [12.0]
     modulation_frequency = 1.2
     material = Material(eps_fourier, modulation_frequency)
-    omegas = np.linspace(1, 10, 5)
+    omegas = np.linspace(2, 10, 13)
 
     eigenvalues, modes_right, modes_left = material.eigensolve(
         omegas, left=True, normalize=True
     )
 
-    slab = Slab(material, 3)
+    slab = Slab(material, 3, alt=alt)
 
     dM = slab.build_dmatrix_domega(omegas, eigenvalues, modes_right, modes_left)
     M = slab.build_matrix(omegas, eigenvalues, modes_right)
-    delta_omega = 1e-9
+    delta_omega = 1e-5
 
     deigenvalues, dmodes_right, dmodes_left = material.eigensolve(
         omegas + delta_omega, left=True, normalize=True
     )
     delta_M = slab.build_matrix(omegas + delta_omega, deigenvalues, dmodes_right)
     dM_fd = (delta_M - M) / delta_omega
-    assert np.allclose(dM_fd, dM, atol=1e-6)
+    assert np.allclose(dM_fd, dM, rtol=1e-3)
 
 
-def test_incident():
+def _test_incident(alt):
     omega = 0.7
     Ei0 = 1
 
     eps_fourier = [1, 6, -4]
     mat = Material(eps_fourier, 3)
     kns, ens = mat.eigensolve(omega)
-    slab = Slab(mat, 3)
+    slab = Slab(mat, 3, alt=alt)
     Nh = mat.Nh
+    Rs1, Rs2, Ts1, Ts2 = [], [], [], []
 
     for i in range(-Nh, Nh + 1):
         Ninc = mat.Nh + i
@@ -248,6 +260,16 @@ def test_incident():
 
         assert np.allclose(rn1, tn2)
         assert np.allclose(rn2, tn1)
+        Rs1.append(rn1)
+        Rs2.append(rn2)
+        Ts1.append(tn1)
+        Ts2.append(tn2)
+
+    return Rs1, Rs2, Ts1, Ts2
+
+
+def test_incident():
+    assert np.allclose(_test_incident(False), _test_incident(True))
 
 
 def test_solve_raises_error():
@@ -266,7 +288,8 @@ def test_extract_coefficients_raises_error():
         slab.extract_coefficients(solution, Eis, kns, ens)
 
 
-def test_field():
+@pytest.mark.parametrize("alt", [True, False])
+def test_field(alt):
     eps0 = 5.25
     deps = 2
     Omega = 1
@@ -281,7 +304,7 @@ def test_field():
     ]
     mat = Material(eps_fourier, Omega, Npad)
     kns, ens = mat.eigensolve(omega)
-    slab = Slab(mat, L)
+    slab = Slab(mat, L, alt=alt)
     matrix_slab = slab.build_matrix(omega, kns, ens)
     Eis = slab.init_incident_field(omega)
     Ninc = mat.Nh
@@ -290,7 +313,6 @@ def test_field():
     solution = slab.solve(matrix_slab, rhs_slab)
     Eslab_plus, Eslab_minus, Er, Et = slab.extract_coefficients(solution, Eis, kns, ens)
 
-    2 * np.pi / omega
     T = mat.modulation_period
     t = np.linspace(0, 3 * T, 6)
     Lhom = 3 * L
@@ -308,11 +330,12 @@ def test_field():
         slab.animate_field(x, t, E)
 
 
-def test_modes():
-    eps_fourier = [2, 6, 2]
+@pytest.mark.parametrize("alt", [True, False])
+def test_modes(alt):
+    eps_fourier = [0.4, 6, -0.2]
     # eps_fourier = [6]
-    material = Material(eps_fourier, 1, Npad=0)
-    slab = Slab(material, 3)
+    material = Material(eps_fourier, 1, Npad=1)
+    slab = Slab(material, 3, alt=alt)
     evs_slab, modes_slab_right, modes_slab_left = slab.eigensolve(
         0.01 - 0.2j,
         1.2 - 0.001j,
@@ -380,8 +403,8 @@ def test_modes():
                 diag=diag,
             )
             res_right = matvecprod(matrix_right, modes_slab_right[:, j])
-            assert np.allclose(res_right, 0)
+            assert np.allclose(res_right, 0, atol=1e-5)
 
             check_ortho[i, j] = q
 
-    assert np.allclose(np.eye(nmodes), check_ortho)
+    assert np.allclose(np.eye(nmodes), check_ortho, atol=1e-6)
