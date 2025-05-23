@@ -1,7 +1,7 @@
 
 PROJECT_NAME := "pytmod"
 PROJECT_DIR := `pwd`
-VERSION := ```python3 -c "import toml;print(toml.load('pyproject.toml')['project']['version'])"```
+# VERSION := ```python3 -c "import toml;print(toml.load('pyproject.toml')['project']['version'])"```
 URL := ```python3 -c "import toml;print(toml.load('pyproject.toml')['project']['urls']['Repository'])"```
 BRANCH := `git branch --show-current`
 LINT_FLAGS := "E501,F401,F403,F405,W503,E402,E203"
@@ -24,31 +24,31 @@ install:
 
 # Clean generated files
 clean:
-	cd doc && make clean
+	cd docs && make clean
 	rm -rf *.whl htmlcov builddir .pytest_cache coverage.xml .coverage
 	rm -rf wheelhouse build
 
 
 # Build documentation
 doc:
-    cd doc && make html
+    cd docs && make html
 
 # Build documentation (no examples)
 doc-noplot:
-    cd doc && make html-noplot
+    cd docs && make html-noplot
 
 # Build documentation (all versions)
 vdoc:
-    cd doc && make versions && make index
+    cd docs && make versions && make index
 
 # Build documentation (all versions, no examples)
 vdoc-noplot:
-    cd doc && make versions-noplot && make index
+    cd docs && make versions-noplot && make index
 
 
 # Build documentation and watch
 autodoc:
-	cd doc && just autobuild
+	cd docs && just autobuild
 
 # Push to github
 gh:
@@ -71,7 +71,7 @@ lint:
 
 # Lint using flake8
 lint-extra:
-	@flake8 --exit-zero --ignore={{LINT_FLAGS}} {{PROJECT_NAME}}  test/ examples/ --exclude "dev*"
+	@flake8 --exit-zero --ignore={{LINT_FLAGS}} {{PROJECT_NAME}}  tests/ examples/ --exclude "dev*"
 
 # Check for duplicated code
 dup:
@@ -96,7 +96,7 @@ header:
 
 # Show html documentation in the default browser
 show:
-    cd doc && make -s show
+    cd docs && make -s show
 
 docker-build:
     docker build . -t pytmod

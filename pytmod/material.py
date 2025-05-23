@@ -73,6 +73,10 @@ class Material:
     def __str__(self):
         return self.__repr__()
 
+    def static(self, Npad=0):
+        eps_fourier = [self.eps_fourier[self.Nh]]
+        return Material(eps_fourier, self.modulation_frequency, Npad)
+
     def from_signal(self, t, epsilon, Nmax=0):
         Omega = 2 * np.pi / (t[-1] - t[0])
         coeffs = []
@@ -566,6 +570,77 @@ class Material:
         """
         return self.freq2time(self.eps_fourier, t)
 
+    def build_matrices_omega(self, ks):
+        ks = np.array(ks)
+        nh = self.nh
+        epsmatrix = np.zeros((nh, nh, *ks.shape), dtype=np.complex128)
+        Imatrix = np.zeros((nh, nh, *ks.shape), dtype=np.complex128)
+        Jmatrix = np.zeros((nh, nh, *ks.shape), dtype=np.complex128)
+        Zmatrix = np.zeros((nh, nh, *ks.shape), dtype=np.complex128)
+        for m in range(nh):
+            mshift = self.index_shift(m)
+            for n in range(nh):
+                dmn = m - n
+                epsmatrix[m, n] = (
+                    0 if abs(dmn) > self.Nh else self.eps_fourier[dmn + self.Nh]
+                )
+                Imatrix[m, n] = 1 if m == n else 0
+                Jmatrix[m, n] = mshift
+        Omega = self.modulation_frequency
+        epsmatrix = move_first_two_axes_to_end(epsmatrix)
+        Jmatrix = move_first_two_axes_to_end(Jmatrix)
+        Zmatrix = move_first_two_axes_to_end(Zmatrix)
+        k2I = move_first_two_axes_to_end(ks**2 * Imatrix)
+        Imatrix = move_first_two_axes_to_end(Imatrix)
+        A = epsmatrix
+        B = -2 * Jmatrix * epsmatrix * Omega
+        C = k2I - Jmatrix**2 * epsmatrix * Omega**2
 
-# def _get_maxis(ur):
-#     return bk.argmax(bk.abs(ur), axis=(0))
+        M2 = np.block([[C, Zmatrix], [Zmatrix, Imatrix]])
+        M1 = np.block([[B, A], [Imatrix, Zmatrix]])
+
+        return M1, M2
+
+    def eigensolve_omega(
+        self, ks, matrices=None, left=False, normalize=True, sort=False
+    ):
+        left0 = left
+        if normalize:
+            left = True
+        ks = np.array(ks) + 0j
+        nh = self.nh
+
+        if matrices is None:
+            matrices = self.build_matrices_omega(ks)
+            mat = np.linalg.solve(*matrices)
+        if left:
+            matH = np.swapaxes(mat, -1, -2).conj()
+            eigenvalues_h, modes_left = np.linalg.eig(matH)
+            modes_left = modes_left.conj()
+        eigenvalues, modes_right = np.linalg.eig(mat)
+
+        if sort:
+            sort_indices = np.argsort(eigenvalues.real, axis=-1)
+            eigenvalues = np.take_along_axis(eigenvalues, sort_indices, axis=-1)
+            sorted_indices_expanded = np.expand_dims(sort_indices, axis=-2)
+            modes_right = np.take_along_axis(
+                modes_right, sorted_indices_expanded, axis=-1
+            )
+
+        eigenvalues = move_last_axes_to_beginning(eigenvalues)
+        modes_right = move_last_two_axes_to_beginning(modes_right)
+
+        if left:
+            if sort:
+                modes_left = np.take_along_axis(
+                    modes_left, sorted_indices_expanded, axis=-1
+                )
+            modes_left = move_last_two_axes_to_beginning(modes_left)
+            if normalize:
+                modes_right, modes_left = self.normalize(modes_right, modes_left)
+            if left0:
+                return eigenvalues, modes_right[:nh], modes_left[:nh]
+
+            return eigenvalues, modes_right[:nh]
+
+        return eigenvalues, modes_right[:nh]

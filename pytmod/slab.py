@@ -51,6 +51,12 @@ class Slab:
     def __str__(self):
         return self.__repr__()
 
+    def static(self, Npad=0):
+        material_static = self.material.static(Npad)
+        return Slab(
+            material_static, self.thickness, self.eps_plus, self.eps_minus, self.alt
+        )
+
     @dimhandler
     def build_matrix(self, omegas, eigenvalues, modes):
         """
@@ -114,6 +120,71 @@ class Slab:
 
         matrix_slab = np.block([[m11, m12], [m21, m22]])
         return np.transpose(matrix_slab, (1, 2, 0))
+
+    def build_rhs(self, omegas, Eis):
+        """
+        Build the right-hand side (RHS) of the linear system for the slab.
+
+        Parameters
+        ----------
+        omegas : array_like
+            The frequencies at which to solve the system.
+        Eis : array_like
+            The incident electric fields.
+
+        Returns
+        -------
+        rhs_slab : array_like
+            The RHS matrix of the linear system.
+        """
+
+        omegas = np.array(omegas)
+        Eis = np.array(Eis)
+        rhs_slab = np.zeros((2 * self.material.nh, *omegas.shape), dtype=np.complex128)
+        for n in range(self.material.nh):
+            rhs_slab[n] = self.eps_plus**0.5 * 2 * Eis[n]
+            rhs_slab[n + self.material.nh] = (
+                self.eps_minus**0.5 * 2 * Eis[n + self.material.nh]
+            )
+            if not self.alt:
+                nshift = self.material.index_shift(n)
+                omegas_shift = omegas - nshift * self.material.modulation_frequency
+                rhs_slab[n] *= omegas_shift
+                rhs_slab[n + self.material.nh] *= omegas_shift
+        return rhs_slab
+
+    def solve(self, matrix_slab, rhs_slab):
+        """
+        Solve the linear system defined by the matrix and RHS of the slab.
+
+        Parameters
+        ----------
+        matrix_slab : array_like
+            The matrix of the linear system.
+        rhs_slab : array_like
+            The right-hand side of the linear system.
+
+        Returns
+        -------
+        solution : array_like
+            The solution of the linear system.
+        """
+        if matrix_slab.ndim == 2:
+            return np.linalg.solve(matrix_slab, rhs_slab)
+        sol = np.empty_like(rhs_slab)
+        if matrix_slab.ndim == 3:
+            for i in range(matrix_slab.shape[-1]):
+                sol[:, i] = np.linalg.solve(matrix_slab[:, :, i], rhs_slab[:, i])
+            return sol
+        if matrix_slab.ndim == 4:
+            for i in range(matrix_slab.shape[-2]):
+                for j in range(matrix_slab.shape[-1]):
+                    sol[:, i, j] = np.linalg.solve(
+                        matrix_slab[:, :, i, j], rhs_slab[:, i, j]
+                    )
+            return sol
+        msg = f"Unsupported number of dimensions: {matrix_slab.ndim}"
+        raise ValueError(msg)
 
     @dimhandler
     def build_dmatrix_domega(self, omegas, eigenvalues, modes, modes_left):
@@ -219,71 +290,6 @@ class Slab:
 
         dmatrix_slab = np.block([[dm11, dm12], [dm21, dm22]])
         return np.transpose(dmatrix_slab, (1, 2, 0))
-
-    def build_rhs(self, omegas, Eis):
-        """
-        Build the right-hand side (RHS) of the linear system for the slab.
-
-        Parameters
-        ----------
-        omegas : array_like
-            The frequencies at which to solve the system.
-        Eis : array_like
-            The incident electric fields.
-
-        Returns
-        -------
-        rhs_slab : array_like
-            The RHS matrix of the linear system.
-        """
-
-        omegas = np.array(omegas)
-        Eis = np.array(Eis)
-        rhs_slab = np.zeros((2 * self.material.nh, *omegas.shape), dtype=np.complex128)
-        for n in range(self.material.nh):
-            rhs_slab[n] = self.eps_plus**0.5 * 2 * Eis[n]
-            rhs_slab[n + self.material.nh] = (
-                self.eps_minus**0.5 * 2 * Eis[n + self.material.nh]
-            )
-            if not self.alt:
-                nshift = self.material.index_shift(n)
-                omegas_shift = omegas - nshift * self.material.modulation_frequency
-                rhs_slab[n] *= omegas_shift
-                rhs_slab[n + self.material.nh] *= omegas_shift
-        return rhs_slab
-
-    def solve(self, matrix_slab, rhs_slab):
-        """
-        Solve the linear system defined by the matrix and RHS of the slab.
-
-        Parameters
-        ----------
-        matrix_slab : array_like
-            The matrix of the linear system.
-        rhs_slab : array_like
-            The right-hand side of the linear system.
-
-        Returns
-        -------
-        solution : array_like
-            The solution of the linear system.
-        """
-        if matrix_slab.ndim == 2:
-            return np.linalg.solve(matrix_slab, rhs_slab)
-        sol = np.empty_like(rhs_slab)
-        if matrix_slab.ndim == 3:
-            for i in range(matrix_slab.shape[-1]):
-                sol[:, i] = np.linalg.solve(matrix_slab[:, :, i], rhs_slab[:, i])
-            return sol
-        if matrix_slab.ndim == 4:
-            for i in range(matrix_slab.shape[-2]):
-                for j in range(matrix_slab.shape[-1]):
-                    sol[:, i, j] = np.linalg.solve(
-                        matrix_slab[:, :, i, j], rhs_slab[:, i, j]
-                    )
-            return sol
-        msg = f"Unsupported number of dimensions: {matrix_slab.ndim}"
-        raise ValueError(msg)
 
     def _extract_coefficients(self, solution, Eis, kns, ens):
         phi_plus = np.exp(1j * kns * self.thickness)
@@ -754,3 +760,89 @@ class Slab:
             )
             M = self.build_matrix(eigenvalues, evs_mat, modes_mat).swapaxes(-1, 0)
         return self.dim - np.linalg.matrix_rank(M, tol=tol)
+
+    def compute_transfo_matrix(self, eigenvalues, modes_right):
+        phasp = np.exp(1j * eigenvalues * self.thickness)
+        phasm = np.exp(-1j * eigenvalues * self.thickness)
+        Id = np.eye(self.material.nh)
+        phasp = Id[:, :, None] * phasp[None, :, :]
+        phasm = Id[:, :, None] * phasm[None, :, :]
+        phasp = np.transpose(phasp, axes=(2, 0, 1))
+        phasm = np.transpose(phasm, axes=(2, 0, 1))
+        Emodes = np.transpose(modes_right, axes=(2, 0, 1))
+        return np.transpose(
+            np.block([[Emodes, Emodes], [Emodes @ phasp, Emodes @ phasm]]),
+            axes=(1, 2, 0),
+        )
+
+    def compute_transfo_matrix_derivative(
+        self, omegas, eigenvalues, modes_right, modes_left
+    ):
+        dmatrix = self.material.build_dmatrix_domega(omegas)
+        deigenvalues = self.material.get_deigenvalues_domega(
+            omegas,
+            eigenvalues,
+            modes_right,
+            modes_left,
+            dmatrix,
+        )
+
+        dmodes = self.material.get_deigenmodes_right_domega(
+            omegas,
+            eigenvalues,
+            modes_right,
+            modes_left,
+            dmatrix,
+        )
+        phasp = np.exp(1j * eigenvalues * self.thickness)
+        phasm = np.exp(-1j * eigenvalues * self.thickness)
+        Id = np.eye(self.material.nh)
+        phasp = Id[:, :, None] * phasp[None, :, :]
+        phasm = Id[:, :, None] * phasm[None, :, :]
+        phasp = np.transpose(phasp, axes=(2, 0, 1))
+        phasm = np.transpose(phasm, axes=(2, 0, 1))
+
+        dphasp = (
+            1j
+            * deigenvalues
+            * self.thickness
+            * np.exp(1j * eigenvalues * self.thickness)
+        )
+        dphasm = (
+            -1j
+            * deigenvalues
+            * self.thickness
+            * np.exp(-1j * eigenvalues * self.thickness)
+        )
+        dphasp = Id[:, :, None] * dphasp[None, :, :]
+        dphasm = Id[:, :, None] * dphasm[None, :, :]
+        dphasp = np.transpose(dphasp, axes=(2, 0, 1))
+        dphasm = np.transpose(dphasm, axes=(2, 0, 1))
+        Emodes = np.transpose(modes_right, axes=(2, 0, 1))
+        dEmodes = np.transpose(dmodes, axes=(2, 0, 1))
+
+        return np.transpose(
+            np.block(
+                [
+                    [dEmodes, dEmodes],
+                    [
+                        dEmodes @ phasp + Emodes @ dphasp,
+                        dEmodes @ phasm + Emodes @ dphasm,
+                    ],
+                ]
+            ),
+            axes=(1, 2, 0),
+        )
+
+    def get_eigenvalues_static_shifted(self, N, Nshift):
+        Omega = self.material.modulation_frequency
+        evs_slab_ana_shift = []
+        for n in range(-N, N + 1):
+            evs_slab_ana_shift_ = np.array(
+                [
+                    self.eigenvalue_static(i) + Omega * n
+                    for i in range(-Nshift, Nshift + 1)
+                ]
+            )
+            evs_slab_ana_shift.append(evs_slab_ana_shift_)
+        return np.sort(np.array(evs_slab_ana_shift).ravel())
