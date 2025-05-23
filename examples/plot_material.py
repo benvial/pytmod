@@ -32,7 +32,7 @@ plt.close("all")
 
 Omega = 1
 eps0 = 5.25
-deps = 4
+deps = 2
 
 
 eps_fourier = [
@@ -65,6 +65,8 @@ kns, ens = mat.eigensolve(omega)
 ####################################################################################
 # The eigenvalues are
 
+print(kns)
+
 
 ####################################################################################
 # We plot the eigenmodes in the time domain
@@ -91,7 +93,7 @@ ev_cv = []
 en_cv = []
 for Npad in Npads:
     mat = pm.Material(eps_fourier, Omega, Npad=Npad)
-    kns, ens = mat.eigensolve(omega)
+    kns, ens = mat.eigensolve(omega, sign=False, sort=True)
     idx = np.argsort(kns)
     kns = kns[idx]
     ens = ens[:, idx]
@@ -126,7 +128,7 @@ plt.show()
 # Relative error
 
 mat = pm.Material(eps_fourier, Omega, Npad=100)
-kns, ens = mat.eigensolve(omega)
+kns, ens = mat.eigensolve(omega, sign=False, sort=True)
 idx = np.argsort(kns)
 kns = kns[idx]
 ens = ens[:, idx]
@@ -171,3 +173,71 @@ for i in range(3):
     plt.ylabel("mode")
     plt.tight_layout()
     plt.show()
+
+
+####################################################################################
+# Compute the dispersion relation
+
+mat = pm.Material(eps_fourier, Omega, Npad=1)
+
+####################################################################################
+# Either fix the frequency and look for the corresponding wavenumber
+
+omegas = np.linspace(0, 1, 100)
+k_vs_omega, _ = mat.eigensolve(omegas, sign=False, sort=True)
+
+
+####################################################################################
+# Or the other way around
+
+ks = np.linspace(0.0, 3, 5000)
+omega_vs_k, _ = mat.eigensolve_omega(ks, sort=True)
+
+omega_vs_k = np.where(np.real(omega_vs_k) <= Omega, omega_vs_k, np.nan)
+omega_vs_k = np.where(np.real(omega_vs_k) >= 0, omega_vs_k, np.nan)
+
+#########################################################################
+# Plot and compare
+
+fig, ax = plt.subplots(2, 1, figsize=(5, 7))
+plt.sca(ax[0])
+l1 = plt.plot(
+    ks.real / Omega,
+    omega_vs_k.T.real / Omega,
+    "-",
+    c="#5066d4",
+    lw=2,
+    mfc="none",
+    label=r"$\omega$ vs. $k$",
+)
+l2 = plt.plot(
+    k_vs_omega.T.real / Omega,
+    omegas.real / Omega,
+    "o",
+    c="#d4507a",
+    mfc="none",
+    ms=4,
+    mew=1,
+    label=r"$k$ vs. $\omega$",
+)
+plt.legend([l1[0], l2[0]], [l1[0].get_label(), l2[0].get_label()])
+plt.xlabel(r"$k/K$")
+plt.ylabel(r"Re $\omega/\Omega$")
+plt.xlim(0, 3)
+plt.ylim(0, 1)
+
+plt.sca(ax[1])
+l1 = plt.plot(
+    ks.real / Omega,
+    omega_vs_k.T.imag / Omega,
+    ".",
+    c="#5066d4",
+    lw=1,
+    ms=4,
+    mew=0,
+    label=r"$\omega$ vs. $k$",
+)
+plt.xlabel(r"$k/K$")
+plt.ylabel(r"Im $\omega/\Omega$")
+plt.xlim(0, 3)
+plt.tight_layout()

@@ -414,6 +414,8 @@ def _nonlinear_eigensolver(
     dim=None,
     **kwargs,
 ):
+    if not isinstance(Rloc, tuple):
+        Rloc = (Rloc, Rloc)
     return_left = kwargs["return_left"]
     if return_left:
         weight = "rayleigh asymmetric"
@@ -438,8 +440,10 @@ def _nonlinear_eigensolver(
             return func(omega)
 
     if guesses is None:
-        guesses_re = np.linspace(omega0.real, omega1.real, Nre + 2)[1:-1]
-        guesses_im = np.linspace(omega0.imag, omega1.imag, Nim + 2)[1:-1]
+        # guesses_re = np.linspace(omega0.real, omega1.real, Nre + 2)[1:-1]
+        # guesses_im = np.linspace(omega0.imag, omega1.imag, Nim + 2)[1:-1]
+        guesses_re = np.linspace(omega0.real, omega1.real, Nre)
+        guesses_im = np.linspace(omega0.imag, omega1.imag, Nim)
         guesses_re, guesses_im = np.meshgrid(guesses_re, guesses_im, indexing="ij")
         guesses = guesses_re + 1j * guesses_im
         guesses0 = guesses.flatten()
@@ -449,9 +453,6 @@ def _nonlinear_eigensolver(
             omegas_re = np.linspace(omega0.real, omega1.real, Nre)
             omegas_im = np.linspace(omega1.imag, omega0.imag, Nim)
             omegas_re_, omegas_im_ = np.meshgrid(omegas_re, omegas_im, indexing="ij")
-
-            #################################################################
-            # Compute complex plane quantities
 
             omegas_complex = omegas_re_ + 1j * omegas_im_
             Mc = func(omegas_complex)
@@ -493,18 +494,8 @@ def _nonlinear_eigensolver(
             guess_peak = np.array(
                 [omegas_complex[coord[0], coord[1]] for coord in coordinates]
             )
-            tloc = np.linspace(0, 2 * np.pi, N_guess_loc + 1)[:-1]
-            guesses = []
-            for guess_loc in guess_peak:
-                guesses_ = (
-                    guess_loc.real
-                    + Rloc * np.cos(tloc)
-                    + 1j * (guess_loc.imag + Rloc * np.sin(tloc))
-                )
-                guesses_ = np.hstack([guesses_, guess_loc])
-                guesses.append(guesses_)
-            if len(guesses) > 0:
-                guesses = np.stack(guesses).flatten()
+            guesses = guess_peak
+
         elif strategy == "random":
             rand_re = rng.random(Nre)
             rand_im = rng.random(Nim)
@@ -526,6 +517,22 @@ def _nonlinear_eigensolver(
             # guesses = bk.stack(guesses).flatten()
 
     guesses = np.array(guesses)
+    unique_indices = unique(guesses, precision=tol * 100)
+    guesses = guesses[unique_indices]
+    # tloc = np.linspace(0, 2 * np.pi, N_guess_loc + 1)[:-1]
+    tloc = rng.random(N_guess_loc) * 2 * np.pi
+    guesses_all = []
+    for guess_loc in guesses:
+        guesses_ = (
+            guess_loc.real
+            + Rloc[0] * rng.random(1) * np.cos(tloc)
+            + 1j * (guess_loc.imag + Rloc[1] * rng.random(1) * np.sin(tloc))
+        )
+        guesses_ = np.hstack([guesses_, guess_loc])
+        guesses_all.append(guesses_)
+    if len(guesses_all) > 0:
+        guesses_all = np.stack(guesses_all).flatten()
+    guesses = np.array(guesses_all)
     if plot_solver and len(guesses) > 0:
         guess_plot = plt.gca().plot(guesses.real / scale, guesses.imag / scale, "xk")
         plt.gca().set_xlabel(r"Re $\omega/\omega_p$")
@@ -721,15 +728,16 @@ def _nleigsolve(func, *args, refine=False, **kwargs):
         else:
             evs0, eigenvectors0 = out
         if refine:
-            kwargs["guesses"] = evs0
-            kwargs["tol"] = max(kwargs["tol"] / 10, 1e-14)
-            kwargs["max_iter"] *= 2
+            kwargs_ref = kwargs.copy()
+            kwargs_ref["guesses"] = evs0
+            kwargs_ref["tol"] = max(kwargs["tol"] / 10, 1e-14)
+            kwargs_ref["max_iter"] *= 2
             if return_left:
                 evs, eigenvectors, eigenvectors_left = _nonlinear_eigensolver(
-                    func, *args, **kwargs
+                    func, *args, **kwargs_ref
                 )
             else:
-                evs, eigenvectors = _nonlinear_eigensolver(func, *args, **kwargs)
+                evs, eigenvectors = _nonlinear_eigensolver(func, *args, **kwargs_ref)
         else:
             if return_left:
                 return evs0, eigenvectors0, eigenvectors_left0
@@ -816,6 +824,9 @@ def _nleigsolve_recursive(
     eigenvectors_left_ : list of array, optional
         The left eigenvectors found
     """
+
+    if Ncut > 0 and kwargs["guesses"] is not None:
+        kwargs["guesses"] = None
     if evs_ is None:
         evs_ = []
     if eigenvectors_ is None:
@@ -1010,11 +1021,13 @@ def nonlinear_eigensolver(
         "filter": True,
         "scale": 1,
         "return_left": False,
+        "refine": False,
     }
     for k, v in defkwargs.items():
         if k not in kwargs:
             kwargs[k] = v
-
+    refine = kwargs["refine"]
+    kwargs["refine"] = False
     return_left = kwargs["return_left"]
     recursive = kwargs["recursive"]
     # dfunc = kwargs["dfunc"]
@@ -1051,11 +1064,22 @@ def nonlinear_eigensolver(
         isort = np.argsort(evs.real)
         evs = evs[isort]
         eigenvectors = np.hstack(eigenvectors_)[:, unique_indices][:, isort]
-
         if return_left:
             eigenvectors_left = np.hstack(eigenvectors_left_)[:, unique_indices][
                 :, isort
             ]
+        if refine:
+            args = (func, omega0, omega1)
+            kwargs_ref = kwargs.copy()
+            kwargs_ref["guesses"] = evs
+            kwargs_ref["tol"] = max(kwargs["tol"] / 1000, 1e-14)
+            kwargs_ref["max_iter"] *= 2
+            if return_left:
+                evs, eigenvectors, eigenvectors_left = _nonlinear_eigensolver(
+                    *args, **kwargs_ref
+                )
+            else:
+                evs, eigenvectors = _nonlinear_eigensolver(*args, **kwargs_ref)
 
         if return_left:
             return evs, eigenvectors, eigenvectors_left
