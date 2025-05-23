@@ -25,6 +25,10 @@ jobs:
         uses: yezz123/setup-uv@v4
         with:
           uv-venv: ".venv"
+      - name: Install Hatch
+        run: uv pip install hatch
+      - name: Generate version file
+        run: hatch version
       - name: Install nox
         run: uv pip install nox
       - name: Build multiple versions of the documentation

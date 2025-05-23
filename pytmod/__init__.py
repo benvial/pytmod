@@ -10,7 +10,10 @@ from __future__ import annotations
 
 from importlib import metadata
 
-from ._version import __version__
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "unknown"
 from .material import Material
 from .slab import Slab
 
