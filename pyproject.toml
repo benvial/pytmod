@@ -64,9 +64,9 @@ doc = [
 dev = ["hatch", "pre-commit", "nox", "uv", "hatch-vcs", "ipython"]
 fem = [
   "gmsh>=4.12.0",
-  "mpi4py>=3.1.0",
-  "slepc4py>=3.21.0",
-  "petsc4py>=3.21.0",
+  # "mpi4py>=3.1.0",
+  # "slepc4py>=3.21.0",
+  # "petsc4py>=3.21.0",
 ]
 
 [project.urls]
