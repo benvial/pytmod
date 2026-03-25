@@ -2,6 +2,7 @@
 # This file is part of pytmod
 # License: GPLv3
 # See the documentation at bvial.info/pytmod
+from __future__ import annotations
 
 __all__ = [
     "__version__",
@@ -12,25 +13,14 @@ __all__ = [
     "commit_id",
 ]
 
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from typing import Tuple
-    from typing import Union
-
-    VERSION_TUPLE = Tuple[Union[int, str], ...]
-    COMMIT_ID = Union[str, None]
-else:
-    VERSION_TUPLE = object
-    COMMIT_ID = object
-
 version: str
 __version__: str
-__version_tuple__: VERSION_TUPLE
-version_tuple: VERSION_TUPLE
-commit_id: COMMIT_ID
-__commit_id__: COMMIT_ID
+__version_tuple__: tuple[int | str, ...]
+version_tuple: tuple[int | str, ...]
+commit_id: str | None
+__commit_id__: str | None
 
-__version__ = version = '0.0.2.dev4+g7e75e371e.d20260227'
-__version_tuple__ = version_tuple = (0, 0, 2, 'dev4', 'g7e75e371e.d20260227')
+__version__ = version = '0.0.2.dev9+ge7c98ad29.d20260325'
+__version_tuple__ = version_tuple = (0, 0, 2, 'dev9', 'ge7c98ad29.d20260325')
 
 __commit_id__ = commit_id = None
