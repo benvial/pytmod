@@ -27,7 +27,10 @@ repos:
     rev: "v0.9.4"
     hooks:
       - id: ruff
-        args: ["--fix", "--show-fixes"]
+        args:
+          - --fix
+          - --show-fixes
+          - "--ignore=T201,SIM108,NPY002"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.9.4"
@@ -44,7 +47,7 @@ repos:
     rev: "v2.4.1"
     hooks:
       - id: codespell
-        args: ["-L", "Numer"]
+        args: ["-L", "Numer", "--ignore-words-list=TE,braket,ket"]
 
   - repo: local
     hooks:

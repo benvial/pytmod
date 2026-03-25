@@ -81,6 +81,7 @@ extensions = [
     "sphinx_togglebutton",
     "numpydoc",
     "sphinx_multiversion",
+    "sphinx_iconify",
 ]
 
 myst_enable_extensions = [

@@ -30,7 +30,17 @@ def tests(session: nox.Session) -> None:
     """
     session.install("-e.[test]")
     session.install("pytest")
-    session.run("pytest", *session.posargs)
+    session.run(
+        "pytest",
+        "tests",
+        "--cov=pytmod",
+        "--cov-report=term",
+        "--cov-report=term",
+        "--cov-report=xml",
+        "--cov-report=html",
+        "--cov-report=json",
+        *session.posargs,
+    )
 
 
 TAG_REGEX = re.compile(r"^v\d+\.\d+\.\d+$")
