@@ -86,6 +86,7 @@ def get_version_tags():
         )
         tags = result.stdout.splitlines()
         version_tags = [tag for tag in tags if TAG_REGEX.match(tag)]
+        version_tags += ["main"]
         return sorted(version_tags, key=lambda v: Version(v[1:]), reverse=True)
     except subprocess.CalledProcessError:
         return []
