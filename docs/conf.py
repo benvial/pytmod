@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import contextlib
 import datetime
+import logging
 import re
 import shutil
 import stat
@@ -16,11 +17,12 @@ import warnings
 from pathlib import Path
 
 from packaging.version import Version
-from sphinx.util import logging
+from sphinx.util import logging as sphinx_logging
 
 import pytmod as package
 
-logger = logging.getLogger(__name__)
+logger = sphinx_logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 def fix_autoapi_permissions(app):
