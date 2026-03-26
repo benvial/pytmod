@@ -118,12 +118,9 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
     for i, tag in enumerate(version_tags):
         session.log(f"Building version {tag} ({i + 1}/{len(version_tags)})")
 
-        # Checkout the tag
-        subprocess.run(["git", "checkout", tag], check=True)
-
         try:
             # Install the package at this version
-            session.install("-e .")
+            session.install(".")
 
             # Build docs for this version
             version_output = output_path / tag.replace(".", "-")
@@ -145,6 +142,8 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
             # Always enable versions config so conf.py can add version context
             build_args += ("-D", "versions=1")
 
+            # Checkout the tag
+            subprocess.run(["git", "checkout", tag], check=True)
             session.run("sphinx-build", *build_args)
 
         finally:
@@ -226,7 +225,7 @@ def docs(session: nox.Session) -> None:
     args, posargs = parser.parse_known_args(session.posargs)
     serve = args.builder == "html" and session.interactive
 
-    session.install("-e.[doc]", "sphinx-autobuild")
+    session.install(" .[doc]", "sphinx-autobuild")
 
     output = args.output or f"docs/_build/{args.builder}"
 
