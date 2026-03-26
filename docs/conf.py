@@ -15,6 +15,7 @@ import stat
 import subprocess
 import warnings
 from pathlib import Path
+from pathlib import Path as _Path
 
 from packaging.version import Version
 from sphinx.util import logging as sphinx_logging
@@ -23,6 +24,19 @@ import pytmod as package
 
 logger = sphinx_logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
+
+_orig_read_text = _Path.read_text
+
+
+def _patched_read_text(self, *args, **kwargs):
+    try:
+        return _orig_read_text(self, *args, **kwargs)
+    except Exception as e:
+        print(f"READ_TEXT FAILED: {self!r} -> {type(e).__name__}: {e}", flush=True)
+        raise
+
+
+_Path.read_text = _patched_read_text
 
 
 def fix_autoapi_permissions(app):
