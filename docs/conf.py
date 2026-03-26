@@ -120,6 +120,8 @@ def build_multiversion_docs(
         logger.warning(f"Could not rename latest directory: {e}")
 
     # Rename main tag directory to 'dev'
+
+    logger.info("Renaming main to dev")
     try:
         main_dir = Path(outdir) / "main"
         main_dir = main_dir.with_name("main")
