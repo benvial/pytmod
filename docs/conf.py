@@ -6,44 +6,19 @@
 
 from __future__ import annotations
 
-import contextlib
 import datetime
-import logging
 import re
 import shutil
-import stat
 import subprocess
 import warnings
 from pathlib import Path
-from pathlib import Path as _Path
 
 from packaging.version import Version
-from sphinx.util import logging as sphinx_logging
+from sphinx.util import logging
 
 import pytmod as package
 
-logger = sphinx_logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
-
-_orig_read_text = _Path.read_text
-
-
-def _patched_read_text(self, *args, **kwargs):
-    try:
-        return _orig_read_text(self, *args, **kwargs)
-    except Exception as e:
-        print(f"READ_TEXT FAILED: {self!r} -> {type(e).__name__}: {e}", flush=True)
-        raise
-
-
-_Path.read_text = _patched_read_text
-
-
-def fix_autoapi_permissions(app):
-    src = Path(app.confdir).parent
-    for p in src.rglob("*.py"):
-        with contextlib.suppress(OSError):
-            p.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+logger = logging.getLogger(__name__)
 
 
 def get_latest_version_tag():
@@ -137,9 +112,7 @@ bibtex_default_style = "unsrt"
 autodoc_typehints = "signature"  # autoapi respects this
 
 autoapi_type = "python"
-# autoapi_dirs = ["../pytmod"]
-
-autoapi_dirs = [str(Path(package.__file__).parent)]
+autoapi_dirs = ["../pytmod"]
 autoapi_options = [
     "members",
     "undoc-members",
@@ -162,20 +135,25 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
 
 def run_after_build(app, exception):  # noqa: ARG001
     outdir = Path(app.outdir).parents[0]
-    with contextlib.suppress(FileNotFoundError):
+    try:
         logger.info("Renaming %s as latest", latest_tag)
         old_dir = Path(outdir) / latest_tag
         new_dir = Path(outdir) / "latest"
-        with contextlib.suppress(OSError):
+
+        try:
+            old_dir.rename(new_dir)
+        except OSError:
             shutil.rmtree(str(new_dir))
-        old_dir.rename(new_dir)
+            old_dir.rename(new_dir)
+
+    except FileNotFoundError:
+        pass
     logger.info("Writing redirection page index.html in %s", outdir)
     with Path.open(outdir / "index.html", "w") as f:
         f.write(redirect_contents)
 
 
 def setup(app):
-    app.connect("builder-inited", fix_autoapi_permissions)
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
     versions = app.config.versions
