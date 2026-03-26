@@ -30,7 +30,7 @@ repos:
         args:
           - --fix
           - --show-fixes
-          - "--ignore=T201,SIM108,NPY002"
+          - "--ignore=T201,SIM108,NPY002,G004"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.9.4"

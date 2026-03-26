@@ -32,7 +32,70 @@ jobs:
       - name: Install package and doc requirements
         run: uv pip install -e .[doc]
       - name: Build multiple versions of the documentation
-        run: sphinx-multiversion --keep-going -n -T -b=html docs docs/_build/html -D plot_gallery=0 -D versions=1
+        run: |
+          # Get all version tags
+          TAGS=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
+          echo "Found tags: $TAGS"
+
+          # Create output directory
+          mkdir -p docs/_build/html
+
+          # Build each version
+          for tag in $TAGS; do
+            echo "Building version $tag"
+            git checkout $tag
+            pip install -e .
+            sphinx-build -n -T -b=html docs "docs/_build/html/${tag//./-}" -D plot_gallery=0 -D versions=1 --keep-going
+          done
+
+          # Go back to original branch
+          git checkout -
+
+          # Create versions.json
+          python -c "
+          import json
+          import os
+          from packaging.version import Version
+
+          tags = os.popen('git tag | grep -E \"^v[0-9]+\.[0-9]+\.[0-9]+$\"').read().strip().split('\n')
+          tags = sorted(tags, key=lambda v: Version(v[1:]), reverse=True)
+          latest = tags[0] if tags else None
+
+          versions = []
+          for tag in tags:
+              versions.append({
+                  'name': tag[1:],
+                  'url': f'./{tag.replace(\".\", \"-\")}/index.html',
+                  'is_latest': tag == latest,
+              })
+
+          with open('docs/_build/html/versions.json', 'w') as f:
+              json.dump(versions, f)
+          "
+
+          # Create redirect index.html
+          cat > docs/_build/html/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Redirecting to latest version</title>
+              <meta charset="utf-8" />
+              <meta http-equiv="refresh" content="0; url=./latest/index.html" />
+              <link rel="canonical" href="https://benvial.github.io/pytmod/latest/index.html" />
+            </head>
+          </html>
+          EOF
+
+          # Rename latest version to 'latest'
+          LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r | head -1)
+          if [ -n "$LATEST_TAG" ]; then
+            LATEST_DIR="docs/_build/html/${LATEST_TAG//./-}"
+            if [ -d "$LATEST_DIR" ]; then
+              mv "docs/_build/html/latest" "docs/_build/html/latest.bak" 2>/dev/null || true
+              mv "$LATEST_DIR" "docs/_build/html/latest"
+            fi
+          fi
+
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action

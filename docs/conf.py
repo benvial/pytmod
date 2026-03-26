@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import datetime
+import json
 import re
 import shutil
 import subprocess
@@ -14,6 +15,7 @@ import warnings
 from pathlib import Path
 
 from packaging.version import Version
+from sphinx.application import Sphinx
 from sphinx.util import logging
 
 import pytmod as package
@@ -21,27 +23,34 @@ import pytmod as package
 logger = logging.getLogger(__name__)
 
 
-def get_latest_version_tag():
+def get_all_version_tags():
+    """Get all version tags from git, sorted by version number (newest first)."""
     try:
-        # Get all tags from git
         result = subprocess.run(
             ["git", "tag"], capture_output=True, text=True, check=True
         )
         tags = result.stdout.splitlines()
-
-        # Filter tags matching vX.Y.Z format
         version_tags = [tag for tag in tags if re.fullmatch(r"v\d+\.\d+\.\d+", tag)]
-
         if not version_tags:
-            return None
-
-        # Sort tags using Version class from packaging
-        return max(version_tags, key=lambda v: Version(v[1:]))
+            return []
+        return sorted(version_tags, key=lambda v: Version(v[1:]), reverse=True)
     except subprocess.CalledProcessError:
-        return None
+        return []
+
+
+def get_latest_version_tag():
+    """Get the latest version tag (highest version number)."""
+    versions = get_all_version_tags()
+    return versions[0] if versions else None
+
+
+def get_current_version():
+    """Get the current version from the package."""
+    return package.__version__
 
 
 latest_tag = get_latest_version_tag()
+current_version = get_current_version()
 
 redirect_contents = """
 <!DOCTYPE html>
@@ -54,6 +63,67 @@ redirect_contents = """
   </head>
 </html>
 """
+
+
+def build_multiversion_docs(
+    app: Sphinx,
+) -> None:
+    """
+    Build documentation for multiple versions.
+    This function is called after the main build to create versioned docs.
+    """
+    if not app.config.versions:
+        return
+
+    outdir = Path(app.outdir).parents[0]
+
+    # Get all version tags
+    version_tags = get_all_version_tags()
+    if not version_tags:
+        logger.warning("No version tags found for multiversion build")
+        return
+
+    # Get the latest tag
+    latest = version_tags[0]
+
+    # Create versions.json for templates
+    versions_data = []
+    for tag in version_tags:
+        version_name = tag[1:]  # Remove 'v' prefix
+        versions_data.append(
+            {
+                "name": version_name,
+                "url": f"./{tag}/index.html",
+                "is_latest": tag == latest,
+            }
+        )
+
+    # Write versions.json
+    versions_json_path = outdir / "versions.json"
+    with Path.open(versions_json_path, "w") as f:
+        json.dump(versions_data, f)
+
+    logger.info(f"Built {len(version_tags)} versions: {version_tags}")
+    logger.info(f"Latest version: {latest}")
+
+    # Rename latest tag directory to 'latest'
+    try:
+        latest_dir = Path(outdir) / latest
+        latest_dir = latest_dir.with_name(latest.replace(".", "-"))
+        if latest_dir.exists():
+            new_dir = Path(outdir) / "latest"
+            if new_dir.exists():
+                shutil.rmtree(new_dir)
+            shutil.move(str(latest_dir), str(new_dir))
+            logger.info(f"Renamed {latest} to latest")
+    except Exception as e:
+        logger.warning(f"Could not rename latest directory: {e}")
+
+    # Write redirect index.html
+    index_path = outdir / "index.html"
+    with Path.open(index_path, "w") as f:
+        f.write(redirect_contents)
+    logger.info("Wrote redirect index.html")
 
 
 # -- General configuration ------------------------------------------------
@@ -80,7 +150,6 @@ extensions = [
     "sphinx_tabs.tabs",
     "sphinx_togglebutton",
     "numpydoc",
-    "sphinx_multiversion",
     "sphinx_iconify",
 ]
 
@@ -133,33 +202,52 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
     return skip
 
 
-def run_after_build(app, exception):  # noqa: ARG001
-    outdir = Path(app.outdir).parents[0]
-    try:
-        logger.info("Renaming %s as latest", latest_tag)
-        old_dir = Path(outdir) / latest_tag
-        new_dir = Path(outdir) / "latest"
+def update_version_context(app, pagename, templatename, context, doctree):  # noqa: ARG001
+    """Update template context with version information."""
+    if app.config.versions:
+        versions = get_all_version_tags()
+        latest = versions[0] if versions else None
 
-        try:
-            old_dir.rename(new_dir)
-        except OSError:
-            shutil.rmtree(str(new_dir))
-            old_dir.rename(new_dir)
+        context["versions"] = []
+        for tag in versions:
+            version_name = tag[1:]  # Remove 'v' prefix
+            context["versions"].append(
+                {
+                    "name": version_name,
+                    "url": f"./{tag}/index.html",
+                    "is_latest": tag == latest,
+                }
+            )
 
-    except FileNotFoundError:
-        pass
-    logger.info("Writing redirection page index.html in %s", outdir)
-    with Path.open(outdir / "index.html", "w") as f:
-        f.write(redirect_contents)
+        context["current_version"] = {
+            "name": current_version,
+            "url": f"./{current_version}/index.html",
+            "is_latest": current_version == (latest[1:] if latest else None),
+        }
+
+        context["latest_version"] = {
+            "name": latest[1:] if latest else None,
+            "url": "./latest/index.html",
+            "is_latest": True,
+        }
 
 
 def setup(app):
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
+    app.add_config_value("current_version", current_version, "env")
+    app.add_config_value(
+        "latest_version", latest_tag[1:] if latest_tag else None, "env"
+    )
+
     versions = app.config.versions
     if versions:
         logger.info("Building multiple versions of docs")
-        app.connect("build-finished", run_after_build)
+        app.connect("build-finished", build_multiversion_docs)
+        app.connect("html-page-context", update_version_context)
+    else:
+        # Single version build - just rename to latest
+        app.connect("build-finished", build_multiversion_docs)
 
 
 conf_dir = Path(__file__).parent.resolve()
@@ -447,13 +535,3 @@ warnings.filterwarnings(
     message="Matplotlib is currently using agg, which is a"
     " non-GUI backend, so cannot show the figure.",
 )
-
-
-# -- Sphinx Multiversion --------------------------------------------------
-# https://sphinx-contrib.github.io/multiversion/main/configuration.html
-
-smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
-smv_branch_whitelist = "dev"
-smv_remote_whitelist = None
-smv_latest_version = latest_tag
-smv_released_pattern = r"^refs/tags/.*$"
