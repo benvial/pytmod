@@ -85,8 +85,10 @@ def get_version_tags():
             ["git", "tag"], capture_output=True, text=True, check=True
         )
         tags = result.stdout.splitlines()
-        version_tags = [tag for tag in tags if TAG_REGEX.match(tag)] + [" main"]
-        return sorted(version_tags, key=lambda v: Version(v[1:]), reverse=True)
+        version_tags = [tag for tag in tags if TAG_REGEX.match(tag)]
+        version_tags = sorted(version_tags, key=lambda v: Version(v[1:]), reverse=True)
+        version_tags.append("main")
+        return version_tags
     except subprocess.CalledProcessError:
         return []
 
