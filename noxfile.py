@@ -123,6 +123,7 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
         try:
             # Install the package at this version
             session.install(".")
+            session.install("sphinx-multiversion")
 
             # Build docs for this version
             version_output = output_path / tag
@@ -235,7 +236,7 @@ def docs(session: nox.Session) -> None:
     args, posargs = parser.parse_known_args(session.posargs)
     serve = args.builder == "html" and session.interactive
 
-    session.install(" .[doc]", "sphinx-autobuild")
+    session.install(" .[doc]", "sphinx-autobuild", "sphinx-multiversion")
 
     output = args.output or f"docs/_build/{args.builder}"
 
