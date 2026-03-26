@@ -33,6 +33,21 @@ jobs:
         run: uv pip install nox
       - name: Build multiple versions of the documentation
         run: nox -s docs --non-interactive -- --versions
+      - name: Debug AutoAPI output
+        run: |
+          ls -R docs/_build/html/dev/autoapi || echo "AutoAPI missing"
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          TAG=$(git tag --sort=-v:refname | head -n 1)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+      - name: Create latest alias
+        run: |
+          cp -r docs/_build/html/${{ steps.get_tag.outputs.tag }} docs/_build/html/latest
+      - name: Add root redirect
+        run: |
+          echo '<meta http-equiv="refresh" content="0; url=./latest/">' > docs/_build/html/index.html
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action

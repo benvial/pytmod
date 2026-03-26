@@ -39,11 +39,11 @@ doc-noplot:
 
 # Build documentation (all versions)
 vdoc:
-    cd docs && make versions && make index
+    nox -s docs --non-interactive -- --versions
 
 # Build documentation (all versions, no examples)
 vdoc-noplot:
-    cd docs && make versions-noplot && make index
+    nox -s docs -- --versions --plot
 
 
 # Build documentation and watch
@@ -97,6 +97,10 @@ header:
 # Show html documentation in the default browser
 show:
     firefox docs/_build/html/index.html
+
+# Show html documentation in the default browser
+show-dev:
+    firefox docs/_build/html/dev/index.html
 
 docker-build:
     docker build . -t pytmod
