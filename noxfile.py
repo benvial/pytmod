@@ -183,12 +183,19 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
         f.write(redirect_html)
 
     # Rename latest version directory to 'latest'
-    latest_dir = output_path / latest.replace(".", "-")
+    latest_dir = output_path / latest
     if latest_dir.exists():
         latest_link = output_path / "latest"
         if latest_link.exists():
             shutil.rmtree(latest_link)
         shutil.move(str(latest_dir), str(latest_link))
+    # Rename main version directory to 'dev'
+    main_dir = output_path / "main"
+    if main_dir.exists():
+        main_link = output_path / "dev"
+        if main_link.exists():
+            shutil.rmtree(main_link)
+        shutil.move(str(main_dir), str(main_link))
 
     session.log(f"Built {len(version_tags)} versions in {output_path}")
 
