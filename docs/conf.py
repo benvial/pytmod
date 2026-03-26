@@ -121,7 +121,9 @@ bibtex_default_style = "unsrt"
 autodoc_typehints = "signature"  # autoapi respects this
 
 autoapi_type = "python"
-autoapi_dirs = ["../pytmod"]
+# autoapi_dirs = ["../pytmod"]
+
+autoapi_dirs = [str(Path(package.__file__).parent)]
 autoapi_options = [
     "members",
     "undoc-members",
@@ -144,19 +146,13 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
 
 def run_after_build(app, exception):  # noqa: ARG001
     outdir = Path(app.outdir).parents[0]
-    try:
+    with contextlib.suppress(FileNotFoundError):
         logger.info("Renaming %s as latest", latest_tag)
         old_dir = Path(outdir) / latest_tag
         new_dir = Path(outdir) / "latest"
-
-        try:
-            old_dir.rename(new_dir)
-        except OSError:
+        with contextlib.suppress(OSError):
             shutil.rmtree(str(new_dir))
-            old_dir.rename(new_dir)
-
-    except FileNotFoundError:
-        pass
+        old_dir.rename(new_dir)
     logger.info("Writing redirection page index.html in %s", outdir)
     with Path.open(outdir / "index.html", "w") as f:
         f.write(redirect_contents)
