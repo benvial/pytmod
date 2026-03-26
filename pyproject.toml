@@ -44,7 +44,7 @@ test = [
   "coverage",
 ]
 doc = [
-  "sphinx",
+  "sphinx<7",
   "shibuya",
   "sphinx-gallery",
   "memory_profiler",
