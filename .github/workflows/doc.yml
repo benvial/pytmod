@@ -30,7 +30,7 @@ jobs:
       - name: Generate version file
         run: hatch version
       - name: Install package and doc requirements
-        run: uv pip install -e .[doc]
+        run: uv pip install -e .[doc] sphinx-multiversion
       - name: Build multiple versions of the documentation
         run: |
           # Get all version tags
