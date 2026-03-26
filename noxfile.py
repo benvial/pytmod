@@ -125,7 +125,7 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
             session.install(".")
 
             # Build docs for this version
-            version_output = output_path / tag.replace(".", "-")
+            version_output = output_path / tag
             version_output.mkdir(parents=True, exist_ok=True)
 
             build_args = [
@@ -160,7 +160,7 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
         versions_data.append(
             {
                 "name": version_name,
-                "url": f"./{tag.replace('.', '-')}/index.html",
+                "url": f"./{tag}/index.html",
                 "is_latest": tag == latest,
             }
         )
