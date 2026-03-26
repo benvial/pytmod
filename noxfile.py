@@ -119,7 +119,8 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
     # Build each version
     for i, tag in enumerate(version_tags):
         session.log(f"Building version {tag} ({i + 1}/{len(version_tags)})")
-
+        if tag == "v0.0.1":
+            session.install("sphinx-multiversion")
         try:
             # Install the package at this version
             session.install(".")
