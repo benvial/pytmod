@@ -12,7 +12,6 @@ keywords = ["time-modulated", "electromagnetism", "optics"]
 authors = [{ email = "benjamin.vial84@gmail.com" }, { name = "Benjamin Vial" }]
 classifiers = [
   "Development Status :: 1 - Planning",
-  "Programming Language :: Python",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
@@ -32,6 +31,7 @@ dependencies = [
   "scipy >= 1.10.0",
   "matplotlib >= 3.7.0",
   "scikit-image >= 0.19.3",
+  "toml>=0.10.2",
 ]
 dynamic = ["version"]
 
@@ -45,23 +45,29 @@ test = [
   "coverage",
 ]
 doc = [
-  "sphinx",
-  "shibuya",
-  "sphinx-gallery",
-  "memory_profiler",
-  "sphinx-autoapi",
-  "myst-parser",
-  "sphinx_design",
-  "sphinxcontrib-bibtex",
-  "sphinxcontrib-video",
-  "pandas",
-  "linkify-it-py",
-  "sphinx-tabs",
-  "sphinx-togglebutton",
-  "numpydoc",
-  "sphinx-multiversion",
+    "sphinx<7",
+    "shibuya",
+    "sphinx-gallery",
+    "memory_profiler",
+    "sphinx-autoapi",
+    "myst-parser",
+    "sphinx_design",
+    "sphinxcontrib-bibtex",
+    "sphinxcontrib-video",
+    "pandas",
+    "linkify-it-py",
+    "sphinx-tabs",
+    "sphinx-togglebutton",
+    "numpydoc",
+    "sphinx-iconify",
 ]
-dev = ["hatch", "pre-commit", "nox", "uv", "hatch-vcs", "ipython"]
+dev = ["codeflash", "hatch", "pre-commit", "nox", "uv", "hatch-vcs", "ipython"]
+fem = [
+  "gmsh>=4.12.0",
+  # "mpi4py>=3.1.0",
+  # "slepc4py>=3.21.0",
+  # "petsc4py>=3.21.0",
+]
 
 [project.urls]
 Homepage = "https://bvial.info/pytmod"
@@ -118,13 +124,26 @@ dev-dependencies = ["pytmod[dev]"]
 [tool.hatch.version]
 source = "vcs"
 
+[tool.hatch.version.raw-options]
+local_scheme = "dirty-tag"
+
 [tool.hatch.build.hooks.vcs]
 version-file = "pytmod/_version.py"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests"]
-addopts = """--cov=pytmod --cov-report term --cov-report xml --cov-report html --cov-report json"""
+# addopts = """--cov-report term --cov-report xml --cov-report html --cov-report json"""
 
 [tool.coverage.run]
 omit = ["dev/*", "tests/*", "docs/*", "pytmod/_version.py"]
+
+[tool.codeflash]
+# All paths are relative to this pyproject.toml's directory.
+module-root = "pytmod"
+tests-root = "tests"
+test-framework = "pytest"
+benchmarks-root = "tests/benchmarks"
+ignore-paths = []
+disable-telemetry = true
+formatter-cmds = ["black $file"]

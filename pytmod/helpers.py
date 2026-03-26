@@ -347,7 +347,7 @@ def dimhandler(f):
         If the number of dimensions in `omegas` is unsupported.
     """
 
-    def wrapper(self, omegas, eigenvalues, modes, *args):
+    def wrapper(self, omegas, eigenvalues, modes, *args, **kwargs):
         omegas = np.array(omegas)
         dim = omegas.ndim
         if dim == 0:
@@ -357,17 +357,25 @@ def dimhandler(f):
                 eigenvalues[:, np.newaxis],
                 modes[:, :, np.newaxis],
                 *(arg[:, :, np.newaxis] for arg in args),
+                **kwargs,
             )[:, :, 0]
         if dim == 1:
-            return f(self, omegas, eigenvalues, modes, *args)
+            return f(self, omegas, eigenvalues, modes, *args, **kwargs)
         if dim == 2:
-            out = []
-            for j, _omegas in enumerate(omegas):
-                _eigenvalues = eigenvalues[:, j]
-                _modes = modes[:, :, j]
-                _args = [arg[:, :, j] for arg in args]
-                out.append(f(self, _omegas, _eigenvalues, _modes, *_args))
-            return np.transpose(np.stack(out, axis=-1), (0, 1, 3, 2))
+            M, N_freq = omegas.shape
+            # Flatten omegas to process all frequencies at once
+            omegas_flat = omegas.ravel()
+            # Reshape eigenvalues and modes to flatten the last two dimensions
+            eigenvalues_flat = eigenvalues.reshape(eigenvalues.shape[0], -1)
+            modes_flat = modes.reshape(modes.shape[0], modes.shape[1], -1)
+            args_flat = [arg.reshape(arg.shape[0], arg.shape[1], -1) for arg in args]
+            # Call f once with all frequencies
+            out_flat = f(
+                self, omegas_flat, eigenvalues_flat, modes_flat, *args_flat, **kwargs
+            )
+            # Reshape output from (..., M*N_freq) to (..., M, N_freq)
+            leading_shape = out_flat.shape[:-1]
+            return out_flat.reshape((*leading_shape, M, N_freq))
         msg = f"Unsupported number of dimensions: {omegas.ndim}"
         raise ValueError(msg)
 
