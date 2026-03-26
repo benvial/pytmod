@@ -217,6 +217,14 @@ def skip_member(app, what, name, obj, skip, options):  # noqa: ARG001
     return skip
 
 
+versions = get_all_version_tags()
+versions_tuple = [("latest", "/")] + [(v, f"/{v}/") for v in versions[:-1]]
+html_context = {
+    "versions": versions_tuple,
+    "current_version": "latest",
+}
+
+
 def update_version_context(app, pagename, templatename, context, doctree):  # noqa: ARG001
     """Update template context with version information."""
     if app.config.versions:
