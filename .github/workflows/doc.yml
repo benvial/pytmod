@@ -18,7 +18,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.11"
       - name: Install ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v3
       - name: Setup uv
@@ -32,7 +32,7 @@ jobs:
       - name: Install nox
         run: uv pip install nox
       - name: Build multiple versions of the documentation
-        run: nox -s docs --non-interactive -- --versions
+        run: nox -s docs --non-interactive -- --versions --plot
       - name: Debug AutoAPI output
         run: |
           ls -R docs/_build/html/dev/autoapi || echo "AutoAPI missing"
