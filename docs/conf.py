@@ -6,9 +6,11 @@
 
 from __future__ import annotations
 
+import contextlib
 import datetime
 import re
 import shutil
+import stat
 import subprocess
 import warnings
 from pathlib import Path
@@ -19,6 +21,13 @@ from sphinx.util import logging
 import pytmod as package
 
 logger = logging.getLogger(__name__)
+
+
+def fix_autoapi_permissions(app):
+    src = Path(app.confdir).parent
+    for p in src.rglob("*.py"):
+        with contextlib.suppress(OSError):
+            p.chmod(stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
 
 def get_latest_version_tag():
@@ -154,6 +163,7 @@ def run_after_build(app, exception):  # noqa: ARG001
 
 
 def setup(app):
+    app.connect("builder-inited", fix_autoapi_permissions)
     app.connect("autoapi-skip-member", skip_member)
     app.add_config_value("versions", False, "env")  # Default is False
     versions = app.config.versions
