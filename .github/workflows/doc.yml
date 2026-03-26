@@ -31,6 +31,15 @@ jobs:
         run: hatch version
       - name: Install nox
         run: uv pip install nox
+      - name: Debug smv temp permissions
+        run: |
+          python -c "
+          import subprocess, tempfile, tarfile, io
+          result = subprocess.run(['git', 'archive', 'HEAD', 'pytmod/'], capture_output=True)
+          with tarfile.open(fileobj=io.BytesIO(result.stdout)) as t:
+              for m in t.getmembers():
+                  print(oct(m.mode), m.name)
+          "
       - name: Build multiple versions of the documentation
         run: nox -s docs --non-interactive -- --versions --plot
       - name: Debug AutoAPI output
