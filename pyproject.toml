@@ -31,6 +31,7 @@ dependencies = [
   "scipy >= 1.10.0",
   "matplotlib >= 3.7.0",
   "scikit-image >= 0.19.3",
+  "toml>=0.10.2",
 ]
 dynamic = ["version"]
 
