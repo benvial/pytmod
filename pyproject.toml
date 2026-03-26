@@ -123,6 +123,9 @@ dev-dependencies = ["pytmod[dev]"]
 [tool.hatch.version]
 source = "vcs"
 
+[tool.hatch.version.raw-options]
+local_scheme = "dirty-tag"
+
 [tool.hatch.build.hooks.vcs]
 version-file = "pytmod/_version.py"
 
