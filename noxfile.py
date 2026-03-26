@@ -123,7 +123,6 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
         try:
             # Install the package at this version
             session.install(".")
-            session.install("sphinx-multiversion")
 
             # Build docs for this version
             version_output = output_path / tag
@@ -147,6 +146,8 @@ def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
 
             # Checkout the tag
             subprocess.run(["git", "checkout", tag], check=True)
+
+            session.install("sphinx-multiversion")
             session.run("sphinx-build", *build_args)
 
         finally:
