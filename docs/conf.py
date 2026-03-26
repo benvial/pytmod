@@ -109,7 +109,7 @@ def build_multiversion_docs(
     # Rename latest tag directory to 'latest'
     try:
         latest_dir = Path(outdir) / latest
-        latest_dir = latest_dir.with_name(latest.replace(".", "-"))
+        latest_dir = latest_dir.with_name(latest)
         if latest_dir.exists():
             new_dir = Path(outdir) / "latest"
             if new_dir.exists():
@@ -118,6 +118,18 @@ def build_multiversion_docs(
             logger.info(f"Renamed {latest} to latest")
     except Exception as e:
         logger.warning(f"Could not rename latest directory: {e}")
+    # Rename main tag directory to 'dev'
+    try:
+        main_dir = Path(outdir) / "main"
+        main_dir = main_dir.with_name("main")
+        if main_dir.exists():
+            new_dir = Path(outdir) / "dev"
+            if new_dir.exists():
+                shutil.rmtree(new_dir)
+            shutil.move(str(main_dir), str(new_dir))
+            logger.info("Renamed main to dev")
+    except Exception as e:
+        logger.warning(f"Could not rename main directory: {e}")
 
     # Write redirect index.html
     index_path = outdir / "index.html"
