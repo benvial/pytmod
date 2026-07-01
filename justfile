@@ -24,14 +24,14 @@ install:
 
 # Clean generated files
 clean:
-	cd docs && make clean
+	cd docs && rm -rf _build generated sg_execution_times.rst autoapi examples
 	rm -rf *.whl htmlcov builddir .pytest_cache coverage.xml .coverage
 	rm -rf wheelhouse build
 
 
 # Build documentation
 doc:
-    cd docs && make html
+    sphinx-build --keep-going -n -T -b=html docs docs/_build/html
 
 # Build documentation (no examples)
 doc-noplot:
@@ -39,11 +39,11 @@ doc-noplot:
 
 # Build documentation (all versions)
 vdoc:
-    cd docs && make versions && make index
+    nox -s docs --non-interactive -- --versions
 
 # Build documentation (all versions, no examples)
 vdoc-noplot:
-    cd docs && make versions-noplot && make index
+    nox -s docs -- --versions --plot
 
 
 # Build documentation and watch
@@ -96,7 +96,11 @@ header:
 
 # Show html documentation in the default browser
 show:
-    cd docs && make -s show
+    firefox docs/_build/html/index.html
+
+# Show html documentation in the default browser
+show-dev:
+    firefox docs/_build/html/dev/index.html
 
 docker-build:
     docker build . -t pytmod

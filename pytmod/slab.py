@@ -189,7 +189,7 @@ class Slab:
     @dimhandler
     def build_dmatrix_domega(self, omegas, eigenvalues, modes, modes_left):
         """
-        Build the of the linear system to be solved.
+        Build the matrix derivativeof the linear system.
 
         Parameters
         ----------
@@ -489,8 +489,9 @@ class Slab:
         Einc : array_like
             The incident field at the specified points in space and time.
         """
-        Nt = len(t)
-        Nx = len(x)
+        x = np.asarray(x)
+        t = np.asarray(t)
+        Eis = np.asarray(Eis)
         nh = self.material.nh
         Nh = self.material.Nh
         eps_plus = self.eps_plus
@@ -498,37 +499,50 @@ class Slab:
         Omega = self.material.modulation_frequency
         L = self.thickness
 
-        Einc = np.zeros((Nx, Nt), dtype=np.complex128)
-        for ix, x_ in enumerate(x):
-            if x_ < 0:
-                _E = 0
-                for n in range(-Nh, Nh + 1):
-                    kn = eps_plus**0.5 * (omega - n * Omega)
-                    _E += Eis[n + Nh] * np.exp(
-                        1j * (kn * (x_) - (omega - n * Omega) * t)
-                    )
-                Einc[ix] = _E
-            elif x_ > L:
-                _E = 0
-                for n in range(-Nh, Nh + 1):
-                    kn = eps_minus**0.5 * (omega - n * Omega)
-                    _E += Eis[n + nh + Nh] * np.exp(
-                        -1j * (kn * (x_ - L) + (omega - n * Omega) * t)
-                    )
-                Einc[ix] = _E
-            else:
-                pass
+        # Harmonic indices: shape (2*Nh + 1,)
+        n = np.arange(-Nh, Nh + 1)
+
+        # Frequencies for each harmonic: shape (2*Nh + 1,)
+        omega_n = omega - n * Omega
+
+        # Initialize output array: shape (Nx, Nt)
+        Einc = np.zeros((len(x), len(t)), dtype=np.complex128)
+
+        # Region x < 0: incident from above
+        mask_plus = x < 0
+        if np.any(mask_plus):
+            x_plus = x[mask_plus]  # shape (n_plus,)
+            # Wave numbers for each harmonic: shape (2*Nh + 1,)
+            kn_plus = np.sqrt(eps_plus) * omega_n
+            # Phase factor for space: shape (n_plus, 2*Nh + 1)
+            phase_x_plus = np.exp(1j * np.outer(x_plus, kn_plus))
+            # Phase factor for time: shape (2*Nh + 1, Nt)
+            phase_t = np.exp(-1j * np.outer(omega_n, t))
+            # Eis coefficients for this region: shape (2*Nh + 1,)
+            Eis_plus = Eis[:nh]
+            # Compute field: (n_plus, 2*Nh + 1) @ (2*Nh + 1, Nt) -> (n_plus, Nt)
+            Einc[mask_plus] = phase_x_plus @ (Eis_plus[:, np.newaxis] * phase_t)
+
+        # Region x > L: incident from below
+        mask_minus = x > L
+        if np.any(mask_minus):
+            x_minus = x[mask_minus]  # shape (n_minus,)
+            # Wave numbers for each harmonic: shape (2*Nh + 1,)
+            kn_minus = np.sqrt(eps_minus) * omega_n
+            # Phase factor for space: shape (n_minus, 2*Nh + 1)
+            phase_x_minus = np.exp(-1j * np.outer(x_minus - L, kn_minus))
+            # Phase factor for time (with negative sign): shape (2*Nh + 1, Nt)
+            phase_t_minus = np.exp(-1j * np.outer(omega_n, t))
+            # Eis coefficients for this region: shape (2*Nh + 1,)
+            Eis_minus = Eis[nh:]
+            # Compute field: (n_minus, 2*Nh + 1) @ (2*Nh + 1, Nt) -> (n_minus, Nt)
+            Einc[mask_minus] = phase_x_minus @ (
+                Eis_minus[:, np.newaxis] * phase_t_minus
+            )
+
         return Einc
 
-    def get_scattered_field(
-        self,
-        x,
-        t,
-        omega,
-        psi,
-        ks,
-        modes,
-    ):
+    def get_scattered_field(self, x, t, omega, psi, ks, modes, harm=None):
         """
         Compute the scattered electric field at positions x and times t.
 
@@ -553,52 +567,88 @@ class Slab:
         E : array_like
             The scattered electric field at positions x and times t.
         """
-        Nt = len(t)
-        Nx = len(x)
+        x = np.asarray(x)
+        t = np.asarray(t)
         Eslab_plus, Eslab_minus, Enr, Ent = psi
         Omega = self.material.modulation_frequency
         eps_plus = self.eps_plus
         eps_minus = self.eps_minus
-        nh = self.material.nh
         Nh = self.material.Nh
         L = self.thickness
 
-        E = np.zeros((Nx, Nt), dtype=np.complex128)
-        for ix, x_ in enumerate(x):
-            if x_ < 0:
-                _E = 0
-                for n in range(-Nh, Nh + 1):
-                    kn = eps_plus**0.5 * (omega - n * Omega)
-                    _E += Enr[n + Nh] * np.exp(
-                        -1j * (kn * (x_) + (omega - n * Omega) * t)
-                    )
-                E[ix] = _E
-            elif x_ > L:
-                _E = 0
-                for n in range(-Nh, Nh + 1):
-                    kn = eps_minus**0.5 * (omega - n * Omega)
-                    _E += Ent[n + Nh] * np.exp(
-                        1j * (kn * (x_ - L) - (omega - n * Omega) * t)
-                    )
-                E[ix] = _E
-            else:
-                _E = 0
-                for p in range(nh):
-                    _En = 0
-                    for n in range(-Nh, Nh + 1):
-                        _En += (
-                            (
-                                Eslab_plus[p] * np.exp(1j * ks[p] * x_)
-                                + Eslab_minus[p] * np.exp(-1j * ks[p] * x_)
-                            )
-                            * modes[n + Nh, p]
-                            * np.exp(-1j * (omega - n * Omega) * t)
-                        )
-                    _E += _En
-                E[ix] = _E
+        if harm is None:
+            harms = np.arange(-Nh, Nh + 1)
+        else:
+            harms = np.array([harm])
+
+        # Harmonic indices to use
+        harms = np.asarray(harms)
+        n_idx = harms + Nh  # Convert to array indices
+
+        # Frequencies for each harmonic: shape (len(harms),)
+        omega_n = omega - harms * Omega
+
+        # Initialize output array: shape (Nx, Nt)
+        E = np.zeros((len(x), len(t)), dtype=np.complex128)
+
+        # Region x < 0: reflected field
+        mask_ref = x < 0
+        if np.any(mask_ref):
+            x_ref = x[mask_ref]  # shape (n_ref,)
+            # Wave numbers for each harmonic: shape (len(harms),)
+            kn_plus = np.sqrt(eps_plus) * omega_n
+            # Phase factor for space: shape (n_ref, len(harms))
+            phase_x_ref = np.exp(-1j * np.outer(x_ref, kn_plus))
+            # Phase factor for time: shape (len(harms), Nt)
+            phase_t = np.exp(-1j * np.outer(omega_n, t))
+            # Reflected coefficients for selected harmonics: shape (len(harms),)
+            Enr_harms = Enr[n_idx]
+            # Compute field: (n_ref, len(harms)) @ (len(harms), Nt) -> (n_ref, Nt)
+            E[mask_ref] = phase_x_ref @ (Enr_harms[:, np.newaxis] * phase_t)
+
+        # Region x > L: transmitted field
+        mask_trans = x > L
+        if np.any(mask_trans):
+            x_trans = x[mask_trans]  # shape (n_trans,)
+            # Wave numbers for each harmonic: shape (len(harms),)
+            kn_minus = np.sqrt(eps_minus) * omega_n
+            # Phase factor for space: shape (n_trans, len(harms))
+            phase_x_trans = np.exp(1j * np.outer(x_trans - L, kn_minus))
+            # Phase factor for time: shape (len(harms), Nt)
+            phase_t_trans = np.exp(-1j * np.outer(omega_n, t))
+            # Transmitted coefficients for selected harmonics: shape (len(harms),)
+            Ent_harms = Ent[n_idx]
+            # Compute field: (n_trans, len(harms)) @ (len(harms), Nt) -> (n_trans, Nt)
+            E[mask_trans] = phase_x_trans @ (Ent_harms[:, np.newaxis] * phase_t_trans)
+
+        # Region 0 <= x <= L: field inside the slab
+        mask_slab = (x >= 0) & (x <= L)
+        if np.any(mask_slab):
+            x_slab = x[mask_slab]  # shape (n_slab,)
+            # x_slab as column vector: shape (n_slab, 1)
+            x_slab_col = x_slab[:, np.newaxis]
+            # ks as row vector: shape (1, nh)
+            ks_row = np.asarray(ks).reshape(1, -1)
+            # Phase factors for forward and backward modes: shape (n_slab, nh)
+            phase_fwd = np.exp(1j * x_slab_col * ks_row)
+            phase_bwd = np.exp(-1j * x_slab_col * ks_row)
+            # Mode amplitudes: shape (nh,)
+            Eslab_plus_arr = np.asarray(Eslab_plus)
+            Eslab_minus_arr = np.asarray(Eslab_minus)
+            # Forward + backward waves: shape (n_slab, nh)
+            slab_waves = Eslab_plus_arr * phase_fwd + Eslab_minus_arr * phase_bwd
+            # Modes matrix for selected harmonics: shape (len(harms), nh)
+            modes_harms = modes[n_idx, :]
+            # Time phase: shape (len(harms), Nt)
+            phase_t_slab = np.exp(-1j * np.outer(omega_n, t))
+            # Compute field:
+            # - slab_waves @ modes_harms.T: (n_slab, nh) @ (nh, len(harms)) -> (n_slab, len(harms))
+            # - @ phase_t_slab: (n_slab, len(harms)) @ (len(harms), Nt) -> (n_slab, Nt)
+            E[mask_slab] = (slab_waves @ modes_harms.T) @ phase_t_slab
+
         return E
 
-    def animate_field(self, x, t, E, fig_ax=None):
+    def animate_field(self, x, t, E, fig_ax=None, blit=True):
         """
         Create an animation of the electric field over time within the slab.
 
@@ -682,7 +732,7 @@ class Slab:
             )
 
         return animation.FuncAnimation(
-            fig, animate, blit=False, repeat=True, frames=len(t) - 1, interval=10
+            fig, animate, blit=blit, repeat=True, frames=len(t) - 1, interval=10
         )
 
     def get_modes_normalization(self, modes_right, modes_left, matrix_derivative):
@@ -845,4 +895,6 @@ class Slab:
                 ]
             )
             evs_slab_ana_shift.append(evs_slab_ana_shift_)
-        return np.sort(np.array(evs_slab_ana_shift).ravel())
+        evs = np.array(evs_slab_ana_shift).ravel()
+        isort = np.argsort(evs)
+        return evs[isort]

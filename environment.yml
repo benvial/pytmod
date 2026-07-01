@@ -8,3 +8,6 @@ dependencies:
   - scipy
   - matplotlib
   - scikit-image
+  # FEM dependencies (conda-installed)
+  - fenics-dolfinx>=0.9.0
+  - petsc=*=complex*

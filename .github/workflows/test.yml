@@ -28,6 +28,10 @@ jobs:
           auto-activate-base: false
           channels: conda-forge,defaults
           channel-priority: strict
+      - name: Install FEM dependencies (conda)
+        if: matrix.venv == 'mamba'
+        run: |
+          conda install -c conda-forge fenics-dolfinx "petsc=*=complex*" -y
       - name: Setup uv
         uses: yezz123/setup-uv@v4
         with:

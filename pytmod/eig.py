@@ -412,6 +412,7 @@ def _nonlinear_eigensolver(
     filter=True,
     scale=1,
     dim=None,
+    cmap="BuPu",
     **kwargs,
 ):
     if not isinstance(Rloc, tuple):
@@ -479,7 +480,7 @@ def _nonlinear_eigensolver(
                     omegas_re / scale,
                     omegas_im / scale,
                     im.T,
-                    cmap="inferno",
+                    cmap=cmap,
                     vmin=vmin,
                     vmax=vmax,
                 )

@@ -9,13 +9,16 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shutil
+import subprocess
 import webbrowser
 from pathlib import Path
 
 import nox
+from packaging.version import Version
 
 nox.needs_version = ">=2024.3.2"
 # nox.options.default_venv_backend = "uv|virtualenv"
@@ -30,7 +33,17 @@ def tests(session: nox.Session) -> None:
     """
     session.install("-e.[test]")
     session.install("pytest")
-    session.run("pytest", *session.posargs)
+    session.run(
+        "pytest",
+        "tests",
+        "--cov=pytmod",
+        "--cov-report=term",
+        "--cov-report=term",
+        "--cov-report=xml",
+        "--cov-report=html",
+        "--cov-report=json",
+        *session.posargs,
+    )
 
 
 TAG_REGEX = re.compile(r"^v\d+\.\d+\.\d+$")
@@ -63,6 +76,130 @@ def tag(session: nox.Session) -> None:
     session.run("git", "push", "--tags")
     session.run("git", "tag", "-f", "latest", tag_name)
     session.run("git", "push", "origin", "latest", "--force")
+
+
+def get_version_tags():
+    """Get all version tags from git."""
+    try:
+        result = subprocess.run(
+            ["git", "tag"], capture_output=True, text=True, check=True
+        )
+        tags = result.stdout.splitlines()
+        version_tags = [tag for tag in tags if TAG_REGEX.match(tag)]
+        version_tags = sorted(version_tags, key=lambda v: Version(v[1:]), reverse=True)
+        version_tags.append("main")
+        return version_tags
+    except subprocess.CalledProcessError:
+        return []
+
+
+def build_multiversion_docs(session, output, builder, plot=True, posargs=()):
+    """Build documentation for multiple versions using custom approach."""
+    # Get all version tags
+    version_tags = get_version_tags()
+    if not version_tags:
+        session.warn("No version tags found for multiversion build")
+        return
+
+    session.log(f"Building {len(version_tags)} versions: {version_tags}")
+
+    # Get current branch/commit info before switching
+    result = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    current_commit = result.stdout.strip()
+
+    # Create output directory
+    output_path = Path(output)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # Build each version
+    for i, tag in enumerate(version_tags):
+        session.log(f"Building version {tag} ({i + 1}/{len(version_tags)})")
+
+        try:
+            # Install the package at this version
+            session.install(".")
+            session.install("sphinx-multiversion")
+
+            # Build docs for this version
+            version_output = output_path / tag
+            version_output.mkdir(parents=True, exist_ok=True)
+
+            build_args = [
+                "-n",  # nitpicky mode
+                "-T",  # full tracebacks
+                f"-b={builder}",
+                "docs",
+                str(version_output),
+                "--keep-going",
+                *posargs,
+            ]
+
+            if not plot:
+                build_args += ("-D", "plot_gallery=0")
+
+            # Always enable versions config so conf.py can add version context
+            build_args += ("-D", "versions=1")
+
+            # Checkout the tag
+            subprocess.run(["git", "checkout", tag], check=True)
+
+            session.run("sphinx-build", *build_args)
+
+        finally:
+            # Switch back to original commit
+            subprocess.run(["git", "checkout", current_commit], check=True)
+
+    # Create versions.json
+    versions_data = []
+    latest = version_tags[0]
+    for tag in version_tags:
+        version_name = tag[1:]  # Remove 'v' prefix
+        versions_data.append(
+            {
+                "name": version_name,
+                "url": f"./{tag}/index.html",
+                "is_latest": tag == latest,
+            }
+        )
+
+    with Path(output_path / "versions.json").open("w") as f:
+        json.dump(versions_data, f)
+
+    # Create redirect index.html
+    redirect_html = """<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redirecting to latest version</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=./latest/index.html" />
+    <link rel="canonical" href="https://benvial.github.io/pytmod/latest/index.html" />
+  </head>
+</html>
+"""
+    with Path(output_path / "index.html").open("w") as f:
+        f.write(redirect_html)
+
+    # Rename latest version directory to 'latest'
+    latest_dir = output_path / latest
+    if latest_dir.exists():
+        latest_link = output_path / "latest"
+        if latest_link.exists():
+            shutil.rmtree(latest_link)
+        shutil.move(str(latest_dir), str(latest_link))
+    # Rename main version directory to 'dev'
+    main_dir = output_path / "main"
+    if main_dir.exists():
+        main_link = output_path / "dev"
+        if main_link.exists():
+            shutil.rmtree(main_link)
+        shutil.move(str(main_dir), str(main_link))
+
+    session.log(f"Built {len(version_tags)} versions in {output_path}")
 
 
 @nox.session(reuse_venv=True)
@@ -99,7 +236,7 @@ def docs(session: nox.Session) -> None:
     args, posargs = parser.parse_known_args(session.posargs)
     serve = args.builder == "html" and session.interactive
 
-    session.install("-e.[doc]", "sphinx-autobuild")
+    session.install(" .[doc]", "sphinx-autobuild", "sphinx-multiversion")
 
     output = args.output or f"docs/_build/{args.builder}"
 
@@ -126,7 +263,9 @@ def docs(session: nox.Session) -> None:
 
     if serve:
         if args.versions:
-            session.run("sphinx-multiversion", *shared_args)
+            build_multiversion_docs(
+                session, output, args.builder, plot=args.plot, posargs=posargs
+            )
 
             path = Path(output).resolve()  # Convert to absolute path
             webbrowser.open(f"file://{path}/index.html")
@@ -137,9 +276,12 @@ def docs(session: nox.Session) -> None:
                 *autobuild_args,
                 *shared_args,
             )
+    elif args.versions:
+        build_multiversion_docs(
+            session, output, args.builder, plot=args.plot, posargs=posargs
+        )
     else:
-        cmd = "sphinx-multiversion" if args.versions else "sphinx-build"
-        session.run(cmd, "--keep-going", *shared_args)
+        session.run("sphinx-build", "--keep-going", *shared_args)
 
 
 @nox.session
